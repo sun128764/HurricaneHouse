@@ -39,8 +39,9 @@ namespace DataCollectDaemon
         }
         public class SerialTools
         {
+            
 
-            static bool isPort()
+            static bool isPort() 
             {
                 string[] str = SerialPort.GetPortNames();
                 if (str == null)
@@ -49,6 +50,9 @@ namespace DataCollectDaemon
                 }
                 else return true;
             }
+
+            
+
         }
     }
 }
