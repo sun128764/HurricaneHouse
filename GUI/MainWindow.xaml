@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        xmlns:geared="clr-namespace:LiveCharts.Geared;assembly=LiveCharts.Geared"
         xmlns:local="clr-namespace:GUI" 
         mc:Ignorable="d"
         Title="FIT Hurricane House Monitor" Height="560" Width="800">
@@ -64,7 +65,14 @@
         </GroupBox>
 
         <GroupBox Name="Monitor" Header="Real-time Monitor" HorizontalAlignment="Left" Height="336" Margin="159,46,0,0" VerticalAlignment="Top" Width="611" Background="#FFF8F9E4">
-            <Grid/>
+            <Grid>
+                <lvc:CartesianChart>
+                    <lvc:CartesianChart.Series>
+                        <!--Notice we are using GLineSeries, instead of LineSeries-->
+                        <geared:GLineSeries Values="{Binding Values}" />
+                    </lvc:CartesianChart.Series>
+                </lvc:CartesianChart>
+            </Grid>
         </GroupBox>
     </Grid>
 </Window>

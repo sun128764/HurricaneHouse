@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using LiveCharts;
 using LiveCharts.Wpf;
+using LiveCharts.Geared;
 using System.IO.Ports;
 using System.ComponentModel;
 
@@ -25,10 +26,18 @@ namespace GUI
     public partial class MainWindow : Window
     {
         public SensorData sensorData { get; set; }
+        public GearedValues<double> Values { get; set; }
+
+        private int databu;
+        private int datacoun;
         public MainWindow()
         {
             InitializeComponent();
             sensorData = new SensorData();
+            Values = new GearedValues<double> { };
+            databu = 0;
+            datacoun = 0;
+            DataContext = this;
             Status.DataContext = sensorData;
             InitCOM("COM5");
         }
@@ -54,7 +63,17 @@ namespace GUI
             //serialPort.Read(readBuffer, 0, readBuffer.Length);
             string str = serialPort.ReadLine();
             sensorData.GetSensorData(str);
-
+            if (datacoun < 10)
+            {
+                databu += sensorData.PressureValue;
+                datacoun++;
+            }
+            else
+            {
+                Values.Add(((double)databu / datacoun / 65536d + 0.095) / 0.009);
+                databu = 0;
+                datacoun = 0;
+            }
             //MessageBox.Show(sensorData.Pressure);
         }
         //

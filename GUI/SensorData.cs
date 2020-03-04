@@ -15,7 +15,7 @@ namespace GUI
         // These fields hold the values for the public properties.
         private int TemperatureValue;
         private int BatteryLevelValue;
-        private int PressureValue;
+        public int PressureValue;
         private int WindSpeedValue;
         private int HuminityValue;
 
