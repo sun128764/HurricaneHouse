@@ -24,33 +24,19 @@ namespace GUI
     /// </summary>
     public partial class MainWindow : Window
     {
+        public SensorData sensorData { get; set; }
         public MainWindow()
         {
+            InitializeComponent();
+            sensorData = new SensorData();
+            Status.DataContext = sensorData;
             InitCOM("COM5");
-            SeriesCollection = new SeriesCollection
-            {
-                new LineSeries
-                {
-                    Title = "Pressure",
-                    Values = new ChartValues<double>{ }
-                }
-            };
-            YFormatter = value => value.ToString("C");
-
-          
-
-            DataContext = this;
         }
-        public string Datanum { get; set; }
-
-        public SeriesCollection SeriesCollection { get; set; }
-        public string[] Labels { get; set; }
-        public Func<double, string> YFormatter { get; set; }
 
         private void SelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e)
         {
             //Perform actions when SelectedItem changes
-            MessageBox.Show((e.NewValue).ToString());
+            MessageBox.Show(sensorData.Pressure);
         }
         public SerialPort serialPort;//串口对象类
         public bool InitCOM(string PortName)
@@ -61,27 +47,18 @@ namespace GUI
             serialPort.RtsEnable = true;
             return OpenPort();//串口打开
         }
-        public delegate void HandleInterfaceUpdataDelegate(string text);
-        private HandleInterfaceUpdataDelegate interfaceUpdataHandle;
         /// 数据接收事件
         private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             // Thread.Sleep(2000);
-            byte[] readBuffer = new byte[serialPort.ReadBufferSize];
             //serialPort.Read(readBuffer, 0, readBuffer.Length);
-            string str =serialPort.ReadLine(); 
-            //string str = System.Text.Encoding.Default.GetString(readBuffer);
-            double pre=0;
-            if (str.Length > 0) pre = (int.Parse(str) / 65536d + 0.095) / 0.009;
-            interfaceUpdataHandle = (x)=>
-            {
-                textBox.Text = x;
-            };//实例化委托对象
-            Dispatcher.Invoke(interfaceUpdataHandle, pre.ToString("F3")+"kPa");
-            SeriesCollection[0].Values.Add(pre);
+            string str = serialPort.ReadLine();
+            sensorData.GetSensorData(str);
 
-            //MessageBox.Show(str);
+            //MessageBox.Show(sensorData.Pressure);
         }
+        //
+
         //打开串口的方法
         public bool OpenPort()
         {
@@ -105,6 +82,11 @@ namespace GUI
         {
             byte[] WriteBuffer = Encoding.ASCII.GetBytes(CommandString);
             serialPort.Write(WriteBuffer, 0, WriteBuffer.Length);
+        }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
