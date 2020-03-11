@@ -7,19 +7,20 @@
         xmlns:geared="clr-namespace:LiveCharts.Geared;assembly=LiveCharts.Geared"
         xmlns:local="clr-namespace:GUI" 
         mc:Ignorable="d"
-        Title="FIT Hurricane House Monitor" Height="560" Width="800">
+        Title="FIT Hurricane House Monitor" Height="600" Width="800">
     <Grid>
         <GroupBox Header="Network Status" HorizontalAlignment="Left" Height="336" Margin="26,46,0,0" VerticalAlignment="Top" Width="128">
             <TreeView HorizontalAlignment="Left" Height="304" VerticalAlignment="Top" Width="118" Margin="0,10,-2,0" Background="#FFF8F9E4" SelectedItemChanged="SelectionChanged">
                 <TreeViewItem Header="Network">
                     <StackPanel Name="Sensor1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="-15,0,0,0">
-                        <Image Source="ok.png" Width="13" Margin="0,2,0,0"/>
-                        <Label Content="Sensor1" Height="auto" HorizontalAlignment="Left" Foreground="Black"/>
+                        <CheckBox Name="chk" VerticalAlignment="Center" HorizontalAlignment="Left"></CheckBox>
+                        <Image Source="ok.png" Width="13" VerticalAlignment="Center"/>
+                        <Label Content="Sensor1" Height="auto" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center"/>
                     </StackPanel>
                 </TreeViewItem>
             </TreeView>
         </GroupBox>
-        <GroupBox Name="Status" Header="Sensor Status" HorizontalAlignment="Left" Height="135" Margin="26,387,0,0" VerticalAlignment="Top" Width="744" Background="#FFF8F9E4">
+        <GroupBox Name="Status" Header="Sensor Status" HorizontalAlignment="Left" Height="auto" Margin="26,387,0,0" VerticalAlignment="Top" Width="744" Background="#FFF8F9E4">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -38,16 +39,38 @@
                     </StackPanel>
                 </GroupBox>
                 <GroupBox Header="Pressure" Margin="5" Grid.Row="0" Grid.Column="1">
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Pressure:"></Label>
-                        <Label Content="{Binding Pressure}" Margin="0,0,0,0" Width="auto"></Label>
+                    <StackPanel Orientation="Vertical" >
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Pressure:"></Label>
+                            <Label Content="{Binding Pressure}" Margin="0,0,0,0" Width="auto"></Label>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="1-Min Avg:"></Label>
+                            <Label Content="{Binding Pressure}" Margin="0,0,0,0" Width="auto"></Label>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="5-Min Avg:"></Label>
+                            <Label Content="{Binding Pressure}" Margin="0,0,0,0" Width="auto"></Label>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="30-Min Avg:"></Label>
+                            <Label Content="{Binding Pressure}" Margin="0,0,0,0" Width="auto"></Label>
+                        </StackPanel>
                     </StackPanel>
+
                 </GroupBox>
                 <GroupBox Header="Wind" Grid.Row="0" Grid.Column="2" Margin="5" Height="auto">
+                    <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Speed:"></Label>
                         <Label Content="N/A" Margin="0,0,0,-0.5" Width="auto"></Label>
                     </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Direction:"></Label>
+                            <Label Content="N/A" Margin="0,0,0,-0.5" Width="auto"></Label>
+                        </StackPanel>
+                    </StackPanel>
+
                 </GroupBox>
                 <GroupBox Header="Humidity" Margin="5" Grid.Row="0" Grid.Column="3">
                     <StackPanel Orientation="Horizontal">
@@ -74,5 +97,10 @@
                 </lvc:CartesianChart>
             </Grid>
         </GroupBox>
+        <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Height="auto" Margin="0,10,20,0" Width="auto" Orientation="Horizontal">
+            <Label Content="Serial port"/>
+            <ComboBox Name="PortList" ItemsSource="{Binding Path=PortListData}"/>
+            <Button Name="ConnectBtn" Content="Start" Click="ConnectBtn_Click"/>
+        </StackPanel>
     </Grid>
 </Window>

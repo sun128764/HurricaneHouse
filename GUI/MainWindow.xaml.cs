@@ -30,16 +30,18 @@ namespace GUI
 
         private int databu;
         private int datacoun;
+        public string[] PortListData { get; set; }
         public MainWindow()
         {
             InitializeComponent();
+            PortListData = SerialPort.GetPortNames();
             sensorData = new SensorData();
             Values = new GearedValues<double> { };
             databu = 0;
             datacoun = 0;
             DataContext = this;
             Status.DataContext = sensorData;
-            InitCOM("COM5");
+            //InitCOM("COM3");
         }
 
         private void SelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e)
@@ -103,9 +105,10 @@ namespace GUI
             serialPort.Write(WriteBuffer, 0, WriteBuffer.Length);
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
+        private void ConnectBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            ComboBox comboBox = PortList;
+            if (comboBox.SelectedItem != null) InitCOM(comboBox.Text);
         }
     }
 }
