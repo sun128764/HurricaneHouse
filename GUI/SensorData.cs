@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using System.Windows;
 
 namespace GUI
 {
@@ -14,6 +9,7 @@ namespace GUI
     {
         // These fields hold the values for the public properties.
         private int TemperatureValue;
+
         private int BatteryLevelValue;
         public int PressureValue;
         private int WindSpeedValue;
@@ -21,9 +17,9 @@ namespace GUI
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        // This method is called by the Set accessor of each property.  
-        // The CallerMemberName attribute that is applied to the optional propertyName  
-        // parameter causes the property name of the caller to be substituted as an argument.  
+        // This method is called by the Set accessor of each property.
+        // The CallerMemberName attribute that is applied to the optional propertyName
+        // parameter causes the property name of the caller to be substituted as an argument.
         protected void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -44,6 +40,7 @@ namespace GUI
                 }
             }
         }
+
         public string BatteryLevel
         {
             get
@@ -59,6 +56,7 @@ namespace GUI
                 }
             }
         }
+
         public string Pressure
         {
             get
@@ -74,6 +72,7 @@ namespace GUI
                 }
             }
         }
+
         public string WindSpeed
         {
             get
@@ -89,6 +88,7 @@ namespace GUI
                 }
             }
         }
+
         public string Huminity
         {
             get
@@ -104,7 +104,6 @@ namespace GUI
                 }
             }
         }
-
 
         public void GetSensorData(string s)
         {

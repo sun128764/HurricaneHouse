@@ -1,15 +1,14 @@
 using NUnit.Framework;
-using System.Collections.Generic;
+
 namespace NUnitTestProject1
 {
     using DataCollectDaemon;
+
     public class Tests
     {
-        
         [SetUp]
         public void Setup()
         {
-            
         }
 
         [Test]

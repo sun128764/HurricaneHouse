@@ -1,22 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using LiveCharts.Geared;
+using System;
+using System.IO.Ports;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using LiveCharts;
-using LiveCharts.Wpf;
-using LiveCharts.Geared;
-using System.IO.Ports;
-using System.ComponentModel;
 
 namespace GUI
 {
@@ -31,6 +18,7 @@ namespace GUI
         private int databu;
         private int datacoun;
         public string[] PortListData { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -49,7 +37,9 @@ namespace GUI
             //Perform actions when SelectedItem changes
             MessageBox.Show(sensorData.Pressure);
         }
+
         public SerialPort serialPort;//串口对象类
+
         public bool InitCOM(string PortName)
         {
             serialPort = new SerialPort(PortName, 9600, Parity.None, 8, StopBits.One);
@@ -58,6 +48,7 @@ namespace GUI
             serialPort.RtsEnable = true;
             return OpenPort();//串口打开
         }
+
         /// 数据接收事件
         private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
@@ -78,6 +69,7 @@ namespace GUI
             }
             //MessageBox.Show(sensorData.Pressure);
         }
+
         //
 
         //打开串口的方法
@@ -98,6 +90,7 @@ namespace GUI
                 return false;
             }
         }
+
         //向串口发送数据
         public void SendCommand(string CommandString)
         {

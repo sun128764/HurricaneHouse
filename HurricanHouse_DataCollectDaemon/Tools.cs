@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.IO.Ports;
+using System.Text.RegularExpressions;
 
 namespace DataCollectDaemon
 {
@@ -37,11 +36,10 @@ namespace DataCollectDaemon
                 return null;
             }
         }
+
         public class SerialTools
         {
-            
-
-            static bool isPort() 
+            private static bool isPort()
             {
                 string[] str = SerialPort.GetPortNames();
                 if (str == null)
@@ -50,9 +48,6 @@ namespace DataCollectDaemon
                 }
                 else return true;
             }
-
-            
-
         }
     }
 }
