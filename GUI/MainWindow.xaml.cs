@@ -18,6 +18,7 @@ namespace GUI
         private int databu;
         private int datacoun;
         public string[] PortListData { get; set; }
+        public Format.PlotControl PlotControl { get; set; }
 
         public MainWindow()
         {
@@ -25,10 +26,15 @@ namespace GUI
             PortListData = SerialPort.GetPortNames();
             sensorData = new SensorData();
             Values = new GearedValues<double> { };
+            PlotControl = new Format.PlotControl();
+            PlotControl.Scale = 50;
             databu = 0;
             datacoun = 0;
             DataContext = this;
+            sll.DataContext = PlotControl;
+            lll.DataContext = PlotControl;
             Status.DataContext = sensorData;
+
             //InitCOM("COM3");
         }
 

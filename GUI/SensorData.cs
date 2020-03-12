@@ -13,7 +13,7 @@ namespace GUI
         private int BatteryLevelValue;
         public int PressureValue;
         private int WindSpeedValue;
-        private int HuminityValue;
+        private int HuminityValue; 
 
         public event PropertyChangedEventHandler PropertyChanged;
 
