@@ -10,10 +10,16 @@ using System.Runtime.CompilerServices;
 
 namespace Format
 {
-    public class MeasureModel
+    public class TimeSeries
     {
-        public DateTime DateTime { get; set; }
-        public double Value { get; set; }
+        public DateTime DateTime;
+        public double Value;
+        public TimeSeries(DateTime time,double value)
+        {
+            DateTime = time;
+            Value = value;
+        }
+
     }
 
     public class PlotControl : INotifyPropertyChanged

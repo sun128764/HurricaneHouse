@@ -2,18 +2,22 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-
+using System.Collections.Generic;
 namespace GUI
 {
     public class SensorData : INotifyPropertyChanged
     {
         // These fields hold the values for the public properties.
         private int TemperatureValue;
-
         private int BatteryLevelValue;
         public int PressureValue;
         private int WindSpeedValue;
-        private int HuminityValue; 
+        private int HuminityValue;
+        public List<Format.TimeSeries> Pressure1m;
+        public List<Format.TimeSeries> Pressure5m;
+        public List<Format.TimeSeries> Pressure30m;
+        public List<Format.TimeSeries> Huminity5m;
+        public List<Format.TimeSeries> Temperature5m;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -111,13 +115,28 @@ namespace GUI
             MatchCollection match = regex.Matches(s);
             if (match.Count == 5)
             {
+                DateTime time = DateTime.Now;
                 int i = 0;
                 Temperature = match[i++].Value;
                 BatteryLevel = match[i++].Value;
                 Pressure = match[i++].Value;
                 WindSpeed = match[i++].Value;
                 Huminity = match[i++].Value;
+                AddData(ref Pressure1m, time, PressureValue, -1);
+                AddData(ref Pressure5m, time, PressureValue, -5);
+                AddData(ref Pressure30m, time, PressureValue, -30);
+                AddData(ref Temperature5m, time, TemperatureValue, -5);
+                AddData(ref Huminity5m, time, HuminityValue, -5);
             }
         }
+        private void AddData(ref List<Format.TimeSeries> series,DateTime time, double value, double interval)
+        {
+            series.Add(new Format.TimeSeries(time, value));
+            foreach(Format.TimeSeries series1 in series)
+            {
+                if (series1.DateTime < time.AddMinutes(interval)) series.Remove(series1);
+            }
+        }
+
     }
 }
