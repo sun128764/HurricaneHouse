@@ -106,6 +106,17 @@
                         <!--Notice we are using GLineSeries, instead of LineSeries-->
                         <geared:GLineSeries Values="{Binding Values}" />
                     </lvc:CartesianChart.Series>
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis DataContext="PlotControl"
+                          LabelFormatter="{Binding DateTimeFormatter}" 
+                          MaxValue="{Binding Max}" 
+                          MinValue="{Binding Min}"
+                          Unit="{Binding AxisUnit}">
+                            <lvc:Axis.Separator>
+                                <lvc:Separator Step="{Binding AxisStep}" />
+                            </lvc:Axis.Separator>
+                        </lvc:Axis>
+                    </lvc:CartesianChart.AxisX>
                 </lvc:CartesianChart>
             </Grid>
         </GroupBox>

@@ -13,11 +13,11 @@ namespace GUI
         public int PressureValue;
         private int WindSpeedValue;
         private int HuminityValue;
-        public List<Format.TimeSeries> Pressure1m;
-        public List<Format.TimeSeries> Pressure5m;
-        public List<Format.TimeSeries> Pressure30m;
-        public List<Format.TimeSeries> Huminity5m;
-        public List<Format.TimeSeries> Temperature5m;
+        public List<Format.TimeSeries> Pressure1m = new List<Format.TimeSeries>();
+        public List<Format.TimeSeries> Pressure5m = new List<Format.TimeSeries>();
+        public List<Format.TimeSeries> Pressure30m = new List<Format.TimeSeries>();
+        public List<Format.TimeSeries> Huminity5m = new List<Format.TimeSeries>();
+        public List<Format.TimeSeries> Temperature5m = new List<Format.TimeSeries>();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -129,13 +129,15 @@ namespace GUI
                 AddData(ref Huminity5m, time, HuminityValue, -5);
             }
         }
-        private void AddData(ref List<Format.TimeSeries> series,DateTime time, double value, double interval)
+        private void AddData(ref List<Format.TimeSeries> series, DateTime time, double value, double interval)
         {
             series.Add(new Format.TimeSeries(time, value));
-            foreach(Format.TimeSeries series1 in series)
+            List<int> remove = new List<int>();
+            foreach (Format.TimeSeries series1 in series)
             {
-                if (series1.DateTime < time.AddMinutes(interval)) series.Remove(series1);
+                if (series1.DateTime < time.AddMinutes(interval)) remove.Add(series.IndexOf(series1));
             }
+            foreach (int i in remove) series.RemoveAt(i);
         }
 
     }

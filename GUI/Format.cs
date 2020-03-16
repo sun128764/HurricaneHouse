@@ -14,7 +14,7 @@ namespace Format
     {
         public DateTime DateTime;
         public double Value;
-        public TimeSeries(DateTime time,double value)
+        public TimeSeries(DateTime time, double value)
         {
             DateTime = time;
             Value = value;
@@ -40,7 +40,7 @@ namespace Format
         public int Scale
         {
             get { return this._Scale; }
-            set { if (this._Scale != value) { this._Scale = value; NotifyPropertyChanged(); } }
+            set { if (this._Scale != value) { this._Scale = value; this.Max = DateTime.Now; this.Min = DateTime.Now.AddMinutes(-value * 0.25 - 5); NotifyPropertyChanged(); } }
         }
         public DateTime Max
         {
@@ -50,7 +50,7 @@ namespace Format
         public DateTime Min
         {
             get { return this._min; }
-            set { if (this._min != value) { this._min = value;NotifyPropertyChanged(); } }
+            set { if (this._min != value) { this._min = value; NotifyPropertyChanged(); } }
         }
     }
 }
