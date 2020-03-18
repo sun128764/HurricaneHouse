@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using LiveCharts;
+using LiveCharts.Configurations;
 
 
 
@@ -24,6 +26,9 @@ namespace Format
 
     public class PlotControl : INotifyPropertyChanged
     {
+        public Func<double, string> DateTimeFormatter { get; set; }
+        public double AxisStep { get; set; }
+        public double AxisUnit { get; set; }
         //public int Scale { set; get; }
         // These fields hold the values for the public properties.
         private int _Scale;
@@ -40,17 +45,34 @@ namespace Format
         public int Scale
         {
             get { return this._Scale; }
-            set { if (this._Scale != value) { this._Scale = value; this.Max = DateTime.Now; this.Min = DateTime.Now.AddMinutes(-value * 0.25 - 5); NotifyPropertyChanged(); } }
+            set { if (this._Scale != value) { this._Scale = value; this.Max = DateTime.Now.Ticks; this.Min = DateTime.Now.AddMinutes(-value * 0.25 - 5).Ticks; NotifyPropertyChanged(); } }
         }
-        public DateTime Max
+        public long Max
         {
-            get { return this._max; }
-            set { if (this._max != value) { this._max = value; NotifyPropertyChanged(); } }
+            get { return this._max.Ticks; }
+            set { DateTime dateTime = new DateTime(value); if (this._max != dateTime) { this._max = dateTime; NotifyPropertyChanged(); } }
         }
-        public DateTime Min
+        public long Min
         {
-            get { return this._min; }
-            set { if (this._min != value) { this._min = value; NotifyPropertyChanged(); } }
+            get { return this._min.Ticks; }
+            set { DateTime dateTime = new DateTime(value); if (this._min != dateTime) { this._min = dateTime; NotifyPropertyChanged(); } }
         }
+        public void RefreshLimit(DateTime dateTime)
+        {
+            this.Max = dateTime.Ticks;
+            this.Min = dateTime.AddMinutes(-Scale * 0.25 - 5).Ticks;
+        }
+        public PlotControl()
+        {
+            //lets set how to display the X Labels
+            DateTimeFormatter = value => new DateTime((long)value).ToString("mm:ss");
+
+            //AxisStep forces the distance between each separator in the X axis
+            AxisStep = TimeSpan.FromSeconds(1).Ticks;
+            //AxisUnit forces lets the axis know that we are plotting seconds
+            //this is not always necessary, but it can prevent wrong labeling
+            AxisUnit = TimeSpan.TicksPerSecond;
+        }
+
     }
 }
