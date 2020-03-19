@@ -100,7 +100,7 @@
 
         <GroupBox Name="Monitor" Header="Real-time Monitor" HorizontalAlignment="Left" Height="336" Margin="159,46,0,0" VerticalAlignment="Top" Width="611" Background="#FFF8F9E4">
             <Grid>
-                <lvc:CartesianChart AnimationsSpeed="0:0:0.5" Hoverable="False">
+                <lvc:CartesianChart AnimationsSpeed="0:0:0.5" Hoverable="False" DisableAnimations="True" DataTooltip="{x:Null}">
                     <lvc:CartesianChart.Series>
                         <!--Notice we are using GLineSeries, instead of LineSeries-->
                         <lvc:LineSeries Values="{Binding Values}"/>
