@@ -21,7 +21,7 @@ namespace GUI
 
         private const double RefVol = 3.3;
         private const int BitDepth = 16;
-        private static object locker = new object();
+        private static readonly object locker = new object();
         public bool isSI = true;
 
         public List<Format.TimeSeries> Pressure1m = new List<Format.TimeSeries>();

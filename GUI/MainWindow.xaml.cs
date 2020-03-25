@@ -1,6 +1,4 @@
-﻿using LiveCharts;
-using LiveCharts.Configurations;
-using System;
+﻿using System;
 using System.IO.Ports;
 using System.Text;
 using System.Windows;
@@ -14,7 +12,6 @@ namespace GUI
     public partial class MainWindow : Window
     {
         public SensorData sensorData { get; set; }
-        public ChartValues<Format.TimeSeries> Values { get; set; }
         
 
         private int databu;
@@ -26,18 +23,7 @@ namespace GUI
         {
             InitializeComponent();
 
-            var mapper = Mappers.Xy<Format.TimeSeries>()
-                .X(model => model.DateTime.Ticks)   //use DateTime.Ticks as X
-                .Y(model => model.Value);           //use the value property as Y
-
-            //lets save the mapper globally.
-            Charting.For<Format.TimeSeries>(mapper);
-
-            //the values property will store our values array
-            Values = new ChartValues<Format.TimeSeries>();
-
-           
-
+                  
             PortListData = SerialPort.GetPortNames();
             sensorData = new SensorData();
             //Values = new ChartValues<double> { };
@@ -46,7 +32,6 @@ namespace GUI
             databu = 0;
             datacoun = 0;
             DataContext = this;
-            control.DataContext = PlotControl;
             sll.DataContext = PlotControl;
             lll.DataContext = PlotControl;
             Status.DataContext = sensorData;
@@ -85,9 +70,7 @@ namespace GUI
             }
             else
             {
-                Values.Add(new Format.TimeSeries(DateTime.Now, ((double)databu / datacoun / 65536d + 0.095) / 0.009));
-                PlotControl.RefreshLimit(DateTime.Now);
-                while (Values.Count > 3600) Values.RemoveAt(0);
+                
                 databu = 0;
                 datacoun = 0;
             }

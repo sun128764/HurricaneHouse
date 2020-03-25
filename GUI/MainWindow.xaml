@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
         Title="FIT Hurricane House Monitor" Height="600" Width="800">
@@ -100,23 +99,7 @@
 
         <GroupBox Name="Monitor" Header="Real-time Monitor" HorizontalAlignment="Left" Height="336" Margin="159,46,0,0" VerticalAlignment="Top" Width="611" Background="#FFF8F9E4">
             <Grid>
-                <lvc:CartesianChart AnimationsSpeed="0:0:0.5" Hoverable="False" DisableAnimations="True" DataTooltip="{x:Null}">
-                    <lvc:CartesianChart.Series>
-                        <!--Notice we are using GLineSeries, instead of LineSeries-->
-                        <lvc:LineSeries Values="{Binding Values}"/>
-                    </lvc:CartesianChart.Series>
-                    <lvc:CartesianChart.AxisX>
-                        <lvc:Axis Name="control"
-                          LabelFormatter="{Binding DateTimeFormatter}" 
-                          MaxValue="{Binding Max}" 
-                          MinValue="{Binding Min}"
-                          Unit="{Binding AxisUnit}">
-                            <lvc:Axis.Separator>
-                                <lvc:Separator Step="{Binding AxisStep}" />
-                            </lvc:Axis.Separator>
-                        </lvc:Axis>
-                    </lvc:CartesianChart.AxisX>
-                </lvc:CartesianChart>
+               
             </Grid>
         </GroupBox>
         <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Height="auto" Margin="0,10,20,0" Width="auto" Orientation="Horizontal">
