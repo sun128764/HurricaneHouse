@@ -3,6 +3,15 @@ using System.IO.Ports;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Collections.ObjectModel;
+using System.Windows.Media;
+using SciChart.Charting.Model.ChartSeries;
+using SciChart.Charting.Model.DataSeries;
+using SciChart.Data.Model;
+using SciChart.Charting.Visuals;
+using SciChart.Charting.Visuals.Axes;
+using SciChart.Charting.ChartModifiers;
+using SciChart.Charting.Visuals.Annotations;
 
 namespace GUI
 {
@@ -23,7 +32,19 @@ namespace GUI
         {
             InitializeComponent();
 
-                  
+            // Create the chart surface
+            var sciChartSurface = new SciChartSurface();
+
+            // Create the X and Y Axis
+            var xAxis = new NumericAxis() { AxisTitle = "Number of Samples (per series)" };
+            var yAxis = new NumericAxis() { AxisTitle = "Value" };
+
+            sciChartSurface.XAxis = xAxis;
+            sciChartSurface.YAxis = yAxis;
+
+            // Specify Interactivity Modifiers
+            sciChartSurface.ChartModifier = new ModifierGroup(new RubberBandXyZoomModifier(), new ZoomExtentsModifier());
+
             PortListData = SerialPort.GetPortNames();
             sensorData = new SensorData();
             //Values = new ChartValues<double> { };
@@ -35,10 +56,11 @@ namespace GUI
             sll.DataContext = PlotControl;
             lll.DataContext = PlotControl;
             Status.DataContext = sensorData;
+            
 
             //InitCOM("COM3");
         }
-
+        
         private void SelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e)
         {
             //Perform actions when SelectedItem changes

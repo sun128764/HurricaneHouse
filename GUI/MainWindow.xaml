@@ -3,9 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:s="http://schemas.abtsoftware.co.uk/scichart"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
         Title="FIT Hurricane House Monitor" Height="600" Width="800">
+        
     <Grid>
         <GroupBox Header="Network Status" HorizontalAlignment="Left" Height="336" Margin="26,46,0,0" VerticalAlignment="Top" Width="128">
             <TreeView HorizontalAlignment="Left" Height="304" VerticalAlignment="Top" Width="118" Margin="0,10,-2,0" Background="#FFF8F9E4" SelectedItemChanged="SelectionChanged">
@@ -99,7 +101,32 @@
 
         <GroupBox Name="Monitor" Header="Real-time Monitor" HorizontalAlignment="Left" Height="336" Margin="159,46,0,0" VerticalAlignment="Top" Width="611" Background="#FFF8F9E4">
             <Grid>
-               
+                <!--  Create the chart surface  -->
+                <!-- where xmlns:s="http://schemas.abtsoftware.co.uk/scichart" -->
+                <s:SciChartSurface x:Name="sciChartSurface">
+                    <!--  Define RenderableSeries  -->
+                    <!-- where xmlns:s="http://schemas.abtsoftware.co.uk/scichart" -->
+                    <s:SciChartSurface.RenderableSeries>
+                        <s:FastLineRenderableSeries x:Name="LineSeries" Stroke="#FF4083B7"/>
+                        
+                       
+                    </s:SciChartSurface.RenderableSeries>
+                    <!--  Create an X Axis  -->
+                    <s:SciChartSurface.XAxis>
+                        <s:NumericAxis AxisTitle="Time"/>
+                    </s:SciChartSurface.XAxis>
+                    <!--  Create a Y Axis  -->
+                    <s:SciChartSurface.YAxis>
+                        <s:NumericAxis AxisTitle="Value"/>
+                    </s:SciChartSurface.YAxis>
+                    <!--  Specify interactivity modifiers  -->
+                    <s:SciChartSurface.ChartModifier>
+                        <s:ModifierGroup>
+                            <s:RubberBandXyZoomModifier />
+                            <s:ZoomExtentsModifier />
+                        </s:ModifierGroup>
+                    </s:SciChartSurface.ChartModifier>
+                </s:SciChartSurface>
             </Grid>
         </GroupBox>
         <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Height="auto" Margin="0,10,20,0" Width="auto" Orientation="Horizontal">
