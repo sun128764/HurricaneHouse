@@ -113,7 +113,7 @@
                     </s:SciChartSurface.RenderableSeries>
                     <!--  Create an X Axis  -->
                     <s:SciChartSurface.XAxis>
-                        <s:NumericAxis AxisTitle="Time"/>
+                        <s:DateTimeAxis AxisTitle="Time"/>
                     </s:SciChartSurface.XAxis>
                     <!--  Create a Y Axis  -->
                     <s:SciChartSurface.YAxis>

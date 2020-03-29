@@ -12,6 +12,7 @@ using SciChart.Charting.Visuals;
 using SciChart.Charting.Visuals.Axes;
 using SciChart.Charting.ChartModifiers;
 using SciChart.Charting.Visuals.Annotations;
+using SciChart.Charting.Model.DataSeries;
 
 namespace GUI
 {
@@ -28,6 +29,8 @@ namespace GUI
         public string[] PortListData { get; set; }
         public Format.PlotControl PlotControl { get; set; }
 
+        public XyDataSeries<DateTime, double> XyData;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -36,11 +39,12 @@ namespace GUI
             var sciChartSurface = new SciChartSurface();
 
             // Create the X and Y Axis
-            var xAxis = new NumericAxis() { AxisTitle = "Number of Samples (per series)" };
-            var yAxis = new NumericAxis() { AxisTitle = "Value" };
+            //var xAxis = new NumericAxis() { AxisTitle = "Time" };
+            //var yAxis = new NumericAxis() { AxisTitle = "Value" };
 
-            sciChartSurface.XAxis = xAxis;
-            sciChartSurface.YAxis = yAxis;
+            //sciChartSurface.XAxis = xAxis;
+            //sciChartSurface.YAxis = yAxis;
+            LineSeries.DataSeries = new XyDataSeries<DateTime, double>();
 
             // Specify Interactivity Modifiers
             sciChartSurface.ChartModifier = new ModifierGroup(new RubberBandXyZoomModifier(), new ZoomExtentsModifier());
@@ -56,6 +60,8 @@ namespace GUI
             sll.DataContext = PlotControl;
             lll.DataContext = PlotControl;
             Status.DataContext = sensorData;
+            XyData = new XyDataSeries<DateTime, double>();
+           
             
 
             //InitCOM("COM3");
@@ -92,7 +98,8 @@ namespace GUI
             }
             else
             {
-                
+                XyData.Append(DateTime.Now, databu / datacoun);
+                LineSeries.DataSeries = XyData;
                 databu = 0;
                 datacoun = 0;
             }
