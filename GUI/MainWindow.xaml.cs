@@ -3,16 +3,10 @@ using System.IO.Ports;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Collections.ObjectModel;
-using System.Windows.Media;
-using SciChart.Charting.Model.ChartSeries;
 using SciChart.Charting.Model.DataSeries;
-using SciChart.Data.Model;
 using SciChart.Charting.Visuals;
-using SciChart.Charting.Visuals.Axes;
 using SciChart.Charting.ChartModifiers;
-using SciChart.Charting.Visuals.Annotations;
-using SciChart.Charting.Model.DataSeries;
+
 
 namespace GUI
 {
@@ -29,7 +23,6 @@ namespace GUI
         public string[] PortListData { get; set; }
         public Format.PlotControl PlotControl { get; set; }
 
-        public XyDataSeries<DateTime, double> XyData;
 
         public MainWindow()
         {
@@ -60,10 +53,6 @@ namespace GUI
             sll.DataContext = PlotControl;
             lll.DataContext = PlotControl;
             Status.DataContext = sensorData;
-            XyData = new XyDataSeries<DateTime, double>();
-           
-            
-
             //InitCOM("COM3");
         }
         
@@ -98,8 +87,8 @@ namespace GUI
             }
             else
             {
-                XyData.Append(DateTime.Now, databu / datacoun);
-                LineSeries.DataSeries = XyData;
+                sensorData.Pressure1mLine.Append(DateTime.Now, databu / datacoun);
+                LineSeries.DataSeries = sensorData.Pressure1mLine;
                 databu = 0;
                 datacoun = 0;
             }
@@ -138,6 +127,11 @@ namespace GUI
         {
             ComboBox comboBox = PortList;
             if (comboBox.SelectedItem != null) InitCOM(comboBox.Text);
+        }
+
+        private void Label_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            //System.Diagnostics.Process.Start("Explorer.exe", @"/select,C:\mylog.log");
         }
     }
 }
