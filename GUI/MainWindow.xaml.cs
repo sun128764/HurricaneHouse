@@ -1,10 +1,13 @@
-﻿using LiveCharts;
-using LiveCharts.Configurations;
-using System;
+﻿using System;
 using System.IO.Ports;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using SciChart.Charting.Model.DataSeries;
+using SciChart.Charting.Visuals;
+using SciChart.Charting.ChartModifiers;
+using System.Threading;
+
 
 namespace GUI
 {
@@ -14,30 +17,33 @@ namespace GUI
     public partial class MainWindow : Window
     {
         public SensorData sensorData { get; set; }
-        public ChartValues<Format.TimeSeries> Values { get; set; }
-        
+
 
         private int databu;
         private int datacoun;
         public string[] PortListData { get; set; }
         public Format.PlotControl PlotControl { get; set; }
 
+
         public MainWindow()
         {
             InitializeComponent();
 
-            var mapper = Mappers.Xy<Format.TimeSeries>()
-                .X(model => model.DateTime.Ticks)   //use DateTime.Ticks as X
-                .Y(model => model.Value);           //use the value property as Y
+            // Create the chart surface
+            var sciChartSurface = new SciChartSurface();
 
-            //lets save the mapper globally.
-            Charting.For<Format.TimeSeries>(mapper);
+            // Create the X and Y Axis
+            //var xAxis = new NumericAxis() { AxisTitle = "Time" };
+            //var yAxis = new NumericAxis() { AxisTitle = "Value" };
 
-            //the values property will store our values array
-            Values = new ChartValues<Format.TimeSeries>();
+            //sciChartSurface.XAxis = xAxis;
+            //sciChartSurface.YAxis = yAxis;
+            // Instantiate the ViewportManager here
+            //double windowSize = 1000.0;
+            LineSeries.DataSeries = new XyDataSeries<DateTime, double>();
 
-           
-
+            // Specify Interactivity Modifiers
+            //sciChartSurface.ChartModifier = new ModifierGroup(new RubberBandXyZoomModifier(), new ZoomExtentsModifier());
             PortListData = SerialPort.GetPortNames();
             sensorData = new SensorData();
             //Values = new ChartValues<double> { };
@@ -46,9 +52,9 @@ namespace GUI
             databu = 0;
             datacoun = 0;
             DataContext = this;
-            control.DataContext = PlotControl;
             sll.DataContext = PlotControl;
             lll.DataContext = PlotControl;
+
             Status.DataContext = sensorData;
 
             //InitCOM("COM3");
@@ -57,7 +63,8 @@ namespace GUI
         private void SelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e)
         {
             //Perform actions when SelectedItem changes
-            MessageBox.Show(sensorData.Pressure);
+            //MessageBox.Show(sciChartSurface.ViewportManager.);
+
         }
 
         public SerialPort serialPort;//串口对象类
@@ -85,16 +92,25 @@ namespace GUI
             }
             else
             {
-                Values.Add(new Format.TimeSeries(DateTime.Now, ((double)databu / datacoun / 65536d + 0.095) / 0.009));
-                PlotControl.RefreshLimit(DateTime.Now);
-                while (Values.Count > 3600) Values.RemoveAt(0);
+                using (sciChartSurface.SuspendUpdates())
+                {
+                    sensorData.Pressure1mLine.Append(DateTime.Now, ((databu / datacoun) / 65536d + 0.095) / 0.009);
+                    
+                    //if (sciChartSurface.ZoomState == ZoomStates.AtExtents)
+                    //{
+                    //    PlotControl.RefreshLimit(DateTime.Now);
+                    //    sciChartSurface.XAxis.VisibleRange = new SciChart.Data.Model.DateRange(PlotControl.Min, PlotControl.Max);
+                    //}
+
+
+                    LineSeries.DataSeries = sensorData.Pressure1mLine;
+                }
                 databu = 0;
                 datacoun = 0;
             }
             //MessageBox.Show(sensorData.Pressure);
         }
 
-        //
 
         //打开串口的方法
         public bool OpenPort()
@@ -126,6 +142,11 @@ namespace GUI
         {
             ComboBox comboBox = PortList;
             if (comboBox.SelectedItem != null) InitCOM(comboBox.Text);
+        }
+
+        private void Label_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            //System.Diagnostics.Process.Start("Explorer.exe", @"/select,C:\mylog.log");
         }
     }
 }

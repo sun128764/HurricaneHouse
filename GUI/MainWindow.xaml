@@ -3,10 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        xmlns:s="http://schemas.abtsoftware.co.uk/scichart"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
         Title="FIT Hurricane House Monitor" Height="600" Width="800">
+        
     <Grid>
         <GroupBox Header="Network Status" HorizontalAlignment="Left" Height="336" Margin="26,46,0,0" VerticalAlignment="Top" Width="128">
             <TreeView HorizontalAlignment="Left" Height="304" VerticalAlignment="Top" Width="118" Margin="0,10,-2,0" Background="#FFF8F9E4" SelectedItemChanged="SelectionChanged">
@@ -14,7 +15,7 @@
                     <StackPanel Name="Sensor1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="-15,0,0,0">
                         <CheckBox Name="chk" VerticalAlignment="Center" HorizontalAlignment="Left"></CheckBox>
                         <Image Source="ok.png" Width="13" VerticalAlignment="Center" />
-                        <Label Content="Sensor1" Height="auto" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" />
+                        <Label Content="Sensor1" Height="auto" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" MouseDoubleClick="Label_MouseDoubleClick"/>
                     </StackPanel>
                 </TreeViewItem>
             </TreeView>
@@ -100,23 +101,43 @@
 
         <GroupBox Name="Monitor" Header="Real-time Monitor" HorizontalAlignment="Left" Height="336" Margin="159,46,0,0" VerticalAlignment="Top" Width="611" Background="#FFF8F9E4">
             <Grid>
-                <lvc:CartesianChart AnimationsSpeed="0:0:0.5" Hoverable="False" DisableAnimations="True" DataTooltip="{x:Null}">
-                    <lvc:CartesianChart.Series>
-                        <!--Notice we are using GLineSeries, instead of LineSeries-->
-                        <lvc:LineSeries Values="{Binding Values}"/>
-                    </lvc:CartesianChart.Series>
-                    <lvc:CartesianChart.AxisX>
-                        <lvc:Axis Name="control"
-                          LabelFormatter="{Binding DateTimeFormatter}" 
-                          MaxValue="{Binding Max}" 
-                          MinValue="{Binding Min}"
-                          Unit="{Binding AxisUnit}">
-                            <lvc:Axis.Separator>
-                                <lvc:Separator Step="{Binding AxisStep}" />
-                            </lvc:Axis.Separator>
-                        </lvc:Axis>
-                    </lvc:CartesianChart.AxisX>
-                </lvc:CartesianChart>
+                <!--  Create the chart surface  -->
+                <!-- where xmlns:s="http://schemas.abtsoftware.co.uk/scichart" -->
+                <s:SciChartSurface x:Name="sciChartSurface">
+                    <!--  Define RenderableSeries  -->
+                    <!-- where xmlns:s="http://schemas.abtsoftware.co.uk/scichart" -->
+                    <s:SciChartSurface.RenderableSeries>
+                        <s:FastLineRenderableSeries x:Name="LineSeries" Stroke="#FF4083B7"/>
+                        
+                       
+                    </s:SciChartSurface.RenderableSeries>
+                    <!--  Create an X Axis  -->
+                    <s:SciChartSurface.XAxis>
+                        <s:DateTimeAxis AxisTitle="Time" DataContext="PlotControl" VisibleRangeLimit="{Binding Limit}" VisibleRangeLimitMode="MinMax"/>
+                    </s:SciChartSurface.XAxis>
+                    <!--  Create a Y Axis  -->
+                    <s:SciChartSurface.YAxis>
+                        <s:NumericAxis AxisTitle="Pressure (kPa)"/>
+                    </s:SciChartSurface.YAxis>
+                    <!--  Specify interactivity modifiers  -->
+                    <s:SciChartSurface.ChartModifier>
+                        <s:ModifierGroup>
+                            <s:RubberBandXyZoomModifier ExecuteOn="MouseLeftButton"
+                                                 RubberBandFill="#33FFFFFF" RubberBandStroke="#AAFFFFFF"
+                                                 RubberBandStrokeDashArray="2 2"/>
+                            <!-- Allow pan on Right mouse drag -->
+                            <s:ZoomPanModifier ExecuteOn="MouseRightButton" ClipModeX="None" />
+                            <!-- Allow Dragging YAxis to Scale -->
+                            <s:YAxisDragModifier DragMode="Scale"/>
+                            <!-- Allow Dragging XAxis to Pan -->
+                            <s:XAxisDragModifier DragMode="Pan"/>
+                            <!-- Allow Mousewheel Zoom -->
+                            <s:MouseWheelZoomModifier/>
+                            <!-- Allow Zoom to Extents on double click -->
+                            <s:ZoomExtentsModifier ExecuteOn="MouseDoubleClick" />
+                        </s:ModifierGroup>
+                    </s:SciChartSurface.ChartModifier>
+                </s:SciChartSurface>
             </Grid>
         </GroupBox>
         <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Height="auto" Margin="0,10,20,0" Width="auto" Orientation="Horizontal">

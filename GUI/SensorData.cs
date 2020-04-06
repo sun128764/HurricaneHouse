@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Linq;
+using SciChart.Charting.Model.DataSeries;
 namespace GUI
 {
     public class SensorData : INotifyPropertyChanged
@@ -21,7 +22,7 @@ namespace GUI
 
         private const double RefVol = 3.3;
         private const int BitDepth = 16;
-        private static object locker = new object();
+        private static readonly object locker = new object();
         public bool isSI = true;
 
         public List<Format.TimeSeries> Pressure1m = new List<Format.TimeSeries>();
@@ -29,6 +30,10 @@ namespace GUI
         public List<Format.TimeSeries> Pressure30m = new List<Format.TimeSeries>();
         public List<Format.TimeSeries> Huminity5m = new List<Format.TimeSeries>();
         public List<Format.TimeSeries> Temperature5m = new List<Format.TimeSeries>();
+
+        public XyDataSeries<DateTime, double> PressureLine = new XyDataSeries<DateTime, double>();
+        public XyDataSeries<DateTime, double> Pressure1mLine = new XyDataSeries<DateTime, double>();
+        public XyDataSeries<DateTime, double> Pressure5mLine = new XyDataSeries<DateTime, double>();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
