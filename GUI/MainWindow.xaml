@@ -113,17 +113,28 @@
                     </s:SciChartSurface.RenderableSeries>
                     <!--  Create an X Axis  -->
                     <s:SciChartSurface.XAxis>
-                        <s:DateTimeAxis AxisTitle="Time"/>
+                        <s:DateTimeAxis AxisTitle="Time" DataContext="PlotControl" VisibleRangeLimit="{Binding Limit}" VisibleRangeLimitMode="MinMax"/>
                     </s:SciChartSurface.XAxis>
                     <!--  Create a Y Axis  -->
                     <s:SciChartSurface.YAxis>
-                        <s:NumericAxis AxisTitle="Value"/>
+                        <s:NumericAxis AxisTitle="Pressure (kPa)"/>
                     </s:SciChartSurface.YAxis>
                     <!--  Specify interactivity modifiers  -->
                     <s:SciChartSurface.ChartModifier>
                         <s:ModifierGroup>
-                            <s:RubberBandXyZoomModifier />
-                            <s:ZoomExtentsModifier />
+                            <s:RubberBandXyZoomModifier ExecuteOn="MouseLeftButton"
+                                                 RubberBandFill="#33FFFFFF" RubberBandStroke="#AAFFFFFF"
+                                                 RubberBandStrokeDashArray="2 2"/>
+                            <!-- Allow pan on Right mouse drag -->
+                            <s:ZoomPanModifier ExecuteOn="MouseRightButton" ClipModeX="None" />
+                            <!-- Allow Dragging YAxis to Scale -->
+                            <s:YAxisDragModifier DragMode="Scale"/>
+                            <!-- Allow Dragging XAxis to Pan -->
+                            <s:XAxisDragModifier DragMode="Pan"/>
+                            <!-- Allow Mousewheel Zoom -->
+                            <s:MouseWheelZoomModifier/>
+                            <!-- Allow Zoom to Extents on double click -->
+                            <s:ZoomExtentsModifier ExecuteOn="MouseDoubleClick" />
                         </s:ModifierGroup>
                     </s:SciChartSurface.ChartModifier>
                 </s:SciChartSurface>

@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using SciChart.Charting.Model.DataSeries;
 using SciChart.Charting.Visuals;
 using SciChart.Charting.ChartModifiers;
+using System.Threading;
 
 
 namespace GUI
@@ -16,7 +17,7 @@ namespace GUI
     public partial class MainWindow : Window
     {
         public SensorData sensorData { get; set; }
-        
+
 
         private int databu;
         private int datacoun;
@@ -37,11 +38,12 @@ namespace GUI
 
             //sciChartSurface.XAxis = xAxis;
             //sciChartSurface.YAxis = yAxis;
+            // Instantiate the ViewportManager here
+            //double windowSize = 1000.0;
             LineSeries.DataSeries = new XyDataSeries<DateTime, double>();
 
             // Specify Interactivity Modifiers
-            sciChartSurface.ChartModifier = new ModifierGroup(new RubberBandXyZoomModifier(), new ZoomExtentsModifier());
-
+            //sciChartSurface.ChartModifier = new ModifierGroup(new RubberBandXyZoomModifier(), new ZoomExtentsModifier());
             PortListData = SerialPort.GetPortNames();
             sensorData = new SensorData();
             //Values = new ChartValues<double> { };
@@ -52,14 +54,17 @@ namespace GUI
             DataContext = this;
             sll.DataContext = PlotControl;
             lll.DataContext = PlotControl;
+
             Status.DataContext = sensorData;
+
             //InitCOM("COM3");
         }
-        
+
         private void SelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e)
         {
             //Perform actions when SelectedItem changes
-            MessageBox.Show(sensorData.Pressure);
+            //MessageBox.Show(sciChartSurface.ViewportManager.);
+
         }
 
         public SerialPort serialPort;//串口对象类
@@ -87,15 +92,25 @@ namespace GUI
             }
             else
             {
-                sensorData.Pressure1mLine.Append(DateTime.Now, databu / datacoun);
-                LineSeries.DataSeries = sensorData.Pressure1mLine;
+                using (sciChartSurface.SuspendUpdates())
+                {
+                    sensorData.Pressure1mLine.Append(DateTime.Now, ((databu / datacoun) / 65536d + 0.095) / 0.009);
+                    
+                    //if (sciChartSurface.ZoomState == ZoomStates.AtExtents)
+                    //{
+                    //    PlotControl.RefreshLimit(DateTime.Now);
+                    //    sciChartSurface.XAxis.VisibleRange = new SciChart.Data.Model.DateRange(PlotControl.Min, PlotControl.Max);
+                    //}
+
+
+                    LineSeries.DataSeries = sensorData.Pressure1mLine;
+                }
                 databu = 0;
                 datacoun = 0;
             }
             //MessageBox.Show(sensorData.Pressure);
         }
 
-        //
 
         //打开串口的方法
         public bool OpenPort()
