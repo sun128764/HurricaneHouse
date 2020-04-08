@@ -32,6 +32,20 @@ namespace Format
         public event PropertyChangedEventHandler PropertyChanged;
         private DateTime _max;
         private DateTime _min;
+
+        private IRange _xVisibleRange;
+        public IRange XVisibleRange
+        {
+            get { return _xVisibleRange; }
+            set
+            {
+                if (_xVisibleRange != value)
+                {
+                    _xVisibleRange = value;
+                    NotifyPropertyChanged("XVisibleRange");
+                }
+            }
+        }
         // This method is called by the Set accessor of each property.
         // The CallerMemberName attribute that is applied to the optional propertyName
         // parameter causes the property name of the caller to be substituted as an argument.
