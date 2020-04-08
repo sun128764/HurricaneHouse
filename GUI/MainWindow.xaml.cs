@@ -42,7 +42,7 @@ namespace GUI
             // Instantiate the ViewportManager here
             //double windowSize = 1000.0;
             LineSeries.DataSeries = new XyDataSeries<DateTime, double>();
-            
+            LineSeries.DataSeries.SeriesName = "Pressure";
             // Specify Interactivity Modifiers
             //sciChartSurface.ChartModifier = new ModifierGroup(new RubberBandXyZoomModifier(), new ZoomExtentsModifier());
             PortListData = SerialPort.GetPortNames();

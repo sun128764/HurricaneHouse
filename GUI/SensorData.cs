@@ -31,8 +31,9 @@ namespace GUI
         public List<Format.TimeSeries> Huminity5m = new List<Format.TimeSeries>();
         public List<Format.TimeSeries> Temperature5m = new List<Format.TimeSeries>();
 
-        public XyDataSeries<DateTime, double> PressureLine = new XyDataSeries<DateTime, double>();
-        public XyDataSeries<DateTime, double> Pressure1mLine = new XyDataSeries<DateTime, double>();
+        public XyDataSeries<DateTime, double> PressureLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure" };
+        
+        public XyDataSeries<DateTime, double> Pressure1mLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure" };
         public XyDataSeries<DateTime, double> Pressure5mLine = new XyDataSeries<DateTime, double>();
 
         public event PropertyChangedEventHandler PropertyChanged;

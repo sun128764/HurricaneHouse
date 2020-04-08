@@ -130,11 +130,17 @@
                             <!-- Allow Dragging YAxis to Scale -->
                             <s:YAxisDragModifier DragMode="Scale"/>
                             <!-- Allow Dragging XAxis to Pan -->
-                            <s:XAxisDragModifier DragMode="Pan"/>
+                            <s:XAxisDragModifier DragMode="Scale"/>
                             <!-- Allow Mousewheel Zoom -->
                             <s:MouseWheelZoomModifier/>
                             <!-- Allow Zoom to Extents on double click -->
                             <s:ZoomExtentsModifier ExecuteOn="MouseDoubleClick"/>
+                            <s:LegendModifier ShowLegend="True" Orientation="Horizontal"
+                                       VerticalAlignment="Bottom"                                     
+                                       HorizontalAlignment="Left"
+                                       LegendPlacement="Inside" />
+                            <!-- Add a RolloverModifier to the chart (shows vertical line tooltips -->
+                            <s:RolloverModifier ExecuteOn="MouseMove" ShowTooltipOn="MouseHover"/>
                         </s:ModifierGroup>
                     </s:SciChartSurface.ChartModifier>
                 </s:SciChartSurface>
