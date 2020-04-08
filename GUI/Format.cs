@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using SciChart.Data.Model;
+using SciChart.Charting.Visuals;
+
+
 
 namespace Format
 {
@@ -46,6 +49,19 @@ namespace Format
                 }
             }
         }
+
+        private ZoomStates _zoomeState;
+        public ZoomStates ZoomState {
+            get { return _zoomeState; }
+            set
+            {
+                if (_zoomeState != value)
+                {
+                    _zoomeState = value;
+                    NotifyPropertyChanged("ZoomState");
+                }
+            }
+        }
         // This method is called by the Set accessor of each property.
         // The CallerMemberName attribute that is applied to the optional propertyName
         // parameter causes the property name of the caller to be substituted as an argument.
@@ -76,8 +92,11 @@ namespace Format
         {
             this.Max = dateTime;
             this.Min = dateTime.AddMinutes(-Scale * 0.25 - 5);
+            IRange range = XVisibleRange;
+            if (ZoomState == ZoomStates.UserZooming) XVisibleRange = range;
+            else XVisibleRange = new DateRange(this.Min, this.Max);
         }
-        
+
 
     }
 }

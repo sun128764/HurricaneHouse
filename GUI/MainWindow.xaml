@@ -103,7 +103,7 @@
             <Grid>
                 <!--  Create the chart surface  -->
                 <!-- where xmlns:s="http://schemas.abtsoftware.co.uk/scichart" -->
-                <s:SciChartSurface x:Name="sciChartSurface">
+                <s:SciChartSurface x:Name="sciChartSurface" ZoomState="{Binding ZoomState, Mode=TwoWay}">
                     <!--  Define RenderableSeries  -->
                     <!-- where xmlns:s="http://schemas.abtsoftware.co.uk/scichart" -->
                     <s:SciChartSurface.RenderableSeries>
@@ -113,7 +113,7 @@
                     </s:SciChartSurface.RenderableSeries>
                     <!--  Create an X Axis  -->
                     <s:SciChartSurface.XAxis>
-                        <s:DateTimeAxis AxisTitle="Time" DataContext="PlotControl" VisibleRangeLimit="{Binding Limit}" VisibleRangeLimitMode="MinMax"/>
+                        <s:DateTimeAxis AxisTitle="Time" VisibleRange="{Binding XVisibleRange, Mode=TwoWay}"/>
                     </s:SciChartSurface.XAxis>
                     <!--  Create a Y Axis  -->
                     <s:SciChartSurface.YAxis>
@@ -134,7 +134,7 @@
                             <!-- Allow Mousewheel Zoom -->
                             <s:MouseWheelZoomModifier/>
                             <!-- Allow Zoom to Extents on double click -->
-                            <s:ZoomExtentsModifier ExecuteOn="MouseDoubleClick" />
+                            <s:ZoomExtentsModifier ExecuteOn="MouseDoubleClick"/>
                         </s:ModifierGroup>
                     </s:SciChartSurface.ChartModifier>
                 </s:SciChartSurface>

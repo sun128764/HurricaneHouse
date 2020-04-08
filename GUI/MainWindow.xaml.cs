@@ -27,10 +27,11 @@ namespace GUI
 
         public MainWindow()
         {
+            PlotControl = new Format.PlotControl();
             InitializeComponent();
 
             // Create the chart surface
-            var sciChartSurface = new SciChartSurface();
+            //sciChartSurface = new SciChartSurface();
 
             // Create the X and Y Axis
             //var xAxis = new NumericAxis() { AxisTitle = "Time" };
@@ -41,20 +42,20 @@ namespace GUI
             // Instantiate the ViewportManager here
             //double windowSize = 1000.0;
             LineSeries.DataSeries = new XyDataSeries<DateTime, double>();
-
+            
             // Specify Interactivity Modifiers
             //sciChartSurface.ChartModifier = new ModifierGroup(new RubberBandXyZoomModifier(), new ZoomExtentsModifier());
             PortListData = SerialPort.GetPortNames();
             sensorData = new SensorData();
             //Values = new ChartValues<double> { };
-            PlotControl = new Format.PlotControl();
+            //PlotControl = new Format.PlotControl();
             PlotControl.Scale = 50;
             databu = 0;
             datacoun = 0;
             DataContext = this;
+            sciChartSurface.DataContext = PlotControl;
             sll.DataContext = PlotControl;
             lll.DataContext = PlotControl;
-
             Status.DataContext = sensorData;
 
             //InitCOM("COM3");
@@ -95,7 +96,7 @@ namespace GUI
                 using (sciChartSurface.SuspendUpdates())
                 {
                     sensorData.Pressure1mLine.Append(DateTime.Now, ((databu / datacoun) / 65536d + 0.095) / 0.009);
-                    
+                    PlotControl.RefreshLimit(DateTime.Now);
                     //if (sciChartSurface.ZoomState == ZoomStates.AtExtents)
                     //{
                     //    PlotControl.RefreshLimit(DateTime.Now);
