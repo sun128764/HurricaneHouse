@@ -61,11 +61,10 @@
                 <GroupBox Header="Wind" Grid.Row="0" Grid.Column="2" Margin="5" Height="auto">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="80"/>
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        <Canvas Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,5,5" MinHeight="80">
-                            <Image x:Name="WindSign" Source="{Binding WindSignImg}">
+                            <Image x:Name="WindSign" Source="cursor.png" Stretch="Fill" Width="30" Height="70" HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <Image.RenderTransform >
                                     <TransformGroup>
                                         <RotateTransform Angle="{Binding WindAngle}"/>
@@ -73,7 +72,7 @@
                                     </TransformGroup>
                                 </Image.RenderTransform>
                             </Image>
-                        </Canvas>
+
                         <StackPanel Orientation="Horizontal" Grid.Row="1">
                             <Label Content="Speed:"/>
                             <Label Content="{Binding WindSpeed}"/>
