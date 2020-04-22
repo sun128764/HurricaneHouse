@@ -18,12 +18,8 @@ namespace GUI
     {
         public SensorData sensorData { get; set; }
 
-
-        private int databu;
-        private int datacoun;
         public string[] PortListData { get; set; }
         public Format.PlotControl PlotControl { get; set; }
-
 
         public MainWindow()
         {
@@ -50,8 +46,6 @@ namespace GUI
             //Values = new ChartValues<double> { };
             //PlotControl = new Format.PlotControl();
             PlotControl.Scale = 50;
-            databu = 0;
-            datacoun = 0;
             DataContext = this;
             sciChartSurface.DataContext = PlotControl;
             sll.DataContext = PlotControl;
@@ -86,28 +80,16 @@ namespace GUI
             //serialPort.Read(readBuffer, 0, readBuffer.Length);
             string str = serialPort.ReadLine();
             sensorData.GetSensorData(str);
-            if (datacoun < 10)
+            using (sciChartSurface.SuspendUpdates())
             {
-                databu += sensorData.PressureValue;
-                datacoun++;
-            }
-            else
-            {
-                using (sciChartSurface.SuspendUpdates())
-                {
-                    sensorData.Pressure1mLine.Append(DateTime.Now, ((databu / datacoun) / 65536d + 0.095) / 0.009);
-                    PlotControl.RefreshLimit(DateTime.Now);
-                    //if (sciChartSurface.ZoomState == ZoomStates.AtExtents)
-                    //{
-                    //    PlotControl.RefreshLimit(DateTime.Now);
-                    //    sciChartSurface.XAxis.VisibleRange = new SciChart.Data.Model.DateRange(PlotControl.Min, PlotControl.Max);
-                    //}
-
-
-                    LineSeries.DataSeries = sensorData.Pressure1mLine;
-                }
-                databu = 0;
-                datacoun = 0;
+                sensorData.Pressure1mLine.Append(DateTime.Now, (sensorData.PressureValue / 65536d + 0.095) / 0.009);
+                PlotControl.RefreshLimit(DateTime.Now);
+                //if (sciChartSurface.ZoomState == ZoomStates.AtExtents)
+                //{
+                //    PlotControl.RefreshLimit(DateTime.Now);
+                //    sciChartSurface.XAxis.VisibleRange = new SciChart.Data.Model.DateRange(PlotControl.Min, PlotControl.Max);
+                //}
+                LineSeries.DataSeries = sensorData.Pressure1mLine;
             }
             //MessageBox.Show(sensorData.Pressure);
         }
