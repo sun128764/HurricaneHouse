@@ -72,7 +72,7 @@ namespace Format
         public int Scale
         {
             get { return this._Scale; }
-            set { if (this._Scale != value) { this._Scale = value; this.Max = DateTime.Now; this.Min = DateTime.Now.AddMinutes(-value * 0.25 - 5); NotifyPropertyChanged(); } }
+            set { if (this._Scale != value) { this._Scale = value; this.Max = DateTime.Now; this.Min = DateTime.Now.AddMinutes(-value); NotifyPropertyChanged(); } }
         }
         public DateTime Max
         {
@@ -91,7 +91,7 @@ namespace Format
         public void RefreshLimit(DateTime dateTime)
         {
             this.Max = dateTime;
-            this.Min = dateTime.AddMinutes(-Scale * 0.25 - 5);
+            this.Min = dateTime.AddMinutes(-Scale);
             IRange range = XVisibleRange;
             if (ZoomState == ZoomStates.UserZooming) XVisibleRange = range;
             else XVisibleRange = new DateRange(this.Min, this.Max);

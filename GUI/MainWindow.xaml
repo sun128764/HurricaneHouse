@@ -61,25 +61,26 @@
                 <GroupBox Header="Wind" Grid.Row="0" Grid.Column="2" Margin="5" Height="auto">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="80"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="70"/>
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                            <Image x:Name="WindSign" Source="cursor.png" Stretch="Fill" Width="30" Height="70" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Image.RenderTransform >
-                                    <TransformGroup>
-                                        <RotateTransform Angle="{Binding WindAngle}"/>
-                                        <ScaleTransform ScaleX="{Binding WindScale}" ScaleY="{Binding WindScale}"/>
-                                    </TransformGroup>
-                                </Image.RenderTransform>
-                            </Image>
-
-                        <StackPanel Orientation="Horizontal" Grid.Row="1">
+                        <Label Content="N" HorizontalAlignment="Center" Grid.Row="0"/>
+                        <Image x:Name="WindSign" Source="cursor.png" Stretch="Fill" Width="20" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
+                            <Image.RenderTransform >
+                                <TransformGroup>
+                                    <RotateTransform Angle="{Binding WindAngle}"/>
+                                    <ScaleTransform ScaleX="{Binding WindScale}" ScaleY="{Binding WindScale}"/>
+                                </TransformGroup>
+                            </Image.RenderTransform>
+                        </Image>
+                        <StackPanel Orientation="Horizontal" Grid.Row="2">
                             <Label Content="Speed:"/>
                             <Label Content="{Binding WindSpeed}"/>
                         </StackPanel>
                     </Grid>
                 </GroupBox>
-                
+
                 <GroupBox Header="Humidity" Margin="5" Grid.Row="0" Grid.Column="3">
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
@@ -92,7 +93,7 @@
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>
-                
+
                 <GroupBox Header="Temperature" Margin="5" Grid.Row="0" Grid.Column="4">
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
@@ -162,7 +163,7 @@
             <Label Content="Time Interval:"/>
             <Label Name ="lll" Content="{Binding Scale}" Width="35" Margin="-5,0,0,0"/>
             <Label Content="min" Width="auto" Margin="-10,0,0,0"/>
-            <Slider Name="sll" Minimum="0" Maximum="100" Value="{Binding Scale, Mode=TwoWay}" VerticalAlignment="Center" Height="23" Width="280"/>
+            <Slider Name="sll" Minimum="5" Maximum="30" Value="{Binding Scale, Mode=TwoWay}" VerticalAlignment="Center" Height="23" Width="280"/>
         </StackPanel>
     </Grid>
 </Window>
