@@ -65,7 +65,7 @@
                             <RowDefinition Height="70"/>
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        <Label Content="N" HorizontalAlignment="Center" Grid.Row="0"/>
+                        <Label Content="{Binding WindDirection}" HorizontalAlignment="Center" Grid.Row="0"/>
                         <Image x:Name="WindSign" Source="cursor.png" Stretch="Fill" Width="20" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
                             <Image.RenderTransform >
                                 <TransformGroup>

@@ -82,7 +82,7 @@ namespace GUI
             sensorData.GetSensorData(str);
             using (sciChartSurface.SuspendUpdates())
             {
-                sensorData.Pressure1mLine.Append(DateTime.Now, (sensorData.PressureValue / 65536d + 0.095) / 0.009);
+                sensorData.Pressure1mLine.Append(DateTime.Now, (sensorData._pressure / 65536d + 0.095) / 0.009);
                 PlotControl.RefreshLimit(DateTime.Now);
                 //if (sciChartSurface.ZoomState == ZoomStates.AtExtents)
                 //{

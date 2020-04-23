@@ -11,13 +11,16 @@ namespace GUI
     {
         private enum Type { Temprature, Battery, Pressure, WindSpeed, WindDirection, Huminity };
         // These fields hold the values for the public properties.
-        private int TemperatureValue;
-        private int BatteryLevelValue;
-        public int PressureValue;
-        private int WindSpeedValue;
-        private int WindDirectionValue;
-        private int HuminityValue;
-        private int StatusValue;
+        private int _temperature;
+        private int _batteryLevel;
+        public int _pressure;
+        private int _windSpeed;
+        private int _windDirection;
+        private int _huminity;
+        private int _status;
+        public int SensorID;
+        public int NetworkID;
+        public int SensorType;
 
 
         private const double RefVol = 3.3;
@@ -32,7 +35,7 @@ namespace GUI
         public List<Format.TimeSeries> Temperature5m = new List<Format.TimeSeries>();
 
         public XyDataSeries<DateTime, double> PressureLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure" };
-        
+
         public XyDataSeries<DateTime, double> Pressure1mLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure" };
         public XyDataSeries<DateTime, double> Pressure5mLine = new XyDataSeries<DateTime, double>();
 
@@ -50,13 +53,13 @@ namespace GUI
         {
             get
             {
-                return ((this.TemperatureValue / 65536d * 3.3 - 0.5) / 0.01).ToString("F3") + "ºC";
+                return ((this._temperature / 65536d * 3.3 - 0.5) / 0.01).ToString("F3") + "ºC";
             }
             set
             {
-                if (int.Parse(value) != this.TemperatureValue)
+                if (int.Parse(value) != this._temperature)
                 {
-                    this.TemperatureValue = int.Parse(value);
+                    this._temperature = int.Parse(value);
                     NotifyPropertyChanged();
                 }
             }
@@ -68,13 +71,13 @@ namespace GUI
         {
             get
             {
-                return ConvertToString(this.BatteryLevelValue, Type.Battery);
+                return ConvertToString(this._batteryLevel, Type.Battery);
             }
             set
             {
-                if (int.Parse(value) != this.BatteryLevelValue)
+                if (int.Parse(value) != this._batteryLevel)
                 {
-                    this.BatteryLevelValue = int.Parse(value);
+                    this._batteryLevel = int.Parse(value);
                     NotifyPropertyChanged();
                 }
             }
@@ -84,13 +87,13 @@ namespace GUI
         {
             get
             {
-                return ConvertToString(this.PressureValue, Type.Pressure);
+                return ConvertToString(this._pressure, Type.Pressure);
             }
             set
             {
-                if (int.Parse(value) != this.PressureValue)
+                if (int.Parse(value) != this._pressure)
                 {
-                    this.PressureValue = int.Parse(value);
+                    this._pressure = int.Parse(value);
                     NotifyPropertyChanged();
                 }
             }
@@ -100,13 +103,13 @@ namespace GUI
         {
             get
             {
-                return ConvertToString(this.WindSpeedValue, Type.WindSpeed);
+                return ConvertToString(this._windSpeed, Type.WindSpeed);
             }
             set
             {
-                if (int.Parse(value) != this.WindSpeedValue)
+                if (int.Parse(value) != this._windSpeed)
                 {
-                    this.WindSpeedValue = int.Parse(value);
+                    this._windSpeed = int.Parse(value);
                     NotifyPropertyChanged();
                 }
             }
@@ -115,13 +118,13 @@ namespace GUI
         {
             get
             {
-                return ConvertToString(this.WindDirectionValue, Type.WindDirection);
+                return ConvertToString(this._windDirection, Type.WindDirection);
             }
             set
             {
-                if (int.Parse(value) != this.WindDirectionValue)
+                if (int.Parse(value) != this._windDirection)
                 {
-                    this.WindDirectionValue = int.Parse(value);
+                    this._windDirection = int.Parse(value);
                     NotifyPropertyChanged();
                 }
             }
@@ -130,13 +133,13 @@ namespace GUI
         {
             get
             {
-                return ConvertToString(this.HuminityValue, Type.Huminity);
+                return ConvertToString(this._huminity, Type.Huminity);
             }
             set
             {
-                if (int.Parse(value) != this.HuminityValue)
+                if (int.Parse(value) != this._huminity)
                 {
-                    this.HuminityValue = int.Parse(value);
+                    this._huminity = int.Parse(value);
                     NotifyPropertyChanged();
                 }
             }
@@ -188,9 +191,9 @@ namespace GUI
                     if (isSI) return res.ToString("F3") + "kPa";
                     else return (res * 0.145037738).ToString("F3") + "PSI";
                 case Type.WindSpeed:
-                    return "N/A";
+                    return (voltage * 57.6 / (57.6 + 150) * 20).ToString("F3") + "m//s";
                 case Type.WindDirection:
-                    return "N/A";
+                    return (voltage * 57.6 / (57.6 + 150) * 72).ToString("F2") + "º";
                 case Type.Huminity:
                     return "N/A";
                 default:
@@ -212,14 +215,13 @@ namespace GUI
                 Huminity = match[i++].Value;
                 lock (locker)
                 {
-                    AddData(ref Pressure1m, time, PressureValue, -1);
+                    AddData(ref Pressure1m, time, _pressure, -1);
                     NotifyPropertyChanged("PressureAvg1m");
-                    AddData(ref Pressure5m, time, PressureValue, -5);
-                    AddData(ref Pressure30m, time, PressureValue, -30);
-                    AddData(ref Temperature5m, time, TemperatureValue, -5);
-                    AddData(ref Huminity5m, time, HuminityValue, -5);
+                    AddData(ref Pressure5m, time, _pressure, -5);
+                    AddData(ref Pressure30m, time, _pressure, -30);
+                    AddData(ref Temperature5m, time, _temperature, -5);
+                    AddData(ref Huminity5m, time, _huminity, -5);
                 }
-
             }
         }
         private void AddData(ref List<Format.TimeSeries> series, DateTime time, int value, double interval)
