@@ -18,9 +18,10 @@ namespace GUI
         private int _windDirection;
         private int _huminity;
         private int _status;
-        public int SensorID;
-        public int NetworkID;
-        public int SensorType;
+
+        public int SensorID { get; set; }
+        public int NetworkID { get; set; }
+        public int SensorType { get; set; }
 
 
         private const double RefVol = 3.3;
@@ -36,7 +37,7 @@ namespace GUI
 
         public XyDataSeries<DateTime, double> PressureLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure" };
 
-        public XyDataSeries<DateTime, double> Pressure1mLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure" };
+        public XyDataSeries<DateTime, double> Pressure1mLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure1m" };
         public XyDataSeries<DateTime, double> Pressure5mLine = new XyDataSeries<DateTime, double>();
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -234,6 +235,5 @@ namespace GUI
             }
             foreach (int i in remove) series.RemoveAt(i);
         }
-
     }
 }
