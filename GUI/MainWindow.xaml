@@ -35,14 +35,14 @@
                 <GroupBox Header="Battery" Grid.Row="0" Grid.Column="0" Margin="5" Height="auto">
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Voltage:"/>
-                        <Label Content="{Binding Path=BatteryLevel}" Margin="0,0,0,0" Width="auto"/>
+                        <Label Content="{Binding BatteryLevelString}" Margin="0,0,0,0" Width="auto"/>
                     </StackPanel>
                 </GroupBox>
                 <GroupBox Header="Pressure" Margin="5" Grid.Row="0" Grid.Column="1">
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
                             <Label Content="Pressure:"/>
-                            <Label Content="{Binding Pressure}" Margin="0,0,0,0" Width="auto"/>
+                            <Label Content="{Binding PressureString}" Margin="0,0,0,0" Width="auto"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Content="1-Min Avg:"/>
@@ -50,11 +50,11 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Content="5-Min Avg:"/>
-                            <Label Content="{Binding Pressure}" Margin="0,0,0,0" Width="auto"/>
+                            <Label Content="{Binding PressureString}" Margin="0,0,0,0" Width="auto"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Content="30-Min Avg:"/>
-                            <Label Content="{Binding Pressure}" Margin="0,0,0,0" Width="auto"/>
+                            <Label Content="{Binding PressureString}" Margin="0,0,0,0" Width="auto"/>
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>
@@ -65,7 +65,7 @@
                             <RowDefinition Height="70"/>
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        <Label Content="{Binding WindDirection}" HorizontalAlignment="Center" Grid.Row="0"/>
+                        <Label Content="{Binding WindDirectionString}" HorizontalAlignment="Center" Grid.Row="0"/>
                         <Image x:Name="WindSign" Source="cursor.png" Stretch="Fill" Width="20" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
                             <Image.RenderTransform >
                                 <TransformGroup>
@@ -76,7 +76,7 @@
                         </Image>
                         <StackPanel Orientation="Horizontal" Grid.Row="2">
                             <Label Content="Speed:"/>
-                            <Label Content="{Binding WindSpeed}"/>
+                            <Label Content="{Binding WindSpeedString}"/>
                         </StackPanel>
                     </Grid>
                 </GroupBox>

@@ -13,7 +13,7 @@ namespace GUI
         // These fields hold the values for the public properties.
         private int _temperature;
         private int _batteryLevel;
-        public int _pressure;
+        private int _pressure;
         private int _windSpeed;
         private int _windDirection;
         private int _huminity;
@@ -22,7 +22,6 @@ namespace GUI
         public int SensorID { get; set; }
         public int NetworkID { get; set; }
         public int SensorType { get; set; }
-
 
         private const double RefVol = 3.3;
         private const int BitDepth = 16;
@@ -49,18 +48,65 @@ namespace GUI
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        #region Real Time Data
-        public string Temperature
+        #region Data String
+        public string TemperautreString
         {
             get
             {
-                return ((this._temperature / 65536d * 3.3 - 0.5) / 0.01).ToString("F3") + "ºC";
+                return ConvertToString(this._temperature, Type.Battery);
+            }
+        }
+
+        public string BatteryLevelString
+        {
+            get
+            {
+                return ConvertToString(this._batteryLevel, Type.Battery);
+            }
+        }
+        public string PressureString
+        {
+            get
+            {
+                return ConvertToString(this._pressure, Type.Pressure);
+            }
+        }
+
+        public string WindSpeedString
+        {
+            get
+            {
+                return ConvertToString(this._windSpeed, Type.WindSpeed);
+            }
+        }
+        public string WindDirectionString
+        {
+            get
+            {
+                return ConvertToString(this._windDirection, Type.WindDirection);
+            }
+        }
+        public string HuminityString
+        {
+            get
+            {
+                return ConvertToString(this._huminity, Type.Huminity);
+            }
+        }
+        #endregion
+        #region Real Time Data
+        public int Temperature
+        {
+            get
+            {
+                return this._temperature;
             }
             set
             {
-                if (int.Parse(value) != this._temperature)
+                if (value != this._temperature)
                 {
-                    this._temperature = int.Parse(value);
+                    this._temperature = value;
+                    NotifyPropertyChanged("TemperautreString");
                     NotifyPropertyChanged();
                 }
             }
@@ -68,79 +114,84 @@ namespace GUI
         /// <summary>
         /// The battery voltage. Needs to be calibrated. R1 and R3.
         /// </summary>
-        public string BatteryLevel
+        public int BatteryLevel
         {
             get
             {
-                return ConvertToString(this._batteryLevel, Type.Battery);
+                return this._batteryLevel;
             }
             set
             {
-                if (int.Parse(value) != this._batteryLevel)
+                if (value != this._batteryLevel)
                 {
-                    this._batteryLevel = int.Parse(value);
+                    this._batteryLevel = value;
+                    NotifyPropertyChanged("BatteryLevelString");
                     NotifyPropertyChanged();
                 }
             }
         }
 
-        public string Pressure
+        public int Pressure
         {
             get
             {
-                return ConvertToString(this._pressure, Type.Pressure);
+                return this._pressure;
             }
             set
             {
-                if (int.Parse(value) != this._pressure)
+                if (value != this._pressure)
                 {
-                    this._pressure = int.Parse(value);
+                    this._pressure = value;
+                    NotifyPropertyChanged("PressureString");
                     NotifyPropertyChanged();
                 }
             }
         }
 
-        public string WindSpeed
+        public int WindSpeed
         {
             get
             {
-                return ConvertToString(this._windSpeed, Type.WindSpeed);
+                return this._windSpeed;
             }
             set
             {
-                if (int.Parse(value) != this._windSpeed)
+                if (value != this._windSpeed)
                 {
-                    this._windSpeed = int.Parse(value);
+                    this._windSpeed = value;
+                    NotifyPropertyChanged("WindSpeedString");
                     NotifyPropertyChanged();
                 }
             }
         }
-        public string WindDirection
+        public int WindDirection
         {
             get
             {
-                return ConvertToString(this._windDirection, Type.WindDirection);
+                return this._windDirection;
             }
             set
             {
-                if (int.Parse(value) != this._windDirection)
+                if (value != this._windDirection)
                 {
-                    this._windDirection = int.Parse(value);
+                    this._windDirection = value;
+                    NotifyPropertyChanged("WindDirectionString");
                     NotifyPropertyChanged();
                 }
             }
         }
-        public string Huminity
+        public int Huminity
         {
             get
             {
-                return ConvertToString(this._huminity, Type.Huminity);
+                return this._huminity;
             }
             set
             {
-                if (int.Parse(value) != this._huminity)
+                if (value != this._huminity)
                 {
-                    this._huminity = int.Parse(value);
+                    this._huminity = value;
+                    NotifyPropertyChanged("HuminityString");
                     NotifyPropertyChanged();
                 }
             }
@@ -184,7 +235,7 @@ namespace GUI
                 case Type.Temprature:
                     res = (voltage - 0.5) / 0.01;
                     if (isSI) return res.ToString("F3") + "ºC";
-                    else return ((res - 32) / 1.8).ToString("F3") + "ºF";
+                    else return (res * 1.8 + 32).ToString("F3") + "ºF";
                 case Type.Battery:
                     return (voltage * 2).ToString("F3") + "V";
                 case Type.Pressure:
@@ -209,12 +260,11 @@ namespace GUI
             {
                 DateTime time = DateTime.Now;
                 int i = 0;
-                Temperature = match[i++].Value;
-                BatteryLevel = match[i++].Value;
-                Pressure = match[i++].Value;
-                WindSpeed = match[i++].Value;
-                Huminity = match[i++].Value;
-                lock (locker)
+                Temperature = int.Parse(match[i++].Value);
+                BatteryLevel = int.Parse(match[i++].Value);
+                Pressure = int.Parse(match[i++].Value);
+                WindSpeed = int.Parse(match[i++].Value);
+                Huminity = int.Parse(match[i++].Value);
                 {
                     AddData(ref Pressure1m, time, _pressure, -1);
                     NotifyPropertyChanged("PressureAvg1m");
