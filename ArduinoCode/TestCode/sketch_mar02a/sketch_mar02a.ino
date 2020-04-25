@@ -51,7 +51,7 @@ void ForwardData() {
   while (Serial2.available()) {
     Serial.write( Serial2.read() );
   }
-  delay(10);
+  //delay(10);
 }
 
 void SendSample() {
@@ -121,20 +121,25 @@ void setup() {
 }
 
 void loop() { // while true
-  CurrentMillis = millis();
-  if ((CurrentMillis - LastMillis) >= 500 && !lock) {
-    SendSample();
+  if (BoardType == 4) {
+    ForwardData();
+    delay(10);
   }
-  if (number < 1024 && lock) {
-    reading += analogRead(A5);
-    number++;
-    delay(1);
-  }
-  if (number >= 512 && lock) {
-    lock = false;
-    pressure = reading >> 9;
-    reading = 0;
-
+  else {
+    CurrentMillis = millis();
+    if ((CurrentMillis - LastMillis) >= 500 && !lock) {
+      SendSample();
+    }
+    if (number < 1024 && lock) {
+      reading += analogRead(A5);
+      number++;
+      delay(1);
+    }
+    if (number >= 512 && lock) {
+      lock = false;
+      pressure = reading >> 9;
+      reading = 0;
+    }
   }
   // XCTU https://www.digi.com/products/embedded-systems/digi-xbee/digi-xbee-tools/xctu#productsupport-utilities
 }
