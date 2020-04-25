@@ -1,7 +1,7 @@
 // parameters
 const unsigned int NetworkID = 5001; //
-const unsigned int BoardID = 2; //
-const unsigned int BoardType = 4; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
+const unsigned int BoardID = 1; //
+const unsigned int BoardType = 1; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
 
 const unsigned int Fs = 50; // sample reading per second (per sensor)
 const unsigned int nSensors = 5;
@@ -25,7 +25,6 @@ void SERCOM2_Handler() {
 }
 XBee xbee = XBee();
 
-
 // define buffers
 #include <stdio.h>
 #include <string.h>
@@ -48,10 +47,12 @@ unsigned long LastMillis;
 unsigned long CurrentMillis;
 
 void ForwardData() {
-  while (Serial2.available()) {
-    Serial.write( Serial2.read() );
+  if (Serial2.available()) {
+    while (Serial2.available()) {
+      Serial.write( Serial2.read());
+    }
+
   }
-  //delay(10);
 }
 
 void SendSample() {
@@ -121,7 +122,8 @@ void setup() {
 }
 
 void loop() { // while true
-  if (BoardType == 4) {
+
+  if (BoardType == 1) {
     ForwardData();
     delay(10);
   }
@@ -129,6 +131,7 @@ void loop() { // while true
     CurrentMillis = millis();
     if ((CurrentMillis - LastMillis) >= 500 && !lock) {
       SendSample();
+      Serial.print("Send");
     }
     if (number < 1024 && lock) {
       reading += analogRead(A5);
