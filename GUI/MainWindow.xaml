@@ -98,22 +98,22 @@
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
                             <Label Content="Temp:"/>
-                            <Label Content="{Binding Temperature}" Margin="0,0,0,0" Width="auto"/>
+                            <Label Content="{Binding TemperautreString}" Margin="0,0,0,0" Width="auto"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Content="1-Min Avg:"/>
-                            <Label Content="{Binding Tempreture}" Width="auto"/>
+                            <Label Content="{Binding TemperautreString}" Width="auto"/>
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>
             </Grid>
         </GroupBox>
 
-        <GroupBox Name="Monitor" Header="Real-time Monitor" HorizontalAlignment="Stretch" Margin="159,50,10,190.5" VerticalAlignment="Stretch" Background="#FFF8F9E4">
-            <Grid>
+        <GroupBox Name="Monitor" Header="Real-time Monitor" HorizontalAlignment="Stretch" Margin="159,50,10,190.5" VerticalAlignment="Stretch" Background="#FFF8F9E4" >
+            <Grid >
                 <!--  Create the chart surface  -->
                 <!-- where xmlns:s="http://schemas.abtsoftware.co.uk/scichart" -->
-                <s:SciChartSurface x:Name="sciChartSurface" ZoomState="{Binding ZoomState, Mode=TwoWay}">
+                <s:SciChartSurface x:Name="sciChartSurface" ZoomState="{Binding ZoomState, Mode=TwoWay}" s:ThemeManager.Theme="BrightSpark">
                     <!--  Define RenderableSeries  -->
                     <!-- where xmlns:s="http://schemas.abtsoftware.co.uk/scichart" -->
                     <s:SciChartSurface.RenderableSeries>

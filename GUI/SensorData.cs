@@ -36,8 +36,8 @@ namespace GUI
 
         public XyDataSeries<DateTime, double> PressureLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure" };
 
-        public XyDataSeries<DateTime, double> Pressure1mLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure1m" };
-        public XyDataSeries<DateTime, double> Pressure5mLine = new XyDataSeries<DateTime, double>();
+        //public XyDataSeries<DateTime, double> Pressure1mLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure1m" };
+        //public XyDataSeries<DateTime, double> Pressure5mLine = new XyDataSeries<DateTime, double>();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -53,7 +53,7 @@ namespace GUI
         {
             get
             {
-                return ConvertToString(this._temperature, Type.Battery);
+                return ConvertToString(this._temperature, Type.Temprature);
             }
         }
 
@@ -256,15 +256,17 @@ namespace GUI
         {
             Regex regex = new Regex(@"-?[0-9]\d*");
             MatchCollection match = regex.Matches(s);
-            if (match.Count == 5)
+            if (match.Count == 8)
             {
                 DateTime time = DateTime.Now;
-                int i = 0;
+                int i = 3;
                 Temperature = int.Parse(match[i++].Value);
                 BatteryLevel = int.Parse(match[i++].Value);
                 Pressure = int.Parse(match[i++].Value);
-                WindSpeed = int.Parse(match[i++].Value);
-                Huminity = int.Parse(match[i++].Value);
+                //WindSpeed = int.Parse(match[i++].Value);
+                //Huminity = int.Parse(match[i++].Value);
+                WindSpeed = 0;
+                Huminity = 0;
                 {
                     AddData(ref Pressure1m, time, _pressure, -1);
                     NotifyPropertyChanged("PressureAvg1m");
