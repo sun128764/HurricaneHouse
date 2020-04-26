@@ -35,3 +35,25 @@ IDE : Visual Studio 2019
 
 Depended libraries : .Net Core , WPF , SciChart
 
+### Class definition
+
+#### Sensor data:
+
+Contain all data and information from sensors.
+
+- Private Variables: Starting by _ and lower case letter. Those variables is the original integer value of sensors measurement. The maximum value depends on the bit depth of the MCU ADC. Those variables can only be accessed by public get and set methods.
+- Public Variables: 
+  - Sensor info with set and get methods.
+  - List of measurement data in Time Series format.
+  - SciChart plot series
+  - Sensor data string with ``NotifyPropertyChanged()``.
+  - Set and get methods of sensor data.
+- Public Methods:
+  - Convert to String: Convert different integer data to string. The unit is determined by bool variable``isSI``.
+  - Get Sensor Data: Read input string from serial communication and add those data to it’s class members.
+- Private Methods:
+  - Add Data: Add time series data point to List.
+
+## Nunit Test Project 1
+
+This is a empty test project which is design to verify the methods of the project.
