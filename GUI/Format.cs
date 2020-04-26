@@ -31,7 +31,7 @@ namespace Format
         public double AxisUnit { get; set; }
         //public int Scale { set; get; }
         // These fields hold the values for the public properties.
-        private int _Scale;
+        private int _scale;
         public event PropertyChangedEventHandler PropertyChanged;
         private DateTime _max;
         private DateTime _min;
@@ -71,8 +71,8 @@ namespace Format
         }
         public int Scale
         {
-            get { return this._Scale; }
-            set { if (this._Scale != value) { this._Scale = value; this.Max = DateTime.Now; this.Min = DateTime.Now.AddMinutes(-value * 0.25 - 5); NotifyPropertyChanged(); } }
+            get { return this._scale; }
+            set { if (this._scale != value) { this._scale = value; this.Max = DateTime.Now; this.Min = DateTime.Now.AddMinutes(-value); NotifyPropertyChanged(); } }
         }
         public DateTime Max
         {
@@ -91,12 +91,10 @@ namespace Format
         public void RefreshLimit(DateTime dateTime)
         {
             this.Max = dateTime;
-            this.Min = dateTime.AddMinutes(-Scale * 0.25 - 5);
+            this.Min = dateTime.AddMinutes(-Scale);
             IRange range = XVisibleRange;
             if (ZoomState == ZoomStates.UserZooming) XVisibleRange = range;
             else XVisibleRange = new DateRange(this.Min, this.Max);
         }
-
-
     }
 }

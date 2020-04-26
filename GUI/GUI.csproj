@@ -118,5 +118,11 @@
   <ItemGroup>
     <Resource Include="cursor.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="compass.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\compass.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

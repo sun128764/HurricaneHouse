@@ -82,14 +82,14 @@ namespace GUI
             sensorData.GetSensorData(str);
             using (sciChartSurface.SuspendUpdates())
             {
-                sensorData.Pressure1mLine.Append(DateTime.Now, (sensorData.PressureValue / 65536d + 0.095) / 0.009);
+                sensorData.PressureLine.Append(DateTime.Now, (sensorData.Pressure / 65536d + 0.095) / 0.009);
                 PlotControl.RefreshLimit(DateTime.Now);
                 //if (sciChartSurface.ZoomState == ZoomStates.AtExtents)
                 //{
                 //    PlotControl.RefreshLimit(DateTime.Now);
                 //    sciChartSurface.XAxis.VisibleRange = new SciChart.Data.Model.DateRange(PlotControl.Min, PlotControl.Max);
                 //}
-                LineSeries.DataSeries = sensorData.Pressure1mLine;
+                LineSeries.DataSeries = sensorData.PressureLine;
             }
             //MessageBox.Show(sensorData.Pressure);
         }

@@ -11,14 +11,17 @@ namespace GUI
     {
         private enum Type { Temprature, Battery, Pressure, WindSpeed, WindDirection, Huminity };
         // These fields hold the values for the public properties.
-        private int TemperatureValue;
-        private int BatteryLevelValue;
-        public int PressureValue;
-        private int WindSpeedValue;
-        private int WindDirectionValue;
-        private int HuminityValue;
-        private int StatusValue;
+        private int _temperature;
+        private int _batteryLevel;
+        private int _pressure;
+        private int _windSpeed;
+        private int _windDirection;
+        private int _huminity;
+        private int _status;
 
+        public int SensorID { get; set; }
+        public int NetworkID { get; set; }
+        public int SensorType { get; set; }
 
         private const double RefVol = 3.3;
         private const int BitDepth = 16;
@@ -32,9 +35,9 @@ namespace GUI
         public List<Format.TimeSeries> Temperature5m = new List<Format.TimeSeries>();
 
         public XyDataSeries<DateTime, double> PressureLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure" };
-        
-        public XyDataSeries<DateTime, double> Pressure1mLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure" };
-        public XyDataSeries<DateTime, double> Pressure5mLine = new XyDataSeries<DateTime, double>();
+
+        //public XyDataSeries<DateTime, double> Pressure1mLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure1m" };
+        //public XyDataSeries<DateTime, double> Pressure5mLine = new XyDataSeries<DateTime, double>();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -45,18 +48,65 @@ namespace GUI
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        #region Real Time Data
-        public string Temperature
+        #region Data String
+        public string TemperautreString
         {
             get
             {
-                return ((this.TemperatureValue / 65536d * 3.3 - 0.5) / 0.01).ToString("F3") + "ºC";
+                return ConvertToString(this._temperature, Type.Temprature);
+            }
+        }
+
+        public string BatteryLevelString
+        {
+            get
+            {
+                return ConvertToString(this._batteryLevel, Type.Battery);
+            }
+        }
+        public string PressureString
+        {
+            get
+            {
+                return ConvertToString(this._pressure, Type.Pressure);
+            }
+        }
+
+        public string WindSpeedString
+        {
+            get
+            {
+                return ConvertToString(this._windSpeed, Type.WindSpeed);
+            }
+        }
+        public string WindDirectionString
+        {
+            get
+            {
+                return ConvertToString(this._windDirection, Type.WindDirection);
+            }
+        }
+        public string HuminityString
+        {
+            get
+            {
+                return ConvertToString(this._huminity, Type.Huminity);
+            }
+        }
+        #endregion
+        #region Real Time Data
+        public int Temperature
+        {
+            get
+            {
+                return this._temperature;
             }
             set
             {
-                if (int.Parse(value) != this.TemperatureValue)
+                if (value != this._temperature)
                 {
-                    this.TemperatureValue = int.Parse(value);
+                    this._temperature = value;
+                    NotifyPropertyChanged("TemperautreString");
                     NotifyPropertyChanged();
                 }
             }
@@ -64,79 +114,84 @@ namespace GUI
         /// <summary>
         /// The battery voltage. Needs to be calibrated. R1 and R3.
         /// </summary>
-        public string BatteryLevel
+        public int BatteryLevel
         {
             get
             {
-                return ConvertToString(this.BatteryLevelValue, Type.Battery);
+                return this._batteryLevel;
             }
             set
             {
-                if (int.Parse(value) != this.BatteryLevelValue)
+                if (value != this._batteryLevel)
                 {
-                    this.BatteryLevelValue = int.Parse(value);
+                    this._batteryLevel = value;
+                    NotifyPropertyChanged("BatteryLevelString");
                     NotifyPropertyChanged();
                 }
             }
         }
 
-        public string Pressure
+        public int Pressure
         {
             get
             {
-                return ConvertToString(this.PressureValue, Type.Pressure);
+                return this._pressure;
             }
             set
             {
-                if (int.Parse(value) != this.PressureValue)
+                if (value != this._pressure)
                 {
-                    this.PressureValue = int.Parse(value);
+                    this._pressure = value;
+                    NotifyPropertyChanged("PressureString");
                     NotifyPropertyChanged();
                 }
             }
         }
 
-        public string WindSpeed
+        public int WindSpeed
         {
             get
             {
-                return ConvertToString(this.WindSpeedValue, Type.WindSpeed);
+                return this._windSpeed;
             }
             set
             {
-                if (int.Parse(value) != this.WindSpeedValue)
+                if (value != this._windSpeed)
                 {
-                    this.WindSpeedValue = int.Parse(value);
+                    this._windSpeed = value;
+                    NotifyPropertyChanged("WindSpeedString");
                     NotifyPropertyChanged();
                 }
             }
         }
-        public string WindDirection
+        public int WindDirection
         {
             get
             {
-                return ConvertToString(this.WindDirectionValue, Type.WindDirection);
+                return this._windDirection;
             }
             set
             {
-                if (int.Parse(value) != this.WindDirectionValue)
+                if (value != this._windDirection)
                 {
-                    this.WindDirectionValue = int.Parse(value);
+                    this._windDirection = value;
+                    NotifyPropertyChanged("WindDirectionString");
                     NotifyPropertyChanged();
                 }
             }
         }
-        public string Huminity
+        public int Huminity
         {
             get
             {
-                return ConvertToString(this.HuminityValue, Type.Huminity);
+                return this._huminity;
             }
             set
             {
-                if (int.Parse(value) != this.HuminityValue)
+                if (value != this._huminity)
                 {
-                    this.HuminityValue = int.Parse(value);
+                    this._huminity = value;
+                    NotifyPropertyChanged("HuminityString");
                     NotifyPropertyChanged();
                 }
             }
@@ -180,7 +235,7 @@ namespace GUI
                 case Type.Temprature:
                     res = (voltage - 0.5) / 0.01;
                     if (isSI) return res.ToString("F3") + "ºC";
-                    else return ((res - 32) / 1.8).ToString("F3") + "ºF";
+                    else return (res * 1.8 + 32).ToString("F3") + "ºF";
                 case Type.Battery:
                     return (voltage * 2).ToString("F3") + "V";
                 case Type.Pressure:
@@ -188,9 +243,9 @@ namespace GUI
                     if (isSI) return res.ToString("F3") + "kPa";
                     else return (res * 0.145037738).ToString("F3") + "PSI";
                 case Type.WindSpeed:
-                    return "N/A";
+                    return (voltage * 57.6 / (57.6 + 150) * 20).ToString("F3") + "m//s";
                 case Type.WindDirection:
-                    return "N/A";
+                    return (voltage * 57.6 / (57.6 + 150) * 72).ToString("F2") + "º";
                 case Type.Huminity:
                     return "N/A";
                 default:
@@ -201,25 +256,25 @@ namespace GUI
         {
             Regex regex = new Regex(@"-?[0-9]\d*");
             MatchCollection match = regex.Matches(s);
-            if (match.Count == 5)
+            if (match.Count == 8)
             {
                 DateTime time = DateTime.Now;
-                int i = 0;
-                Temperature = match[i++].Value;
-                BatteryLevel = match[i++].Value;
-                Pressure = match[i++].Value;
-                WindSpeed = match[i++].Value;
-                Huminity = match[i++].Value;
-                lock (locker)
+                int i = 3;
+                Temperature = int.Parse(match[i++].Value);
+                BatteryLevel = int.Parse(match[i++].Value);
+                Pressure = int.Parse(match[i++].Value);
+                //WindSpeed = int.Parse(match[i++].Value);
+                //Huminity = int.Parse(match[i++].Value);
+                WindSpeed = 0;
+                Huminity = 0;
                 {
-                    AddData(ref Pressure1m, time, PressureValue, -1);
+                    AddData(ref Pressure1m, time, _pressure, -1);
                     NotifyPropertyChanged("PressureAvg1m");
-                    AddData(ref Pressure5m, time, PressureValue, -5);
-                    AddData(ref Pressure30m, time, PressureValue, -30);
-                    AddData(ref Temperature5m, time, TemperatureValue, -5);
-                    AddData(ref Huminity5m, time, HuminityValue, -5);
+                    AddData(ref Pressure5m, time, _pressure, -5);
+                    AddData(ref Pressure30m, time, _pressure, -30);
+                    AddData(ref Temperature5m, time, _temperature, -5);
+                    AddData(ref Huminity5m, time, _huminity, -5);
                 }
-
             }
         }
         private void AddData(ref List<Format.TimeSeries> series, DateTime time, int value, double interval)
@@ -232,6 +287,5 @@ namespace GUI
             }
             foreach (int i in remove) series.RemoveAt(i);
         }
-
     }
 }
