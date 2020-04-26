@@ -160,7 +160,7 @@
             <Button Name="ConnectBtn" Content="Start" Click="ConnectBtn_Click" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Height="30" Margin="0,15,0,0" >
-            <Label Content="Time Interval:"/>
+            <Label Content="Time Period:"/>
             <Label Name ="lll" Content="{Binding Scale}" Width="35" Margin="-5,0,0,0"/>
             <Label Content="min" Width="auto" Margin="-10,0,0,0"/>
             <Slider Name="sll" Minimum="5" Maximum="30" Value="{Binding Scale, Mode=TwoWay}" VerticalAlignment="Center" Height="23" Width="280"/>
