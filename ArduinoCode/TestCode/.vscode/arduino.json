@@ -1,0 +1,7 @@
+{
+    "sketch": "sketch_mar02a\\sketch_mar02a.ino",
+    "board": "adafruit:samd:adafruit_feather_m0",
+    "configuration": "usbstack=arduino,debug=off",
+    "programmer": "AVRISP mkII",
+    "port": "COM3"
+}
