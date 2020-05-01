@@ -10,14 +10,37 @@
 
     <Grid>
         <GroupBox Header="Network Status" HorizontalAlignment="Left" Margin="10,50,0,190.5" VerticalAlignment="Stretch" Width="144">
-            <TreeView HorizontalAlignment="Stretch" Height="auto" VerticalAlignment="Stretch" Width="118" Margin="0,10,0,10" Background="#FFF8F9E4" SelectedItemChanged="SelectionChanged">
-                <TreeViewItem Header="Network">
+            <TreeView Name="NodeList" HorizontalAlignment="Stretch" Height="auto" VerticalAlignment="Stretch" Width="118" Margin="0,10,0,10" Background="#FFF8F9E4">
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate DataType="{x:Type local:SensorInfo}" ItemsSource="{Binding Items}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="-15,0,0,0">
+                            <CheckBox VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            <Image x:Name="Icon" Width="13" VerticalAlignment="Center" />
+                            <Label Content="{Binding Name}" Height="auto" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" MouseDoubleClick="Label_MouseDoubleClick"/>
+                        </StackPanel>
+                        <HierarchicalDataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding SensorStatus}" Value="Ok">
+                                <Setter TargetName="Icon" Property="Source" Value="icons/ok.png"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SensorStatus}" Value="Lost">
+                                <Setter TargetName="Icon" Property="Source" Value="icons/lost.png"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SensorStatus}" Value="Error">
+                                <Setter TargetName="Icon" Property="Source" Value="icons/error.png"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SensorStatus}" Value="Wait">
+                                <Setter TargetName="Icon" Property="Source" Value="icons/wait.png"/>
+                            </DataTrigger>
+                        </HierarchicalDataTemplate.Triggers>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+                <!--<TreeViewItem Header="Network">
                     <StackPanel Name="Sensor1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="-15,0,0,0">
                         <CheckBox Name="chk" VerticalAlignment="Center" HorizontalAlignment="Left"></CheckBox>
                         <Image Source="ok.png" Width="13" VerticalAlignment="Center" />
                         <Label Content="Sensor1" Height="auto" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" MouseDoubleClick="Label_MouseDoubleClick"/>
                     </StackPanel>
-                </TreeViewItem>
+                </TreeViewItem>-->
             </TreeView>
         </GroupBox>
         <GroupBox Name="Status" Header="Sensor Status" HorizontalAlignment="Stretch" Height="170" Margin="10,0,10,15" VerticalAlignment="Bottom" Width="auto" Background="#FFF8F9E4">

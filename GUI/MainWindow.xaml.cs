@@ -26,26 +26,16 @@ namespace GUI
             PlotControl = new Format.PlotControl();
             InitializeComponent();
 
-            // Create the chart surface
-            //sciChartSurface = new SciChartSurface();
+            SensorInfo sensorInfo = new SensorInfo();
+            sensorInfo.SetInfo("Sensor1", 5001, 1, SensorInfo.Types.regular, "nothing");
+            sensorInfo.SensorStatus = SensorInfo.Status.Ok;
+            NodeList.Items.Add(sensorInfo);
 
-            // Create the X and Y Axis
-            //var xAxis = new NumericAxis() { AxisTitle = "Time" };
-            //var yAxis = new NumericAxis() { AxisTitle = "Value" };
-
-            //sciChartSurface.XAxis = xAxis;
-            //sciChartSurface.YAxis = yAxis;
-            // Instantiate the ViewportManager here
-            //double windowSize = 1000.0;
             LineSeries.DataSeries = new XyDataSeries<DateTime, double>();
             LineSeries.DataSeries.SeriesName = "Pressure";
-            // Specify Interactivity Modifiers
-            //sciChartSurface.ChartModifier = new ModifierGroup(new RubberBandXyZoomModifier(), new ZoomExtentsModifier());
             PortListData = SerialPort.GetPortNames();
             sensorData = new SensorData();
-            //Values = new ChartValues<double> { };
-            //PlotControl = new Format.PlotControl();
-            PlotControl.Scale = 50;
+            PlotControl.Scale = 5;
             DataContext = this;
             sciChartSurface.DataContext = PlotControl;
             sll.DataContext = PlotControl;
