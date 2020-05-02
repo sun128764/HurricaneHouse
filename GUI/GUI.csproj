@@ -114,5 +114,8 @@
     <Resource Include="icons\ok.png" />
     <Resource Include="icons\wait.png" />
   </ItemGroup>
+  <ItemGroup>
+    <SplashScreen Include="Picture\Title.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
