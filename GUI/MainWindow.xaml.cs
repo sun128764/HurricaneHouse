@@ -41,15 +41,6 @@ namespace GUI
             sll.DataContext = PlotControl;
             lll.DataContext = PlotControl;
             Status.DataContext = sensorData;
-
-            //InitCOM("COM3");
-        }
-
-        private void SelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e)
-        {
-            //Perform actions when SelectedItem changes
-            //MessageBox.Show(sciChartSurface.ViewportManager.);
-
         }
 
         public SerialPort serialPort;//串口对象类
@@ -115,6 +106,8 @@ namespace GUI
         {
             ComboBox comboBox = PortList;
             if (comboBox.SelectedItem != null) InitCOM(comboBox.Text);
+            Button button = sender as Button;
+            if (serialPort.IsOpen) button.IsEnabled = false;
         }
 
         private void Label_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)

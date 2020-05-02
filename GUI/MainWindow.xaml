@@ -133,7 +133,7 @@
         </GroupBox>
 
         <GroupBox Name="Monitor" Header="Real-time Monitor" HorizontalAlignment="Stretch" Margin="159,50,10,190.5" VerticalAlignment="Stretch" Background="#FFF8F9E4" >
-            <Grid >
+            <Grid>
                 <!--  Create the chart surface  -->
                 <!-- where xmlns:s="http://schemas.abtsoftware.co.uk/scichart" -->
                 <s:SciChartSurface x:Name="sciChartSurface" ZoomState="{Binding ZoomState, Mode=TwoWay}" s:ThemeManager.Theme="BrightSpark">

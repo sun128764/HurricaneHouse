@@ -10,6 +10,7 @@ namespace GUI
     public class SensorData : INotifyPropertyChanged
     {
         private enum Type { Temprature, Battery, Pressure, WindSpeed, WindDirection, Huminity };
+        private readonly string[] windName = new string[16] { "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW" };
         // These fields hold the values for the public properties.
         private int _temperature;
         private int _batteryLevel;
@@ -234,8 +235,8 @@ namespace GUI
             {
                 case Type.Temprature:
                     res = (voltage - 0.5) / 0.01;
-                    if (isSI) return res.ToString("F3") + "ºC";
-                    else return (res * 1.8 + 32).ToString("F3") + "ºF";
+                    if (isSI) return res.ToString("F1") + "ºC";
+                    else return (res * 1.8 + 32).ToString("F1") + "ºF";
                 case Type.Battery:
                     return (voltage * 2).ToString("F3") + "V";
                 case Type.Pressure:
@@ -243,9 +244,11 @@ namespace GUI
                     if (isSI) return res.ToString("F3") + "kPa";
                     else return (res * 0.145037738).ToString("F3") + "PSI";
                 case Type.WindSpeed:
-                    return (voltage * 57.6 / (57.6 + 150) * 20).ToString("F3") + "m//s";
+                    return (voltage * 57.6 / (57.6 + 150) * 20).ToString("F1") + "m//s";
                 case Type.WindDirection:
-                    return (voltage * 57.6 / (57.6 + 150) * 72).ToString("F2") + "º";
+                    double direction = (voltage * 57.6 / (57.6 + 150) * 72);
+                    string name = windName[(int)direction / 16];
+                    return name + direction.ToString("F2") + "º";
                 case Type.Huminity:
                     return "N/A";
                 default:
