@@ -92,8 +92,8 @@
                         <Image x:Name="WindSign" Source="icons/cursor.png" Stretch="Fill" Width="20" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
                             <Image.RenderTransform >
                                 <TransformGroup>
-                                    <RotateTransform Angle="{Binding WindAngle}"/>
-                                    <ScaleTransform ScaleX="{Binding WindScale}" ScaleY="{Binding WindScale}"/>
+                                    <!--<RotateTransform Angle="{Binding WindAngle}"/>
+                                    <ScaleTransform ScaleX="{Binding WindScale}" ScaleY="{Binding WindScale}"/>-->
                                 </TransformGroup>
                             </Image.RenderTransform>
                         </Image>

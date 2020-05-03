@@ -80,11 +80,25 @@ namespace GUI
                 return ConvertToString(this._windSpeed, Type.WindSpeed);
             }
         }
+        public double WindScale
+        {
+            get
+            {
+                return 0;
+            }
+        }
         public string WindDirectionString
         {
             get
             {
                 return ConvertToString(this._windDirection, Type.WindDirection);
+            }
+        }
+        public double WindAngle
+        {
+            get
+            {
+                return (double)this._windDirection / (2 << (BitDepth - 1)) * RefVol * 57.6 / (57.6 + 150) * 20;
             }
         }
         public string HuminityString
