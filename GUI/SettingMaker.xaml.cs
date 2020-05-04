@@ -23,5 +23,35 @@ namespace GUI
         {
             InitializeComponent();
         }
+
+        private void ExitBtn_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void CancelBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OpenBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SaveBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void AddBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DelBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

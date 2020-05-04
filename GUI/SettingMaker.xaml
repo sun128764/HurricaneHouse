@@ -29,10 +29,10 @@
                 <ListBox Height="300">
                 </ListBox>
                 <StackPanel Orientation="Horizontal">
-                    <Button Name="Open" Content="Open" ToolTip="Open setting file."/>
-                    <Button Name="Save" Content="Save" ToolTip="Save this list to file."/>
-                    <Button Name="Add" Content="+" ToolTip="Creat new sensor to list."/>
-                    <Button Name="Del" Content="-" ToolTip="Delete selected sensor from list"/>
+                    <Button Name="OpenBtn" Content="Open" ToolTip="Open setting file." Click="OpenBtn_Click"/>
+                    <Button Name="SaveBtn" Content="Save" ToolTip="Save this list to file." Click="SaveBtn_Click"/>
+                    <Button Name="AddBtn" Content="+" ToolTip="Creat new sensor to list." Click="AddBtn_Click"/>
+                    <Button Name="DelBtn" Content="-" ToolTip="Delete selected sensor from list" Click="DelBtn_Click"/>
                 </StackPanel>
             </StackPanel>
         </GroupBox>
@@ -60,11 +60,11 @@
                 <ComboBoxItem Content="Reguler"/>
             </ComboBox>
             <Label Content="Note:" Grid.Row="4" Grid.Column="0"/>
-            <TextBlock Name="Metadata" Grid.Row="4" Grid.Column="1" Background="White" Margin="3" />
+            <TextBox Name="Metadata" Grid.Row="4" Grid.Column="1" Background="White" Margin="3" TextWrapping="Wrap" AcceptsReturn="True" SpellCheck.IsEnabled="True" Language="en-US"/>
         </Grid>
         <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" Height="auto" Margin="10" VerticalAlignment="Bottom" Width="auto">
-            <Button Name="ExitBtn" Width="80" Content="Finish" ToolTip="Save change and exit to main window."/>
-            <Button Name="CancelBtn" Width="80" Content="Cancel" ToolTip="Restore all change and exit to main window."/>
+            <Button Name="ExitBtn" Width="80" Content="Finish" ToolTip="Save change and exit to main window." Click="ExitBtn_Click"/>
+            <Button Name="CancelBtn" Width="80" Content="Cancel" ToolTip="Restore all change and exit to main window." Click="CancelBtn_Click"/>
         </StackPanel>
     </Grid>
 
