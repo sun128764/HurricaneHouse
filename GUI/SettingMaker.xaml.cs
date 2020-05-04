@@ -21,9 +21,16 @@ namespace GUI
     /// </summary>
     public partial class SettingMaker : Window
     {
+        public string Setting;
+        public List<SensorInfo> SensorInfos { set; get; }
         public SettingMaker()
         {
             InitializeComponent();
+            DataContext = this;
+            SensorInfos = new List<SensorInfo>();
+            SensorInfo sensorInfo = new SensorInfo();
+            sensorInfo.SetInfo("Sensor1", 5001, 1, SensorInfo.Types.regular, "nothing");
+            SensorInfos.Add(sensorInfo);
         }
 
         private void ExitBtn_Click(object sender, RoutedEventArgs e)
@@ -41,7 +48,7 @@ namespace GUI
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
-                _ = File.ReadAllText(openFileDialog.FileName);
+                Setting = File.ReadAllText(openFileDialog.FileName);
             }
         }
 
@@ -56,6 +63,11 @@ namespace GUI
         }
 
         private void DelBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void FinishBtn_Click(object sender, RoutedEventArgs e)
         {
 
         }

@@ -7,7 +7,7 @@ using SciChart.Charting.Model.DataSeries;
 using SciChart.Charting.Visuals;
 using SciChart.Charting.ChartModifiers;
 using System.Threading;
-
+using System.IO;
 
 namespace GUI
 {
@@ -16,8 +16,8 @@ namespace GUI
     /// </summary>
     public partial class MainWindow : Window
     {
+        public string SettingPath;
         public SensorData sensorData { get; set; }
-
         public string[] PortListData { get; set; }
         public Format.PlotControl PlotControl { get; set; }
 
@@ -119,6 +119,9 @@ namespace GUI
         {
             var settingWindow = new SettingMaker();
             settingWindow.ShowDialog();
+            string setting;
+            setting = settingWindow.Setting;
+            MessageBox.Show(setting);
         }
     }
 }

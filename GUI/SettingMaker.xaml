@@ -26,8 +26,20 @@
         </Grid.ColumnDefinitions>
         <GroupBox Header="Sensor List" Grid.Column="0" Grid.Row="0" Width="200" Height="auto" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Stretch">
             <StackPanel Orientation="Vertical">
-                <ListBox Height="300">
-                </ListBox>
+                <TreeView Name="SensorList" ItemsSource="{Binding SensorInfos}" Height="300">
+                    <TreeView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
+                <!--<ListView x:Name="SensorList"  Height="300" ItemsSource="{Binding SensorInfos}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>-->
                 <StackPanel Orientation="Horizontal">
                     <Button Name="OpenBtn" Content="Open" ToolTip="Open setting file." Click="OpenBtn_Click"/>
                     <Button Name="SaveBtn" Content="Save" ToolTip="Save this list to file." Click="SaveBtn_Click"/>
@@ -36,7 +48,7 @@
                 </StackPanel>
             </StackPanel>
         </GroupBox>
-        <Grid Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" DataContext="{Binding ElementName=SensorList}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
@@ -47,6 +59,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="100"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Label Content="Name:" Grid.Row="0" Grid.Column="0"/>
             <TextBox Name="SensorName" Grid.Row="0" Grid.Column="1"/>
@@ -61,10 +74,11 @@
             </ComboBox>
             <Label Content="Note:" Grid.Row="4" Grid.Column="0"/>
             <TextBox Name="Metadata" Grid.Row="4" Grid.Column="1" Background="White" Margin="3" TextWrapping="Wrap" AcceptsReturn="True" SpellCheck.IsEnabled="True" Language="en-US"/>
+            <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Height="auto" Margin="10" VerticalAlignment="Bottom" Width="auto">
+                <Button Name="FinishBtn" Width="80" Content="Finish" ToolTip="Save change and exit to main window." Click="FinishBtn_Click"/>
+                <Button Name="CancelBtn" Width="80" Content="Cancel" ToolTip="Restore all change and exit to main window." Click="CancelBtn_Click"/>
+            </StackPanel>
         </Grid>
-        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" Height="auto" Margin="10" VerticalAlignment="Bottom" Width="auto">
-            <Button Name="ExitBtn" Width="80" Content="Finish" ToolTip="Save change and exit to main window." Click="ExitBtn_Click"/>
-            <Button Name="CancelBtn" Width="80" Content="Cancel" ToolTip="Restore all change and exit to main window." Click="CancelBtn_Click"/>
-        </StackPanel>
+        <Button Grid.Column="1" Name="ExitBtn" Content="Exit" Width="100" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Bottom" Click="ExitBtn_Click" ToolTip="Exit"/>
     </Grid>
 </Window>

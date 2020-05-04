@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace GUI
 {
-    class SensorInfo
+    public class SensorInfo
     {
         public ObservableCollection<SensorInfo> Items { get; set; }
         public enum Types { Router, Anemometer, Humidity, regular }
