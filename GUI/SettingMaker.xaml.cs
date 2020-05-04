@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Microsoft.Win32;
+using System.IO;
 
 namespace GUI
 {
@@ -31,12 +33,16 @@ namespace GUI
 
         private void CancelBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            this.Close();
         }
 
         private void OpenBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                _ = File.ReadAllText(openFileDialog.FileName);
+            }
         }
 
         private void SaveBtn_Click(object sender, RoutedEventArgs e)

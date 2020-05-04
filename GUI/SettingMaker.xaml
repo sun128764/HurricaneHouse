@@ -49,7 +49,7 @@
                 <RowDefinition Height="100"/>
             </Grid.RowDefinitions>
             <Label Content="Name:" Grid.Row="0" Grid.Column="0"/>
-            <TextBox Name="Name" Grid.Row="0" Grid.Column="1"/>
+            <TextBox Name="SensorName" Grid.Row="0" Grid.Column="1"/>
             <Label Content="Network ID:" Grid.Row="1" Grid.Column="0"/>
             <TextBox Name="NetID" Grid.Row="1" Grid.Column="1"/>
             <Label Content="Sensor ID:" Grid.Row="2" Grid.Column="0"/>
@@ -67,5 +67,4 @@
             <Button Name="CancelBtn" Width="80" Content="Cancel" ToolTip="Restore all change and exit to main window." Click="CancelBtn_Click"/>
         </StackPanel>
     </Grid>
-
 </Window>
