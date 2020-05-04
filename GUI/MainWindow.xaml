@@ -188,5 +188,6 @@
             <Label Content="min" Width="auto" Margin="-10,0,0,0"/>
             <Slider Name="sll" Minimum="5" Maximum="30" Value="{Binding Scale, Mode=TwoWay}" VerticalAlignment="Center" Height="23" Width="280"/>
         </StackPanel>
+        <Button Name="SettingBtn" Content="Setting" HorizontalAlignment="Left" Margin="40,15,0,0" VerticalAlignment="Top" Width="76" Click="SettingBtn_Click"/>
     </Grid>
 </Window>

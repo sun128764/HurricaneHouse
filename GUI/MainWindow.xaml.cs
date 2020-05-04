@@ -114,5 +114,11 @@ namespace GUI
         {
             //System.Diagnostics.Process.Start("Explorer.exe", @"/select,C:\mylog.log");
         }
+
+        private void SettingBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var settingWindow = new SettingMaker();
+            settingWindow.ShowDialog();
+        }
     }
 }
