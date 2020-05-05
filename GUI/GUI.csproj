@@ -67,7 +67,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="JsonTools.cs" />
     <Compile Include="SensorInfo.cs" />
     <Compile Include="SettingMaker.xaml.cs">
       <DependentUpon>SettingMaker.xaml</DependentUpon>
