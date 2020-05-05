@@ -13,13 +13,26 @@ namespace GUI
     public class SensorInfo
     {
         public ObservableCollection<SensorInfo> Items { get; set; }
-        public enum Types { Router, Anemometer, Humidity, regular }
+        public enum Types { Router, Anemometer, Humidity, Regular }
+        
         public enum Status { Ok, Lost, Error, Wait };
 
         public string Name { set; get; }
         public int NetWorkID { set; get; }
         public int SensorID { set; get; }
         public Types SensorType { set; get; }
+        [JsonIgnore]
+        public int TypeIndex
+        {
+            set
+            {
+                SensorType = (Types)value;
+            }
+            get
+            {
+                return (int)this.SensorType;
+            }
+        }
         public string MetaData { set; get; }
         [JsonIgnore]
         public Status SensorStatus { set; get; }

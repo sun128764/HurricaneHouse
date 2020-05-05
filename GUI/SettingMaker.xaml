@@ -18,6 +18,10 @@
             <Setter Property="Margin" Value="3"/>
             <Setter Property="Width" Value="100"/>
         </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Margin" Value="3"/>
+            <Setter Property="Width" Value="100"/>
+        </Style>
     </Window.Resources>
     <Grid Background="LightGray">
         <Grid.ColumnDefinitions>
@@ -68,12 +72,14 @@
             <Label Content="Sensor ID:" Grid.Row="2" Grid.Column="0"/>
             <TextBox Name="SensorID" Grid.Row="2" Grid.Column="1" Text="{Binding SensorID }"/>
             <Label Content="Sensor Type" Grid.Row="3" Grid.Column="0"/>
-            <ComboBox Name="SensorType" Grid.Row="3" Grid.Column="1" Margin="3">
+            <ComboBox Name="SensorType" Grid.Row="3" Grid.Column="1" Margin="3" SelectedIndex="{Binding TypeIndex}">
                 <ComboBoxItem Content="Router"/>
+                <ComboBoxItem Content="Anemometer"/>
+                <ComboBoxItem Content="Humidity"/>
                 <ComboBoxItem Content="Reguler"/>
             </ComboBox>
             <Label Content="Note:" Grid.Row="4" Grid.Column="0"/>
-            <TextBox Name="Metadata" Grid.Row="4" Grid.Column="1" Background="White" Margin="3" TextWrapping="Wrap" AcceptsReturn="True" SpellCheck.IsEnabled="True" Language="en-US" Text="{Binding MetaData}"/>
+            <TextBox Name="Metadata" Grid.Row="4" Grid.Column="1" Background="White" Margin="3" TextWrapping="Wrap" AcceptsReturn="True" SpellCheck.IsEnabled="True" Language="en-US" Text="{Binding MetaData}" TextChanged="Metadata_TextChanged"/>
             <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Height="auto" Margin="10" VerticalAlignment="Bottom" Width="auto">
                 <Button Name="FinishBtn" Width="80" Content="Finish" ToolTip="Save change and exit to main window." Click="FinishBtn_Click"/>
                 <Button Name="CancelBtn" Width="80" Content="Cancel" ToolTip="Restore all change and exit to main window." Click="CancelBtn_Click"/>

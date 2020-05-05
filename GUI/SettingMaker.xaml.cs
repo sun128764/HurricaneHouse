@@ -23,6 +23,7 @@ namespace GUI
     public partial class SettingMaker : Window
     {
         public string Setting;
+
         public List<SensorInfo> SensorInfos { set; get; }
         public SettingMaker()
         {
@@ -46,6 +47,7 @@ namespace GUI
         private void OpenBtn_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Setting files (*.json)|*.json";
             if (openFileDialog.ShowDialog() == true)
             {
                 Setting = File.ReadAllText(openFileDialog.FileName);
@@ -57,8 +59,15 @@ namespace GUI
 
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
-            string output = JsonConvert.SerializeObject(SensorInfos);
-            System.IO.File.WriteAllText(@"D:\\test.json", output);
+            string output = JsonConvert.SerializeObject(SensorInfos, Formatting.Indented);
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Setting files (*.json)|*.json";
+            saveFileDialog.AddExtension = true;
+            saveFileDialog.OverwritePrompt = true;
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                System.IO.File.WriteAllText(saveFileDialog.FileName, output);
+            }
         }
 
         private void AddBtn_Click(object sender, RoutedEventArgs e)
@@ -74,6 +83,11 @@ namespace GUI
         }
 
         private void FinishBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Metadata_TextChanged(object sender, TextChangedEventArgs e)
         {
 
         }
