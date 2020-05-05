@@ -66,7 +66,7 @@ namespace GUI
             saveFileDialog.OverwritePrompt = true;
             if (saveFileDialog.ShowDialog() == true)
             {
-                System.IO.File.WriteAllText(saveFileDialog.FileName, output);
+                File.WriteAllText(saveFileDialog.FileName, output);
             }
         }
 
