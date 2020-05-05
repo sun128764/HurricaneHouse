@@ -79,7 +79,8 @@ namespace GUI
 
         private void DelBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            SensorInfos.Remove(SensorList.SelectedItem as SensorInfo);
+            SensorList.Items.Refresh();
         }
 
         private void FinishBtn_Click(object sender, RoutedEventArgs e)
