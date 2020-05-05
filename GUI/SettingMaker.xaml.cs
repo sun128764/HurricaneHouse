@@ -28,8 +28,7 @@ namespace GUI
             InitializeComponent();
             DataContext = this;
             SensorInfos = new List<SensorInfo>();
-            SensorInfo sensorInfo = new SensorInfo();
-            sensorInfo.SetInfo("Sensor1", 5001, 1, SensorInfo.Types.regular, "nothing");
+            SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor" };
             SensorInfos.Add(sensorInfo);
         }
 
@@ -59,7 +58,9 @@ namespace GUI
 
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor" };
+            SensorInfos.Add(sensorInfo);
+            SensorList.Items.Refresh();
         }
 
         private void DelBtn_Click(object sender, RoutedEventArgs e)

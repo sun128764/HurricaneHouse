@@ -26,8 +26,8 @@ namespace GUI
             PlotControl = new Format.PlotControl();
             InitializeComponent();
 
-            SensorInfo sensorInfo = new SensorInfo();
-            sensorInfo.SetInfo("Sensor1", 5001, 1, SensorInfo.Types.regular, "nothing");
+            SensorInfo sensorInfo = new SensorInfo() { Name = "sensor1" };
+            //sensorInfo.SetInfo("Sensor1", 5001, 1, SensorInfo.Types.regular, "nothing");
             sensorInfo.SensorStatus = SensorInfo.Status.Ok;
             NodeList.Items.Add(sensorInfo);
 
