@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace GUI
 {
@@ -48,12 +49,16 @@ namespace GUI
             if (openFileDialog.ShowDialog() == true)
             {
                 Setting = File.ReadAllText(openFileDialog.FileName);
+                SensorInfos.Clear();
+                SensorInfos.AddRange(JsonConvert.DeserializeObject<List<SensorInfo>>(Setting));
+                SensorList.Items.Refresh();
             }
         }
 
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            string output = JsonConvert.SerializeObject(SensorInfos);
+            System.IO.File.WriteAllText(@"D:\\test.json", output);
         }
 
         private void AddBtn_Click(object sender, RoutedEventArgs e)

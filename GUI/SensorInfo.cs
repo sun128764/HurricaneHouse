@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Windows.Media;
+using Newtonsoft.Json;
 
 namespace GUI
 {
@@ -20,7 +21,7 @@ namespace GUI
         public int SensorID { set; get; }
         public Types SensorType { set; get; }
         public string MetaData { set; get; }
-
+        [JsonIgnore]
         public Status SensorStatus { set; get; }
 
         public SensorInfo()
