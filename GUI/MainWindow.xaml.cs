@@ -3,6 +3,7 @@ using System.IO.Ports;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Collections.Generic;
 using SciChart.Charting.Model.DataSeries;
 using SciChart.Charting.Visuals;
 using SciChart.Charting.ChartModifiers;
@@ -20,16 +21,20 @@ namespace GUI
         public SensorData sensorData { get; set; }
         public string[] PortListData { get; set; }
         public Format.PlotControl PlotControl { get; set; }
+        public List<SensorInfo> SensorInfos { set; get; }
+
 
         public MainWindow()
         {
-            PlotControl = new Format.PlotControl();
             InitializeComponent();
-
-            SensorInfo sensorInfo = new SensorInfo() { Name = "sensor1" };
-            //sensorInfo.SetInfo("Sensor1", 5001, 1, SensorInfo.Types.regular, "nothing");
+            PlotControl = new Format.PlotControl();
+            SensorInfos = new List<SensorInfo>();
+            SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor" };
+            SensorInfos.Add(sensorInfo);
             sensorInfo.SensorStatus = SensorInfo.Status.Ok;
-            NodeList.Items.Add(sensorInfo);
+            NodeList.Items.Refresh();
+            //sensorInfo.SetInfo("Sensor1", 5001, 1, SensorInfo.Types.regular, "nothing");
+            //NodeList.Items.Add(SensorInfos);
 
             LineSeries.DataSeries = new XyDataSeries<DateTime, double>();
             LineSeries.DataSeries.SeriesName = "Pressure";
@@ -119,9 +124,9 @@ namespace GUI
         {
             var settingWindow = new SettingMaker();
             settingWindow.ShowDialog();
-            string setting;
-            setting = settingWindow.Setting;
-            MessageBox.Show(setting);
+            SensorInfos.Clear();
+            SensorInfos.AddRange(settingWindow.SensorInfos);
+            NodeList.Items.Refresh();
         }
     }
 }

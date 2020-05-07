@@ -10,15 +10,15 @@
 
     <Grid>
         <GroupBox Header="Network Status" HorizontalAlignment="Left" Margin="10,50,0,190.5" VerticalAlignment="Stretch" Width="144">
-            <TreeView Name="NodeList" HorizontalAlignment="Stretch" Height="auto" VerticalAlignment="Stretch" Width="118" Margin="0,10,0,10" Background="#FFF8F9E4">
+            <TreeView Name="NodeList" ItemsSource="{Binding SensorInfos}" HorizontalAlignment="Stretch" Height="auto" VerticalAlignment="Stretch" Width="118" Margin="0,10,0,10" Background="#FFF8F9E4">
                 <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate DataType="{x:Type local:SensorInfo}" ItemsSource="{Binding Items}">
+                    <DataTemplate>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="-15,0,0,0">
                             <CheckBox VerticalAlignment="Center" HorizontalAlignment="Left"/>
                             <Image x:Name="Icon" Width="13" VerticalAlignment="Center" />
                             <Label Content="{Binding Name}" Height="auto" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" MouseDoubleClick="Label_MouseDoubleClick"/>
                         </StackPanel>
-                        <HierarchicalDataTemplate.Triggers>
+                        <DataTemplate.Triggers>
                             <DataTrigger Binding="{Binding SensorStatus}" Value="Ok">
                                 <Setter TargetName="Icon" Property="Source" Value="icons/ok.png"/>
                             </DataTrigger>
@@ -31,8 +31,8 @@
                             <DataTrigger Binding="{Binding SensorStatus}" Value="Wait">
                                 <Setter TargetName="Icon" Property="Source" Value="icons/wait.png"/>
                             </DataTrigger>
-                        </HierarchicalDataTemplate.Triggers>
-                    </HierarchicalDataTemplate>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
                 </TreeView.ItemTemplate>
                 <!--<TreeViewItem Header="Network">
                     <StackPanel Name="Sensor1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="-15,0,0,0">
