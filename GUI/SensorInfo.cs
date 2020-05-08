@@ -36,7 +36,8 @@ namespace GUI
         public string MetaData { set; get; }
         [JsonIgnore]
         public Status SensorStatus { set; get; }
-
+        [JsonIgnore]
+        public SensorData SensorData = new SensorData();
         public SensorInfo()
         {
             this.Items = new ObservableCollection<SensorInfo>();

@@ -7,8 +7,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using SciChart.Data.Model;
 using SciChart.Charting.Visuals;
-
-
+using System.Text.RegularExpressions;
 
 namespace Format
 {
@@ -51,7 +50,8 @@ namespace Format
         }
 
         private ZoomStates _zoomeState;
-        public ZoomStates ZoomState {
+        public ZoomStates ZoomState
+        {
             get { return _zoomeState; }
             set
             {
@@ -95,6 +95,41 @@ namespace Format
             IRange range = XVisibleRange;
             if (ZoomState == ZoomStates.UserZooming) XVisibleRange = range;
             else XVisibleRange = new DateRange(this.Min, this.Max);
+        }
+    }
+
+    public class DataPackage
+    {
+        public int NetworkID;
+        public int SensorID;
+        public int SensorTYpe;
+        public DateTime Time;
+        public int Pressure;
+        public int Temperature;
+        public int Battery;
+        public int WindSpeed;
+        public int WindDirection;
+        public int Huminity;
+        public static DataPackage Decode(String data)
+        {
+            DataPackage dataPackage = new DataPackage();
+            Regex regex = new Regex(@"-?[0-9]\d*");
+            MatchCollection match = regex.Matches(data);
+            if (match.Count == 8)
+            {
+                dataPackage.Time = DateTime.Now;
+                int i = 0;
+                dataPackage.NetworkID = int.Parse(match[i++].Value);
+                dataPackage.SensorID = int.Parse(match[i++].Value);
+                dataPackage.SensorTYpe = int.Parse(match[i++].Value);
+                dataPackage.Temperature = int.Parse(match[i++].Value);
+                dataPackage.Battery = int.Parse(match[i++].Value);
+                dataPackage.Pressure = int.Parse(match[i++].Value);
+                dataPackage.WindSpeed = int.Parse(match[i++].Value);
+                dataPackage.Huminity = int.Parse(match[i++].Value);
+            }
+            else dataPackage = null;
+            return dataPackage;
         }
     }
 }

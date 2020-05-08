@@ -22,7 +22,7 @@ namespace GUI
         public string[] PortListData { get; set; }
         public Format.PlotControl PlotControl { get; set; }
         public List<SensorInfo> SensorInfos { set; get; }
-
+        public XyDataSeries<DateTime, double> DispalySeries;
 
         public MainWindow()
         {
@@ -35,9 +35,6 @@ namespace GUI
             NodeList.Items.Refresh();
             //sensorInfo.SetInfo("Sensor1", 5001, 1, SensorInfo.Types.regular, "nothing");
             //NodeList.Items.Add(SensorInfos);
-
-            LineSeries.DataSeries = new XyDataSeries<DateTime, double>();
-            LineSeries.DataSeries.SeriesName = "Pressure";
             PortListData = SerialPort.GetPortNames();
             sensorData = new SensorData();
             PlotControl.Scale = 5;
@@ -68,6 +65,7 @@ namespace GUI
             sensorData.GetSensorData(str);
             using (sciChartSurface.SuspendUpdates())
             {
+                //SensorInfos.Find(x => x.Name == "ss");
                 sensorData.PressureLine.Append(DateTime.Now, (sensorData.Pressure / 65536d + 0.095) / 0.009);
                 PlotControl.RefreshLimit(DateTime.Now);
                 //if (sciChartSurface.ZoomState == ZoomStates.AtExtents)
