@@ -29,14 +29,11 @@ namespace GUI
             InitializeComponent();
             PlotControl = new Format.PlotControl();
             SensorInfos = new List<SensorInfo>();
-            SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor" };
+            SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor", NetWorkID = 1000, SensorID = 1, SensorStatus = SensorInfo.Status.Ok };
             SensorInfos.Add(sensorInfo);
-            sensorInfo.SensorStatus = SensorInfo.Status.Ok;
             NodeList.Items.Refresh();
-            //sensorInfo.SetInfo("Sensor1", 5001, 1, SensorInfo.Types.regular, "nothing");
-            //NodeList.Items.Add(SensorInfos);
             PortListData = SerialPort.GetPortNames();
-            sensorData = new SensorData();
+            sensorData = SensorInfos[0].SensorData;
             PlotControl.Scale = 5;
             DataContext = this;
             sciChartSurface.DataContext = PlotControl;
@@ -63,21 +60,18 @@ namespace GUI
             //serialPort.Read(readBuffer, 0, readBuffer.Length);
             string str = serialPort.ReadLine();
             Format.DataPackage dataPackage = Format.DataPackage.Decode(str);
-
-            sensorData.GetSensorData(dataPackage);
-            using (sciChartSurface.SuspendUpdates())
+            SensorInfo sensorInfo = SensorInfos.Find(x => x.NetWorkID == dataPackage.NetworkID || x.SensorID == dataPackage.SensorID);
+            if (sensorInfo != null)
             {
-                //SensorInfos.Find(x => x.Name == "ss");
-                sensorData.PressureLine.Append(DateTime.Now, (sensorData.Pressure / 65536d + 0.095) / 0.009);
-                PlotControl.RefreshLimit(DateTime.Now);
-                //if (sciChartSurface.ZoomState == ZoomStates.AtExtents)
-                //{
-                //    PlotControl.RefreshLimit(DateTime.Now);
-                //    sciChartSurface.XAxis.VisibleRange = new SciChart.Data.Model.DateRange(PlotControl.Min, PlotControl.Max);
-                //}
-                LineSeries.DataSeries = sensorData.PressureLine;
+                sensorInfo.SensorData.GetSensorData(dataPackage);
+                using (sciChartSurface.SuspendUpdates())
+                {
+                    sensorInfo.SensorData.PressureLine.Append(DateTime.Now, (sensorInfo.SensorData.Pressure / 65536d + 0.095) / 0.009);
+                    PlotControl.RefreshLimit(DateTime.Now);
+                    LineSeries.DataSeries = sensorInfo.SensorData.PressureLine;
+                }
             }
-            //MessageBox.Show(sensorData.Pressure);
+            //sensorData.GetSensorData(dataPackage);
         }
 
 
