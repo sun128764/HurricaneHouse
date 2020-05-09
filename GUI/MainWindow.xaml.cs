@@ -18,11 +18,10 @@ namespace GUI
     public partial class MainWindow : Window
     {
         public string SettingPath;
-        public SensorData sensorData { get; set; }
         public string[] PortListData { get; set; }
         public Format.PlotControl PlotControl { get; set; }
         public List<SensorInfo> SensorInfos { set; get; }
-        public XyDataSeries<DateTime, double> DispalySeries;
+        public SensorInfo SelectedSensor { set; get; }
 
         public MainWindow()
         {
@@ -33,13 +32,13 @@ namespace GUI
             SensorInfos.Add(sensorInfo);
             NodeList.Items.Refresh();
             PortListData = SerialPort.GetPortNames();
-            sensorData = SensorInfos[0].SensorData;
+            SelectedSensor = SensorInfos[0];
             PlotControl.Scale = 5;
             DataContext = this;
             sciChartSurface.DataContext = PlotControl;
             sll.DataContext = PlotControl;
             lll.DataContext = PlotControl;
-            Status.DataContext = sensorData;
+            Status.DataContext = SelectedSensor.SensorData;
         }
 
         public SerialPort serialPort;//串口对象类
@@ -52,7 +51,6 @@ namespace GUI
             serialPort.RtsEnable = true;
             return OpenPort();//串口打开
         }
-
         /// 数据接收事件
         private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
@@ -64,17 +62,17 @@ namespace GUI
             if (sensorInfo != null)
             {
                 sensorInfo.SensorData.GetSensorData(dataPackage);
-                using (sciChartSurface.SuspendUpdates())
+                if (sensorInfo == SelectedSensor)
                 {
-                    sensorInfo.SensorData.PressureLine.Append(DateTime.Now, (sensorInfo.SensorData.Pressure / 65536d + 0.095) / 0.009);
-                    PlotControl.RefreshLimit(DateTime.Now);
-                    LineSeries.DataSeries = sensorInfo.SensorData.PressureLine;
+                    using (sciChartSurface.SuspendUpdates())
+                    {
+                        PlotControl.RefreshLimit(DateTime.Now);
+                        LineSeries.DataSeries = SelectedSensor.SensorData.PressureLine;
+                    }
                 }
+
             }
-            //sensorData.GetSensorData(dataPackage);
         }
-
-
         //打开串口的方法
         public bool OpenPort()
         {
@@ -108,12 +106,17 @@ namespace GUI
             Button button = sender as Button;
             if (serialPort.IsOpen) button.IsEnabled = false;
         }
-
         private void Label_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            SensorInfo sensor = NodeList.SelectedItem as SensorInfo;
+            if(sensor != SelectedSensor)
+            {
+                SelectedSensor = sensor;
+                Status.DataContext = SelectedSensor.SensorData;
+                LineSeries.DataSeries = SelectedSensor.SensorData.PressureLine;
+            }
             //System.Diagnostics.Process.Start("Explorer.exe", @"/select,C:\mylog.log");
         }
-
         private void SettingBtn_Click(object sender, RoutedEventArgs e)
         {
             var settingWindow = new SettingMaker();

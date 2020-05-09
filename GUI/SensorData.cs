@@ -281,6 +281,8 @@ namespace GUI
             WindDirection = 0;
             Huminity = 0;
 
+            PressureLine.Append(package.Time, (Pressure / 65536d + 0.095) / 0.009);
+
             AddData(ref Pressure1m, package.Time, _pressure, -1);
             NotifyPropertyChanged("PressureAvg1m");
             AddData(ref Pressure5m, package.Time, _pressure, -5);
