@@ -269,30 +269,25 @@ namespace GUI
                     return "error";
             }
         }
-        public void GetSensorData(string s)
+        public void GetSensorData(Format.DataPackage package)
         {
-            Regex regex = new Regex(@"-?[0-9]\d*");
-            MatchCollection match = regex.Matches(s);
-            if (match.Count == 8)
-            {
-                DateTime time = DateTime.Now;
-                int i = 3;
-                Temperature = int.Parse(match[i++].Value);
-                BatteryLevel = int.Parse(match[i++].Value);
-                Pressure = int.Parse(match[i++].Value);
-                //WindSpeed = int.Parse(match[i++].Value);
-                //Huminity = int.Parse(match[i++].Value);
-                WindSpeed = 0;
-                Huminity = 0;
-                {
-                    AddData(ref Pressure1m, time, _pressure, -1);
-                    NotifyPropertyChanged("PressureAvg1m");
-                    AddData(ref Pressure5m, time, _pressure, -5);
-                    AddData(ref Pressure30m, time, _pressure, -30);
-                    AddData(ref Temperature5m, time, _temperature, -5);
-                    AddData(ref Huminity5m, time, _huminity, -5);
-                }
-            }
+            Temperature = package.Temperature;
+            BatteryLevel = package.Battery;
+            Pressure = package.Pressure;
+            WindSpeed = package.WindSpeed;
+            WindDirection = package.WindDirection;
+            Huminity = package.Huminity;
+            WindSpeed = 0;
+            WindDirection = 0;
+            Huminity = 0;
+
+            AddData(ref Pressure1m, package.Time, _pressure, -1);
+            NotifyPropertyChanged("PressureAvg1m");
+            AddData(ref Pressure5m, package.Time, _pressure, -5);
+            AddData(ref Pressure30m, package.Time, _pressure, -30);
+            AddData(ref Temperature5m, package.Time, _temperature, -5);
+            AddData(ref Huminity5m, package.Time, _huminity, -5);
+
         }
         private void AddData(ref List<Format.TimeSeries> series, DateTime time, int value, double interval)
         {

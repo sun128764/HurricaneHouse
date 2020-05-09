@@ -62,7 +62,9 @@ namespace GUI
             // Thread.Sleep(2000);
             //serialPort.Read(readBuffer, 0, readBuffer.Length);
             string str = serialPort.ReadLine();
-            sensorData.GetSensorData(str);
+            Format.DataPackage dataPackage = Format.DataPackage.Decode(str);
+
+            sensorData.GetSensorData(dataPackage);
             using (sciChartSurface.SuspendUpdates())
             {
                 //SensorInfos.Find(x => x.Name == "ss");
