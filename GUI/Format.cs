@@ -20,7 +20,6 @@ namespace Format
             DateTime = time;
             Value = value;
         }
-
     }
 
     public class PlotControl : INotifyPropertyChanged

@@ -57,7 +57,6 @@ namespace GUI
                 return ConvertToString(this._temperature, Type.Temprature);
             }
         }
-
         public string BatteryLevelString
         {
             get
@@ -72,7 +71,6 @@ namespace GUI
                 return ConvertToString(this._pressure, Type.Pressure);
             }
         }
-
         public string WindSpeedString
         {
             get
@@ -145,7 +143,6 @@ namespace GUI
                 }
             }
         }
-
         public int Pressure
         {
             get
@@ -162,7 +159,6 @@ namespace GUI
                 }
             }
         }
-
         public int WindSpeed
         {
             get
@@ -222,7 +218,6 @@ namespace GUI
                     if (this.Pressure1m.Count < 1) return "0";
                     else return ConvertToString((int)this.Pressure1m.Average(t => t.Value), Type.Pressure);
                 }
-
             }
         }
 
