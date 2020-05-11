@@ -16,7 +16,7 @@
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="-15,0,0,0">
                             <CheckBox VerticalAlignment="Center" HorizontalAlignment="Left"/>
                             <Image x:Name="Icon" Width="13" VerticalAlignment="Center" />
-                            <Label Content="{Binding Name}" Height="auto" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" MouseDoubleClick="Label_MouseDoubleClick"/>
+                            <Label Content="{Binding Name}" Height="auto" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" MouseLeftButtonUp="Label_MouseDoubleClick" MouseDoubleClick="Label_MouseDoubleClick"/>
                         </StackPanel>
                         <DataTemplate.Triggers>
                             <DataTrigger Binding="{Binding SensorStatus}" Value="Ok">
@@ -148,7 +148,7 @@
                     </s:SciChartSurface.XAxis>
                     <!--  Create a Y Axis  -->
                     <s:SciChartSurface.YAxis>
-                        <s:NumericAxis AxisTitle="Pressure (kPa)"/>
+                        <s:NumericAxis AxisTitle="Pressure (kPa)" VisibleRange="{Binding YVisibleRange, Mode=TwoWay}"/>
                     </s:SciChartSurface.YAxis>
                     <!--  Specify interactivity modifiers  -->
                     <s:SciChartSurface.ChartModifier>

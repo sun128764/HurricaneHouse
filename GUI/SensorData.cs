@@ -29,6 +29,7 @@ namespace GUI
         private static readonly object locker = new object();
         public bool isSI = true;
 
+        public Format.PlotControl PlotControl = new Format.PlotControl() { Scale = 5};
         public List<Format.TimeSeries> Pressure1m = new List<Format.TimeSeries>();
         public List<Format.TimeSeries> Pressure5m = new List<Format.TimeSeries>();
         public List<Format.TimeSeries> Pressure30m = new List<Format.TimeSeries>();

@@ -19,14 +19,12 @@ namespace GUI
     {
         public string SettingPath;
         public string[] PortListData { get; set; }
-        public Format.PlotControl PlotControl { get; set; }
         public List<SensorInfo> SensorInfos { set; get; }
         public SensorInfo SelectedSensor { set; get; }
 
         public MainWindow()
         {
             InitializeComponent();
-            PlotControl = new Format.PlotControl();
             SensorInfos = new List<SensorInfo>();
             SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor1", NetWorkID = 5001, SensorID = 1, SensorStatus = SensorInfo.Status.Ok };
             SensorInfo sensorInfo2 = new SensorInfo() { Name = "New Sensor2", NetWorkID = 5001, SensorID = 2, SensorStatus = SensorInfo.Status.Ok };
@@ -35,11 +33,10 @@ namespace GUI
             NodeList.Items.Refresh();
             PortListData = SerialPort.GetPortNames();
             SelectedSensor = SensorInfos[0];
-            PlotControl.Scale = 5;
             DataContext = this;
-            sciChartSurface.DataContext = PlotControl;
-            sll.DataContext = PlotControl;
-            lll.DataContext = PlotControl;
+            sciChartSurface.DataContext = SelectedSensor.SensorData.PlotControl;
+            sll.DataContext = SelectedSensor.SensorData.PlotControl;
+            lll.DataContext = SelectedSensor.SensorData.PlotControl;
             Status.DataContext = SelectedSensor.SensorData;
         }
 
@@ -68,7 +65,7 @@ namespace GUI
                 {
                     using (sciChartSurface.SuspendUpdates())
                     {
-                        PlotControl.RefreshLimit(DateTime.Now);
+                        SelectedSensor.SensorData.PlotControl.RefreshLimit(DateTime.Now);
                         LineSeries.DataSeries = SelectedSensor.SensorData.PressureLine;
                     }
                 }
@@ -116,6 +113,9 @@ namespace GUI
                 SelectedSensor = sensor;
                 Status.DataContext = SelectedSensor.SensorData;
                 LineSeries.DataSeries = SelectedSensor.SensorData.PressureLine;
+                sciChartSurface.DataContext = SelectedSensor.SensorData.PlotControl;
+                sll.DataContext = SelectedSensor.SensorData.PlotControl;
+                lll.DataContext = SelectedSensor.SensorData.PlotControl;
             }
             //System.Diagnostics.Process.Start("Explorer.exe", @"/select,C:\mylog.log");
         }
