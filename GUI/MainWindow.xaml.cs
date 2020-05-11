@@ -28,8 +28,10 @@ namespace GUI
             InitializeComponent();
             PlotControl = new Format.PlotControl();
             SensorInfos = new List<SensorInfo>();
-            SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor", NetWorkID = 1000, SensorID = 1, SensorStatus = SensorInfo.Status.Ok };
+            SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor1", NetWorkID = 5001, SensorID = 1, SensorStatus = SensorInfo.Status.Ok };
+            SensorInfo sensorInfo2 = new SensorInfo() { Name = "New Sensor2", NetWorkID = 5001, SensorID = 2, SensorStatus = SensorInfo.Status.Ok };
             SensorInfos.Add(sensorInfo);
+            SensorInfos.Add(sensorInfo2);
             NodeList.Items.Refresh();
             PortListData = SerialPort.GetPortNames();
             SelectedSensor = SensorInfos[0];
@@ -58,7 +60,7 @@ namespace GUI
             //serialPort.Read(readBuffer, 0, readBuffer.Length);
             string str = serialPort.ReadLine();
             Format.DataPackage dataPackage = Format.DataPackage.Decode(str);
-            SensorInfo sensorInfo = SensorInfos.Find(x => x.NetWorkID == dataPackage.NetworkID || x.SensorID == dataPackage.SensorID);
+            SensorInfo sensorInfo = SensorInfos.Find(x => x.SensorID == dataPackage.SensorID);
             if (sensorInfo != null)
             {
                 sensorInfo.SensorData.GetSensorData(dataPackage);
