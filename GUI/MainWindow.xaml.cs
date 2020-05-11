@@ -3,11 +3,12 @@ using System.IO.Ports;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Collections.Generic;
 using SciChart.Charting.Model.DataSeries;
 using SciChart.Charting.Visuals;
 using SciChart.Charting.ChartModifiers;
 using System.Threading;
-
+using System.IO;
 
 namespace GUI
 {
@@ -16,50 +17,30 @@ namespace GUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        public SensorData sensorData { get; set; }
-
+        public string SettingPath;
         public string[] PortListData { get; set; }
         public Format.PlotControl PlotControl { get; set; }
+        public List<SensorInfo> SensorInfos { set; get; }
+        public SensorInfo SelectedSensor { set; get; }
 
         public MainWindow()
         {
-            PlotControl = new Format.PlotControl();
             InitializeComponent();
-
-            // Create the chart surface
-            //sciChartSurface = new SciChartSurface();
-
-            // Create the X and Y Axis
-            //var xAxis = new NumericAxis() { AxisTitle = "Time" };
-            //var yAxis = new NumericAxis() { AxisTitle = "Value" };
-
-            //sciChartSurface.XAxis = xAxis;
-            //sciChartSurface.YAxis = yAxis;
-            // Instantiate the ViewportManager here
-            //double windowSize = 1000.0;
-            LineSeries.DataSeries = new XyDataSeries<DateTime, double>();
-            LineSeries.DataSeries.SeriesName = "Pressure";
-            // Specify Interactivity Modifiers
-            //sciChartSurface.ChartModifier = new ModifierGroup(new RubberBandXyZoomModifier(), new ZoomExtentsModifier());
+            PlotControl = new Format.PlotControl();
+            SensorInfos = new List<SensorInfo>();
+            SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor1", NetWorkID = 5001, SensorID = 1, SensorStatus = SensorInfo.Status.Ok };
+            SensorInfo sensorInfo2 = new SensorInfo() { Name = "New Sensor2", NetWorkID = 5001, SensorID = 2, SensorStatus = SensorInfo.Status.Ok };
+            SensorInfos.Add(sensorInfo);
+            SensorInfos.Add(sensorInfo2);
+            NodeList.Items.Refresh();
             PortListData = SerialPort.GetPortNames();
-            sensorData = new SensorData();
-            //Values = new ChartValues<double> { };
-            //PlotControl = new Format.PlotControl();
-            PlotControl.Scale = 50;
+            SelectedSensor = SensorInfos[0];
+            PlotControl.Scale = 5;
             DataContext = this;
             sciChartSurface.DataContext = PlotControl;
             sll.DataContext = PlotControl;
             lll.DataContext = PlotControl;
-            Status.DataContext = sensorData;
-
-            //InitCOM("COM3");
-        }
-
-        private void SelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e)
-        {
-            //Perform actions when SelectedItem changes
-            //MessageBox.Show(sciChartSurface.ViewportManager.);
-
+            Status.DataContext = SelectedSensor.SensorData;
         }
 
         public SerialPort serialPort;//串口对象类
@@ -72,29 +53,28 @@ namespace GUI
             serialPort.RtsEnable = true;
             return OpenPort();//串口打开
         }
-
         /// 数据接收事件
         private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             // Thread.Sleep(2000);
             //serialPort.Read(readBuffer, 0, readBuffer.Length);
             string str = serialPort.ReadLine();
-            sensorData.GetSensorData(str);
-            using (sciChartSurface.SuspendUpdates())
+            Format.DataPackage dataPackage = Format.DataPackage.Decode(str);
+            SensorInfo sensorInfo = SensorInfos.Find(x => x.SensorID == dataPackage.SensorID);
+            if (sensorInfo != null)
             {
-                sensorData.PressureLine.Append(DateTime.Now, (sensorData.Pressure / 65536d + 0.095) / 0.009);
-                PlotControl.RefreshLimit(DateTime.Now);
-                //if (sciChartSurface.ZoomState == ZoomStates.AtExtents)
-                //{
-                //    PlotControl.RefreshLimit(DateTime.Now);
-                //    sciChartSurface.XAxis.VisibleRange = new SciChart.Data.Model.DateRange(PlotControl.Min, PlotControl.Max);
-                //}
-                LineSeries.DataSeries = sensorData.PressureLine;
+                sensorInfo.SensorData.GetSensorData(dataPackage);
+                if (sensorInfo == SelectedSensor)
+                {
+                    using (sciChartSurface.SuspendUpdates())
+                    {
+                        PlotControl.RefreshLimit(DateTime.Now);
+                        LineSeries.DataSeries = SelectedSensor.SensorData.PressureLine;
+                    }
+                }
+
             }
-            //MessageBox.Show(sensorData.Pressure);
         }
-
-
         //打开串口的方法
         public bool OpenPort()
         {
@@ -125,11 +105,27 @@ namespace GUI
         {
             ComboBox comboBox = PortList;
             if (comboBox.SelectedItem != null) InitCOM(comboBox.Text);
+            Button button = sender as Button;
+            if (serialPort.IsOpen) button.IsEnabled = false;
         }
-
         private void Label_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            SensorInfo sensor = NodeList.SelectedItem as SensorInfo;
+            if(sensor != SelectedSensor)
+            {
+                SelectedSensor = sensor;
+                Status.DataContext = SelectedSensor.SensorData;
+                LineSeries.DataSeries = SelectedSensor.SensorData.PressureLine;
+            }
             //System.Diagnostics.Process.Start("Explorer.exe", @"/select,C:\mylog.log");
+        }
+        private void SettingBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var settingWindow = new SettingMaker();
+            settingWindow.ShowDialog();
+            SensorInfos.Clear();
+            SensorInfos.AddRange(settingWindow.SensorInfos);
+            NodeList.Items.Refresh();
         }
     }
 }

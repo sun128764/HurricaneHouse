@@ -3,32 +3,45 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using System.Drawing;
+using System.Windows.Media;
+using Newtonsoft.Json;
 
 namespace GUI
 {
-    class SensorInfo
+    public class SensorInfo
     {
-        public enum Types { Router, Anemometer, Humidity, regular }
+        public ObservableCollection<SensorInfo> Items { get; set; }
+        public enum Types { Router, Anemometer, Humidity, Regular }
+        
+        public enum Status { Ok, Lost, Error, Wait };
 
-        private string _name;
-        private int _netWorkID;
-        private int _sensorID;
-        private Types _sensorType;
-        private string _metaData;
-
-        public string Name => _name;
-        public int NetWorkID => _netWorkID;
-        public int SensorID => _sensorID;
-        public Types SensorType => _sensorType;
-        public string MetaData => _metaData;
-
-        public void SetInfo(string name, int netWorkID, int sensorID,Types type, string metaData)
+        public string Name { set; get; }
+        public int NetWorkID { set; get; }
+        public int SensorID { set; get; }
+        public Types SensorType { set; get; }
+        [JsonIgnore]
+        public int TypeIndex
         {
-            this._name = name;
-            this._netWorkID = netWorkID;
-            this._sensorID = sensorID;
-            this._sensorType = type;
-            this._metaData = metaData;
+            set
+            {
+                SensorType = (Types)value;
+            }
+            get
+            {
+                return (int)this.SensorType;
+            }
         }
+        public string MetaData { set; get; }
+        [JsonIgnore]
+        public Status SensorStatus { set; get; }
+        [JsonIgnore]
+        public SensorData SensorData = new SensorData();
+        public SensorInfo()
+        {
+            this.Items = new ObservableCollection<SensorInfo>();
+        }
+
     }
 }

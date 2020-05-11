@@ -10,6 +10,7 @@ namespace GUI
     public class SensorData : INotifyPropertyChanged
     {
         private enum Type { Temprature, Battery, Pressure, WindSpeed, WindDirection, Huminity };
+        private readonly string[] windName = new string[16] { "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW" };
         // These fields hold the values for the public properties.
         private int _temperature;
         private int _batteryLevel;
@@ -56,7 +57,6 @@ namespace GUI
                 return ConvertToString(this._temperature, Type.Temprature);
             }
         }
-
         public string BatteryLevelString
         {
             get
@@ -71,7 +71,6 @@ namespace GUI
                 return ConvertToString(this._pressure, Type.Pressure);
             }
         }
-
         public string WindSpeedString
         {
             get
@@ -79,11 +78,25 @@ namespace GUI
                 return ConvertToString(this._windSpeed, Type.WindSpeed);
             }
         }
+        public double WindScale
+        {
+            get
+            {
+                return 0;
+            }
+        }
         public string WindDirectionString
         {
             get
             {
                 return ConvertToString(this._windDirection, Type.WindDirection);
+            }
+        }
+        public double WindAngle
+        {
+            get
+            {
+                return (double)this._windDirection / (2 << (BitDepth - 1)) * RefVol * 57.6 / (57.6 + 150) * 20;
             }
         }
         public string HuminityString
@@ -130,7 +143,6 @@ namespace GUI
                 }
             }
         }
-
         public int Pressure
         {
             get
@@ -147,7 +159,6 @@ namespace GUI
                 }
             }
         }
-
         public int WindSpeed
         {
             get
@@ -207,7 +218,6 @@ namespace GUI
                     if (this.Pressure1m.Count < 1) return "0";
                     else return ConvertToString((int)this.Pressure1m.Average(t => t.Value), Type.Pressure);
                 }
-
             }
         }
 
@@ -234,8 +244,8 @@ namespace GUI
             {
                 case Type.Temprature:
                     res = (voltage - 0.5) / 0.01;
-                    if (isSI) return res.ToString("F3") + "ºC";
-                    else return (res * 1.8 + 32).ToString("F3") + "ºF";
+                    if (isSI) return res.ToString("F1") + "ºC";
+                    else return (res * 1.8 + 32).ToString("F1") + "ºF";
                 case Type.Battery:
                     return (voltage * 2).ToString("F3") + "V";
                 case Type.Pressure:
@@ -243,39 +253,38 @@ namespace GUI
                     if (isSI) return res.ToString("F3") + "kPa";
                     else return (res * 0.145037738).ToString("F3") + "PSI";
                 case Type.WindSpeed:
-                    return (voltage * 57.6 / (57.6 + 150) * 20).ToString("F3") + "m//s";
+                    return (voltage * 57.6 / (57.6 + 150) * 20).ToString("F1") + "m//s";
                 case Type.WindDirection:
-                    return (voltage * 57.6 / (57.6 + 150) * 72).ToString("F2") + "º";
+                    double direction = (voltage * 57.6 / (57.6 + 150) * 72);
+                    string name = windName[(int)direction / 16];
+                    return name + direction.ToString("F2") + "º";
                 case Type.Huminity:
                     return "N/A";
                 default:
                     return "error";
             }
         }
-        public void GetSensorData(string s)
+        public void GetSensorData(Format.DataPackage package)
         {
-            Regex regex = new Regex(@"-?[0-9]\d*");
-            MatchCollection match = regex.Matches(s);
-            if (match.Count == 8)
-            {
-                DateTime time = DateTime.Now;
-                int i = 3;
-                Temperature = int.Parse(match[i++].Value);
-                BatteryLevel = int.Parse(match[i++].Value);
-                Pressure = int.Parse(match[i++].Value);
-                //WindSpeed = int.Parse(match[i++].Value);
-                //Huminity = int.Parse(match[i++].Value);
-                WindSpeed = 0;
-                Huminity = 0;
-                {
-                    AddData(ref Pressure1m, time, _pressure, -1);
-                    NotifyPropertyChanged("PressureAvg1m");
-                    AddData(ref Pressure5m, time, _pressure, -5);
-                    AddData(ref Pressure30m, time, _pressure, -30);
-                    AddData(ref Temperature5m, time, _temperature, -5);
-                    AddData(ref Huminity5m, time, _huminity, -5);
-                }
-            }
+            Temperature = package.Temperature;
+            BatteryLevel = package.Battery;
+            Pressure = package.Pressure;
+            WindSpeed = package.WindSpeed;
+            WindDirection = package.WindDirection;
+            Huminity = package.Huminity;
+            WindSpeed = 0;
+            WindDirection = 0;
+            Huminity = 0;
+
+            PressureLine.Append(package.Time, (Pressure / 65536d + 0.095) / 0.009);
+
+            AddData(ref Pressure1m, package.Time, _pressure, -1);
+            NotifyPropertyChanged("PressureAvg1m");
+            AddData(ref Pressure5m, package.Time, _pressure, -5);
+            AddData(ref Pressure30m, package.Time, _pressure, -30);
+            AddData(ref Temperature5m, package.Time, _temperature, -5);
+            AddData(ref Huminity5m, package.Time, _huminity, -5);
+
         }
         private void AddData(ref List<Format.TimeSeries> series, DateTime time, int value, double interval)
         {
