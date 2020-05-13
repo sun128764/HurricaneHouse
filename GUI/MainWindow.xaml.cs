@@ -26,8 +26,8 @@ namespace GUI
         {
             InitializeComponent();
             SensorInfos = new List<SensorInfo>();
-            SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor1", NetWorkID = 5001, SensorID = 1, SensorStatus = SensorInfo.Status.Ok };
-            SensorInfo sensorInfo2 = new SensorInfo() { Name = "New Sensor2", NetWorkID = 5001, SensorID = 2, SensorStatus = SensorInfo.Status.Ok };
+            SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor1", NetWorkID = 5001, SensorID = 1, SensorStatus = SensorInfo.Status.Ok, SensorType = SensorInfo.Types.Humidity };
+            SensorInfo sensorInfo2 = new SensorInfo() { Name = "New Sensor2", NetWorkID = 5001, SensorID = 2, SensorStatus = SensorInfo.Status.Ok, SensorType = SensorInfo.Types.Anemometer };
             SensorInfos.Add(sensorInfo);
             SensorInfos.Add(sensorInfo2);
             NodeList.Items.Refresh();
@@ -108,7 +108,7 @@ namespace GUI
         private void Label_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             SensorInfo sensor = NodeList.SelectedItem as SensorInfo;
-            if(sensor != SelectedSensor)
+            if (sensor != SelectedSensor)
             {
                 SelectedSensor = sensor;
                 Status.DataContext = SelectedSensor.SensorData;

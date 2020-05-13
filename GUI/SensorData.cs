@@ -272,7 +272,7 @@ namespace GUI
                     double sRH = (voltage / RefVol - 0.1515) / 0.00636;
                     double temp = ((Temperature / (2 << (BitDepth - 1)) * RefVol) - 0.5) / 0.01;
                     double tRH = sRH / (1.0546 - 0.00216 * temp);
-                    if (SensorType == SensorInfo.Types.Humidity) return tRH.ToString() + "%RH";
+                    if (SensorType == SensorInfo.Types.Humidity) return tRH.ToString("F0") + "%RH";
                     else return "N/A";
                 default:
                     return "error";
@@ -286,9 +286,6 @@ namespace GUI
             WindSpeed = package.WindSpeed;
             WindDirection = package.WindDirection;
             Huminity = package.Huminity;
-            WindSpeed = 0;
-            WindDirection = 0;
-            Huminity = 0;
 
             PressureLine.Append(package.Time, (Pressure / 65536d + 0.095) / 0.009);
 
