@@ -51,7 +51,6 @@ void ForwardData() {
     while (Serial2.available()) {
       Serial.write( Serial2.read());
     }
-
   }
 }
 
@@ -102,7 +101,7 @@ void setup() {
   Serial2.printf("ATNI %d\r", BoardID ); // node id
   delay(100);
   Serial.print("2");
-  if (BoardType == 1) {
+  if (BoardType == 2) {
     Serial2.print("ATCE 1\r"); // set cooridnator device
   } else {
     Serial2.print("ATCE 0\r"); // set router/endpoint device

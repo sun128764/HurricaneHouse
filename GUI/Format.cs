@@ -138,7 +138,8 @@ namespace Format
                 dataPackage.Battery = int.Parse(match[i++].Value);
                 dataPackage.Pressure = int.Parse(match[i++].Value);
                 dataPackage.WindSpeed = int.Parse(match[i++].Value);
-                dataPackage.Huminity = int.Parse(match[i++].Value);
+                if(dataPackage.SensorTYpe == 2) dataPackage.WindDirection = int.Parse(match[i++].Value);
+                else dataPackage.Huminity = int.Parse(match[i++].Value);
             }
             else dataPackage = null;
             return dataPackage;
