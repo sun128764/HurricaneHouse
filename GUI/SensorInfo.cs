@@ -14,13 +14,24 @@ namespace GUI
     {
         public ObservableCollection<SensorInfo> Items { get; set; }
         public enum Types { Router, Anemometer, Humidity, Regular }
-        
+
         public enum Status { Ok, Lost, Error, Wait };
 
         public string Name { set; get; }
         public int NetWorkID { set; get; }
         public int SensorID { set; get; }
-        public Types SensorType { set; get; }
+        public Types SensorType
+        {
+            set
+            {
+                this.SensorData.SensorType = value;
+
+            }
+            get
+            {
+                return this.SensorData.SensorType;
+            }
+        }
         [JsonIgnore]
         public int TypeIndex
         {

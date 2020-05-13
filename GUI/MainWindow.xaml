@@ -71,14 +71,14 @@
                             <Label Content="1-Min Avg:"/>
                             <Label Content="{Binding PressureAvg1m}" Margin="0,0,0,0" Width="auto"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal">
+                        <!--<StackPanel Orientation="Horizontal">
                             <Label Content="5-Min Avg:"/>
                             <Label Content="{Binding PressureString}" Margin="0,0,0,0" Width="auto"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Content="30-Min Avg:"/>
                             <Label Content="{Binding PressureString}" Margin="0,0,0,0" Width="auto"/>
-                        </StackPanel>
+                        </StackPanel>-->
                     </StackPanel>
                 </GroupBox>
                 <GroupBox Header="Wind" Grid.Row="0" Grid.Column="2" Margin="5" Height="auto">
@@ -110,10 +110,10 @@
                             <Label Content="Absolute:"/>
                             <Label Content="N/A" Margin="0,0,0,-0.5" Width="auto"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal">
+                        <!--<StackPanel Orientation="Horizontal">
                             <Label Content="1-Min Avg:"/>
                             <Label Content="N/A" Margin="0,0,0,-0.5" Width="auto"/>
-                        </StackPanel>
+                        </StackPanel>-->
                     </StackPanel>
                 </GroupBox>
 
@@ -123,10 +123,10 @@
                             <Label Content="Temp:"/>
                             <Label Content="{Binding TemperautreString}" Margin="0,0,0,0" Width="auto"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal">
+                        <!--<StackPanel Orientation="Horizontal">
                             <Label Content="1-Min Avg:"/>
                             <Label Content="{Binding TemperautreString}" Width="auto"/>
-                        </StackPanel>
+                        </StackPanel>-->
                     </StackPanel>
                 </GroupBox>
             </Grid>
