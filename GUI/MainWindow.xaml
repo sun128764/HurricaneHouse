@@ -89,11 +89,11 @@
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
                         <Label Content="{Binding WindDirectionString}" HorizontalAlignment="Center" Grid.Row="0"/>
-                        <Image x:Name="WindSign" Source="icons/cursor.png" Stretch="Fill" Width="20" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
+                        <Image x:Name="WindSign" Source="icons/cursor.png" Stretch="Fill" Width="20" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" RenderTransformOrigin=".5,.5">
                             <Image.RenderTransform >
                                 <TransformGroup>
-                                    <!--<RotateTransform Angle="{Binding WindAngle}"/>
-                                    <ScaleTransform ScaleX="{Binding WindScale}" ScaleY="{Binding WindScale}"/>-->
+                                    <RotateTransform Angle="{Binding WindAngle}" />
+                                    <ScaleTransform ScaleX="{Binding WindScale}" ScaleY="{Binding WindScale}"/>
                                 </TransformGroup>
                             </Image.RenderTransform>
                         </Image>

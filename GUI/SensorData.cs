@@ -84,7 +84,7 @@ namespace GUI
         {
             get
             {
-                return 0;
+                return 1;
             }
         }
         public string WindDirectionString
@@ -98,7 +98,8 @@ namespace GUI
         {
             get
             {
-                return (double)this._windDirection / (2 << (BitDepth - 1)) * RefVol * 57.6 / (57.6 + 150) * 20;
+                if (SensorType == SensorInfo.Types.Anemometer) return (double)this._windDirection / (2 << (BitDepth - 1)) * RefVol * 57.6 / (57.6 + 150) * 20;
+                else return 0;
             }
         }
         public string HuminityString
