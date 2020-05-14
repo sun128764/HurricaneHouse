@@ -98,10 +98,10 @@ namespace GUI
         {
             get
             {
-                double direction = (this._windDirection / (2 << (BitDepth - 1)) * RefVol * (57.6 + 150) / 57.6 * 72);
+                double direction = (double)this._windDirection / (2 << (BitDepth - 1)) * RefVol * (57.6 + 150) / 57.6 * 72;
                 if (SensorType == SensorInfo.Types.Anemometer) return direction;
                 //if (SensorType == SensorInfo.Types.Anemometer) return (double)this._windDirection / (2 << (BitDepth - 1)) * RefVol * 57.6 / (57.6 + 150) * 20;
-                else return 0;
+                else return direction;
             }
         }
         public string HuminityString
@@ -265,11 +265,11 @@ namespace GUI
                     if (isSI) return res.ToString("F3") + "kPa";
                     else return (res * 0.145037738).ToString("F3") + "PSI";
                 case Type.WindSpeed:
-                    if (SensorType == SensorInfo.Types.Anemometer) return (voltage * 57.6 / (57.6 + 150) * 20).ToString("F1") + "m//s";
+                    if (SensorType == SensorInfo.Types.Anemometer) return (voltage * (57.6 + 150) / 57.6 * 20).ToString("F1") + "m//s";
                     else return "N/A";
                 case Type.WindDirection:
-                    double direction = (voltage * (57.6 + 150)  / 57.6 * 72) ;
-                    string name = windName[(int)(direction%360 / 22.5)];
+                    double direction = (voltage * (57.6 + 150) / 57.6 * 72);
+                    string name = windName[(int)(direction % 360 / 22.5)];
                     if (SensorType == SensorInfo.Types.Anemometer) return name + " " + direction.ToString("F2") + "º";
                     else return "N/A";
                 case Type.Huminity:
