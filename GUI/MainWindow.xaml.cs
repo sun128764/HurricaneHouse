@@ -45,13 +45,13 @@ namespace GUI
         public bool InitCOM(string PortName)
         {
             serialPort = new SerialPort(PortName, 9600, Parity.None, 8, StopBits.One);
-            serialPort.DataReceived += new SerialDataReceivedEventHandler(serialPort_DataReceived);//DataReceived事件委托
+            serialPort.DataReceived += new SerialDataReceivedEventHandler(SerialPort_DataReceived);//DataReceived事件委托
             serialPort.ReceivedBytesThreshold = 1;
             serialPort.RtsEnable = true;
             return OpenPort();//串口打开
         }
         /// 数据接收事件
-        private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             // Thread.Sleep(2000);
             //serialPort.Read(readBuffer, 0, readBuffer.Length);

@@ -18,7 +18,7 @@ namespace GUI
         private int _windSpeed;
         private int _windDirection;
         private int _huminity;
-        private int _status;
+        //private int _status;
 
         public int SensorID { get; set; }
         public int NetworkID { get; set; }
