@@ -234,13 +234,6 @@ namespace GUI
             }
         }
         #endregion
-        //public string Pressure1mAvg
-        //{
-        //    get
-        //    {
-        //        return Pressure1m.Average(t => t.Value);
-        //    }
-        //}
         /// <summary>
         /// Convert ADC reading to actual value; SI or Eng unit is determined by SensorData.isSI;
         /// </summary>
