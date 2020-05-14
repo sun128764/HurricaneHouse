@@ -57,19 +57,21 @@ namespace GUI
             //serialPort.Read(readBuffer, 0, readBuffer.Length);
             string str = serialPort.ReadLine();
             Format.DataPackage dataPackage = Format.DataPackage.Decode(str);
-            SensorInfo sensorInfo = SensorInfos.Find(x => x.SensorID == dataPackage.SensorID);
-            if (sensorInfo != null)
+            if (dataPackage != null)
             {
-                sensorInfo.SensorData.GetSensorData(dataPackage);
-                if (sensorInfo == SelectedSensor)
+                SensorInfo sensorInfo = SensorInfos.Find(x => x.SensorID == dataPackage.SensorID);
+                if (sensorInfo != null)
                 {
-                    using (sciChartSurface.SuspendUpdates())
+                    sensorInfo.SensorData.GetSensorData(dataPackage);
+                    if (sensorInfo == SelectedSensor)
                     {
-                        SelectedSensor.SensorData.PlotControl.RefreshLimit(DateTime.Now);
-                        LineSeries.DataSeries = SelectedSensor.SensorData.PressureLine;
+                        using (sciChartSurface.SuspendUpdates())
+                        {
+                            SelectedSensor.SensorData.PlotControl.RefreshLimit(DateTime.Now);
+                            LineSeries.DataSeries = SelectedSensor.SensorData.PressureLine;
+                        }
                     }
                 }
-
             }
         }
         //打开串口的方法
