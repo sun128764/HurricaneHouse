@@ -18,17 +18,19 @@ namespace GUI
         private int _windSpeed;
         private int _windDirection;
         private int _huminity;
-        private int _status;
+        //private int _status;
 
         public int SensorID { get; set; }
         public int NetworkID { get; set; }
-        public int SensorType { get; set; }
+        public SensorInfo.Types SensorType { get; set; }
 
         private const double RefVol = 3.3;
         private const int BitDepth = 16;
         private static readonly object locker = new object();
+        private static readonly object Tlocker = new object();
         public bool isSI = true;
 
+        public Format.PlotControl PlotControl = new Format.PlotControl() { Scale = 5 };
         public List<Format.TimeSeries> Pressure1m = new List<Format.TimeSeries>();
         public List<Format.TimeSeries> Pressure5m = new List<Format.TimeSeries>();
         public List<Format.TimeSeries> Pressure30m = new List<Format.TimeSeries>();
@@ -82,7 +84,7 @@ namespace GUI
         {
             get
             {
-                return 0;
+                return 1;
             }
         }
         public string WindDirectionString
@@ -96,7 +98,10 @@ namespace GUI
         {
             get
             {
-                return (double)this._windDirection / (2 << (BitDepth - 1)) * RefVol * 57.6 / (57.6 + 150) * 20;
+                double direction = (double)this._windDirection / (2 << (BitDepth - 1)) * RefVol * (57.6 + 150) / 57.6 * 72;
+                if (SensorType == SensorInfo.Types.Anemometer) return direction;
+                //if (SensorType == SensorInfo.Types.Anemometer) return (double)this._windDirection / (2 << (BitDepth - 1)) * RefVol * 57.6 / (57.6 + 150) * 20;
+                else return direction;
             }
         }
         public string HuminityString
@@ -108,17 +113,24 @@ namespace GUI
         }
         #endregion
         #region Real Time Data
+
         public int Temperature
         {
             get
             {
-                return this._temperature;
+                lock (Tlocker)
+                {
+                    return this._temperature;
+                }
             }
             set
             {
                 if (value != this._temperature)
                 {
-                    this._temperature = value;
+                    lock (Tlocker)
+                    {
+                        this._temperature = value;
+                    }
                     NotifyPropertyChanged("TemperautreString");
                     NotifyPropertyChanged();
                 }
@@ -187,6 +199,7 @@ namespace GUI
                 {
                     this._windDirection = value;
                     NotifyPropertyChanged("WindDirectionString");
+                    NotifyPropertyChanged("WindAngle");
                     NotifyPropertyChanged();
                 }
             }
@@ -220,15 +233,7 @@ namespace GUI
                 }
             }
         }
-
         #endregion
-        //public string Pressure1mAvg
-        //{
-        //    get
-        //    {
-        //        return Pressure1m.Average(t => t.Value);
-        //    }
-        //}
         /// <summary>
         /// Convert ADC reading to actual value; SI or Eng unit is determined by SensorData.isSI;
         /// </summary>
@@ -253,13 +258,19 @@ namespace GUI
                     if (isSI) return res.ToString("F3") + "kPa";
                     else return (res * 0.145037738).ToString("F3") + "PSI";
                 case Type.WindSpeed:
-                    return (voltage * 57.6 / (57.6 + 150) * 20).ToString("F1") + "m//s";
+                    if (SensorType == SensorInfo.Types.Anemometer) return (voltage * (57.6 + 150) / 57.6 * 20).ToString("F1") + "m//s";
+                    else return "N/A";
                 case Type.WindDirection:
-                    double direction = (voltage * 57.6 / (57.6 + 150) * 72);
-                    string name = windName[(int)direction / 16];
-                    return name + direction.ToString("F2") + "º";
+                    double direction = (voltage * (57.6 + 150) / 57.6 * 72);
+                    string name = windName[(int)(direction % 360 / 22.5)];
+                    if (SensorType == SensorInfo.Types.Anemometer) return name + " " + direction.ToString("F2") + "º";
+                    else return "N/A";
                 case Type.Huminity:
-                    return "N/A";
+                    double sRH = (voltage / RefVol - 0.1515) / 0.00636;
+                    double temp = ((Temperature / (2 << (BitDepth - 1)) * RefVol) - 0.5) / 0.01;
+                    double tRH = sRH / (1.0546 - 0.00216 * temp);
+                    if (SensorType == SensorInfo.Types.Humidity) return tRH.ToString("F0") + "%RH";
+                    else return "N/A";
                 default:
                     return "error";
             }
@@ -272,9 +283,6 @@ namespace GUI
             WindSpeed = package.WindSpeed;
             WindDirection = package.WindDirection;
             Huminity = package.Huminity;
-            WindSpeed = 0;
-            WindDirection = 0;
-            Huminity = 0;
 
             PressureLine.Append(package.Time, (Pressure / 65536d + 0.095) / 0.009);
 

@@ -19,27 +19,24 @@ namespace GUI
     {
         public string SettingPath;
         public string[] PortListData { get; set; }
-        public Format.PlotControl PlotControl { get; set; }
         public List<SensorInfo> SensorInfos { set; get; }
         public SensorInfo SelectedSensor { set; get; }
 
         public MainWindow()
         {
             InitializeComponent();
-            PlotControl = new Format.PlotControl();
             SensorInfos = new List<SensorInfo>();
-            SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor1", NetWorkID = 5001, SensorID = 1, SensorStatus = SensorInfo.Status.Ok };
-            SensorInfo sensorInfo2 = new SensorInfo() { Name = "New Sensor2", NetWorkID = 5001, SensorID = 2, SensorStatus = SensorInfo.Status.Ok };
+            SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor1", NetWorkID = 5001, SensorID = 1, SensorStatus = SensorInfo.Status.Ok, SensorType = SensorInfo.Types.Humidity };
+            SensorInfo sensorInfo2 = new SensorInfo() { Name = "New Sensor2", NetWorkID = 5001, SensorID = 2, SensorStatus = SensorInfo.Status.Ok, SensorType = SensorInfo.Types.Anemometer };
             SensorInfos.Add(sensorInfo);
             SensorInfos.Add(sensorInfo2);
             NodeList.Items.Refresh();
             PortListData = SerialPort.GetPortNames();
             SelectedSensor = SensorInfos[0];
-            PlotControl.Scale = 5;
             DataContext = this;
-            sciChartSurface.DataContext = PlotControl;
-            sll.DataContext = PlotControl;
-            lll.DataContext = PlotControl;
+            sciChartSurface.DataContext = SelectedSensor.SensorData.PlotControl;
+            sll.DataContext = SelectedSensor.SensorData.PlotControl;
+            lll.DataContext = SelectedSensor.SensorData.PlotControl;
             Status.DataContext = SelectedSensor.SensorData;
         }
 
@@ -48,31 +45,33 @@ namespace GUI
         public bool InitCOM(string PortName)
         {
             serialPort = new SerialPort(PortName, 9600, Parity.None, 8, StopBits.One);
-            serialPort.DataReceived += new SerialDataReceivedEventHandler(serialPort_DataReceived);//DataReceived事件委托
+            serialPort.DataReceived += new SerialDataReceivedEventHandler(SerialPort_DataReceived);//DataReceived事件委托
             serialPort.ReceivedBytesThreshold = 1;
             serialPort.RtsEnable = true;
             return OpenPort();//串口打开
         }
         /// 数据接收事件
-        private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             // Thread.Sleep(2000);
             //serialPort.Read(readBuffer, 0, readBuffer.Length);
             string str = serialPort.ReadLine();
             Format.DataPackage dataPackage = Format.DataPackage.Decode(str);
-            SensorInfo sensorInfo = SensorInfos.Find(x => x.SensorID == dataPackage.SensorID);
-            if (sensorInfo != null)
+            if (dataPackage != null)
             {
-                sensorInfo.SensorData.GetSensorData(dataPackage);
-                if (sensorInfo == SelectedSensor)
+                SensorInfo sensorInfo = SensorInfos.Find(x => x.SensorID == dataPackage.SensorID);
+                if (sensorInfo != null)
                 {
-                    using (sciChartSurface.SuspendUpdates())
+                    sensorInfo.SensorData.GetSensorData(dataPackage);
+                    if (sensorInfo == SelectedSensor)
                     {
-                        PlotControl.RefreshLimit(DateTime.Now);
-                        LineSeries.DataSeries = SelectedSensor.SensorData.PressureLine;
+                        using (sciChartSurface.SuspendUpdates())
+                        {
+                            SelectedSensor.SensorData.PlotControl.RefreshLimit(DateTime.Now);
+                            LineSeries.DataSeries = SelectedSensor.SensorData.PressureLine;
+                        }
                     }
                 }
-
             }
         }
         //打开串口的方法
@@ -111,11 +110,14 @@ namespace GUI
         private void Label_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             SensorInfo sensor = NodeList.SelectedItem as SensorInfo;
-            if(sensor != SelectedSensor)
+            if (sensor != SelectedSensor)
             {
                 SelectedSensor = sensor;
                 Status.DataContext = SelectedSensor.SensorData;
                 LineSeries.DataSeries = SelectedSensor.SensorData.PressureLine;
+                sciChartSurface.DataContext = SelectedSensor.SensorData.PlotControl;
+                sll.DataContext = SelectedSensor.SensorData.PlotControl;
+                lll.DataContext = SelectedSensor.SensorData.PlotControl;
             }
             //System.Diagnostics.Process.Start("Explorer.exe", @"/select,C:\mylog.log");
         }

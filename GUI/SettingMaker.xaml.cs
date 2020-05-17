@@ -46,8 +46,10 @@ namespace GUI
 
         private void OpenBtn_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Setting files (*.json)|*.json";
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Setting files (*.json)|*.json"
+            };
             if (openFileDialog.ShowDialog() == true)
             {
                 Setting = File.ReadAllText(openFileDialog.FileName);
@@ -60,10 +62,12 @@ namespace GUI
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
             string output = JsonConvert.SerializeObject(SensorInfos, Formatting.Indented);
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Setting files (*.json)|*.json";
-            saveFileDialog.AddExtension = true;
-            saveFileDialog.OverwritePrompt = true;
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Setting files (*.json)|*.json",
+                AddExtension = true,
+                OverwritePrompt = true
+            };
             if (saveFileDialog.ShowDialog() == true)
             {
                 File.WriteAllText(saveFileDialog.FileName, output);

@@ -1,7 +1,7 @@
 // parameters
 const unsigned int NetworkID = 5001; //
 const unsigned int BoardID = 2; //
-const unsigned int BoardType = 4; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
+const unsigned int BoardType = 2; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
 
 const unsigned int Fs = 50; // sample reading per second (per sensor)
 const unsigned int nSensors = 5;
@@ -51,7 +51,6 @@ void ForwardData() {
     while (Serial2.available()) {
       Serial.write( Serial2.read());
     }
-
   }
 }
 
@@ -102,7 +101,7 @@ void setup() {
   Serial2.printf("ATNI %d\r", BoardID ); // node id
   delay(100);
   Serial.print("2");
-  if (BoardType == 1) {
+  if (BoardType == 2) {
     Serial2.print("ATCE 1\r"); // set cooridnator device
   } else {
     Serial2.print("ATCE 0\r"); // set router/endpoint device
@@ -126,7 +125,7 @@ void setup() {
 }
 
 void loop() { // while true
-  if (BoardType == 1) {
+  if (BoardType == 2) {
     ForwardData();
   }
   CurrentMillis = millis();
