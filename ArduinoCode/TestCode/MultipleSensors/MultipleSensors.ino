@@ -88,7 +88,6 @@ void setup() {
   pinMode(blue, OUTPUT);
   // Default ADC's resolution of the Atmel's ATSAM21 is 10bit (reading range from 0 to 1023).
   analogReadResolution(16);
-  Serial.print("1");
   Serial2.begin(9600);
   pinPeripheral(XBeeRX, PIO_SERCOM_ALT);
   pinPeripheral(XBeeTX, PIO_SERCOM_ALT);
@@ -100,7 +99,6 @@ void setup() {
   delay(100);
   Serial2.printf("ATNI %d\r", BoardID ); // node id
   delay(100);
-  Serial.print("2");
   if (BoardType == 2) {
     Serial2.print("ATCE 1\r"); // set cooridnator device
   } else {
@@ -114,7 +112,7 @@ void setup() {
   delay(100);
   Serial2.print("ATNP\r" ); // read the max payload of a packet. (determined from encryption and type of coommunication)
   delay(100);
-  Serial.print("3");
+  Serial2.print("ATCN\r" ); //Exit command mode.
   while (Serial2.available()) {
     Serial.write( Serial2.read() ); // display response
   }
