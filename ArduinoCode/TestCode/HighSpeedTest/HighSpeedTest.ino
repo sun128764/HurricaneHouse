@@ -1,7 +1,7 @@
 // parameters
 const unsigned int NetworkID = 5001; //
 const unsigned int BoardID = 2; //
-const unsigned int BoardType = 4; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
+const unsigned int BoardType = 3; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
 
 const unsigned int Fs = 50; // sample reading per second (per sensor)
 const unsigned int nSensors = 5;
@@ -62,27 +62,25 @@ void ForwardData() {
 
 void SendSample() {
   analogReadResolution(8);
-  int i = 0;
-  SerBuf[i++] = BoardID;
-  SerBuf[i++] = BoardType;
-  SerBuf[i++] = analogRead(A0);//Temperature
-  SerBuf[i++] = analogRead(A1);//Battery
-  SerBuf[i++] = analogRead(A3);//Extention A3
-  SerBuf[i++] = analogRead(A4);// Expansion A4
+  SerBuf[0] = BoardID;
+  SerBuf[1] = BoardType;
+  SerBuf[2] = analogRead(A0);//Temperature
+  SerBuf[3] = analogRead(A1);//Battery
+  SerBuf[4] = analogRead(A3);//Extention A3
+  SerBuf[5] = analogRead(A4);// Expansion A4
   //Mills() to Byte[]
-  SerBuf[i++] = (StartTime >> 24) & LMask;
-  SerBuf[i++] = (StartTime >> 16) & LMask;
-  SerBuf[i++] = (StartTime >> 8) & LMask;
-  SerBuf[i++] = (StartTime) & LMask;
-  for (int j = 0; j <= 10; j++) {
+  SerBuf[6] = (StartTime >> 24) & LMask;
+  SerBuf[7] = (StartTime >> 16) & LMask;
+  SerBuf[8] = (StartTime >> 8) & LMask;
+  SerBuf[9] = (StartTime) & LMask;
+  int i=10;
+  for (int j = 0; j < 10; j++) {
     SerBuf[i++] = (Pressure[j] >> 8) & PMask;
     SerBuf[i++] = (Pressure[j]) & PMask;
   }
+  Serial2.write(255);
   Serial2.write(SerBuf, 30);
   analogReadResolution(14);
-  number = 0;
-  LastMillis = CurrentMillis;
-  lock = true;
 }
 
 void setup() {
@@ -136,7 +134,7 @@ void loop() { // while true
     ForwardData();
   }
   CurrentMillis = millis();
-  if ((CurrentMillis - LastMillis) >= 1000 && !lock) {
+  if ((CurrentMillis - LastMillis) >= 100 && !lock) {
     lock = true;
     StartTime = CurrentMillis;
   }
@@ -148,10 +146,13 @@ void loop() { // while true
     Pressure[PressureIndex++] = reading >> 10;
     reading = 0;
     lock = false;
-    if (PressureIndex > 10) {
-      PressureIndex = 0;
-      SendSample();
-    }
+    number = 0;
+    LastMillis = (CurrentMillis / 100) * 100;
+  }
+
+  if (PressureIndex > 9) {
+    PressureIndex = 0;
+    SendSample();
   }
   // XCTU https://www.digi.com/products/embedded-systems/digi-xbee/digi-xbee-tools/xctu#productsupport-utilities
 }

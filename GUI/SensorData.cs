@@ -283,8 +283,13 @@ namespace GUI
             WindSpeed = package.WindSpeed;
             WindDirection = package.WindDirection;
             Huminity = package.Huminity;
-
-            PressureLine.Append(package.Time, (Pressure / 65536d + 0.095) / 0.009);
+            double[] pressureL = new double[10];
+            for(int i = 0; i < 10; i++)
+            {
+                pressureL[i]= (package.PressureList[i] / 65536d + 0.095) / 0.009;
+            }
+            
+            PressureLine.Append(package.TimeSeries, pressureL);
 
             AddData(ref Pressure1m, package.Time, _pressure, -1);
             NotifyPropertyChanged("PressureAvg1m");

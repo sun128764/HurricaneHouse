@@ -26,8 +26,8 @@ namespace GUI
         {
             InitializeComponent();
             SensorInfos = new List<SensorInfo>();
-            SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor1", NetWorkID = 5001, SensorID = 1, SensorStatus = SensorInfo.Status.Ok, SensorType = SensorInfo.Types.Humidity };
-            SensorInfo sensorInfo2 = new SensorInfo() { Name = "New Sensor2", NetWorkID = 5001, SensorID = 2, SensorStatus = SensorInfo.Status.Ok, SensorType = SensorInfo.Types.Anemometer };
+            SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor1", NetWorkID = 5001, SensorID = 2, SensorStatus = SensorInfo.Status.Ok, SensorType = SensorInfo.Types.Humidity };
+            SensorInfo sensorInfo2 = new SensorInfo() { Name = "New Sensor2", NetWorkID = 5001, SensorID = 1, SensorStatus = SensorInfo.Status.Ok, SensorType = SensorInfo.Types.Anemometer };
             SensorInfos.Add(sensorInfo);
             SensorInfos.Add(sensorInfo2);
             NodeList.Items.Refresh();
@@ -46,7 +46,7 @@ namespace GUI
         {
             serialPort = new SerialPort(PortName, 9600, Parity.None, 8, StopBits.One);
             serialPort.DataReceived += new SerialDataReceivedEventHandler(SerialPort_DataReceived);//DataReceived事件委托
-            serialPort.ReceivedBytesThreshold = 1;
+            serialPort.ReceivedBytesThreshold = 31;
             serialPort.RtsEnable = true;
             return OpenPort();//串口打开
         }
@@ -55,8 +55,11 @@ namespace GUI
         {
             // Thread.Sleep(2000);
             //serialPort.Read(readBuffer, 0, readBuffer.Length);
-            string str = serialPort.ReadLine();
-            Format.DataPackage dataPackage = Format.DataPackage.Decode(str);
+            while (serialPort.ReadByte() != 255);
+            while (serialPort.BytesToRead < 30) ;
+            byte[] data = new byte[30];
+            serialPort.Read(data, 0, 30);
+            Format.DataPackage dataPackage = Format.DataPackage.Decode(data);
             if (dataPackage != null)
             {
                 SensorInfo sensorInfo = SensorInfos.Find(x => x.SensorID == dataPackage.SensorID);

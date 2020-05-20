@@ -122,26 +122,31 @@ namespace Format
         public int WindSpeed;
         public int WindDirection;
         public int Huminity;
-        public static DataPackage Decode(String data)
+        public int BoardTime;
+        public int[] PressureList;
+        public DateTime[] TimeSeries;
+        public static DataPackage Decode(byte[] data)
         {
             DataPackage dataPackage = new DataPackage();
-            Regex regex = new Regex(@"-?[0-9]\d*");
-            MatchCollection match = regex.Matches(data);
-            if (match.Count == 8)
+            dataPackage.TimeSeries = new DateTime[10];
+            dataPackage.SensorID = data[0];
+            dataPackage.SensorTYpe = data[1];
+            dataPackage.Temperature = data[2] << 8;
+            dataPackage.Battery = data[3] << 8;
+            dataPackage.WindSpeed = data[4] << 8;
+            if (dataPackage.SensorTYpe == 2) dataPackage.WindDirection = data[5] << 8;
+            else dataPackage.Huminity = data[5] << 8;
+            dataPackage.BoardTime = (data[6] << 24) + (data[7] << 16) + (data[8] << 8) + data[9];
+            dataPackage.Pressure = ((data[10] << 8) + data[11]) << 2;
+            dataPackage.Time = DateTime.Now;
+            dataPackage.PressureList = new int[10];
+            int i = 10;
+            for (int j = 0; j < 10; j++)
             {
-                dataPackage.Time = DateTime.Now;
-                int i = 0;
-                dataPackage.NetworkID = int.Parse(match[i++].Value);
-                dataPackage.SensorID = int.Parse(match[i++].Value);
-                dataPackage.SensorTYpe = int.Parse(match[i++].Value);
-                dataPackage.Temperature = int.Parse(match[i++].Value);
-                dataPackage.Battery = int.Parse(match[i++].Value);
-                dataPackage.Pressure = int.Parse(match[i++].Value);
-                dataPackage.WindSpeed = int.Parse(match[i++].Value);
-                if(dataPackage.SensorTYpe == 2) dataPackage.WindDirection = int.Parse(match[i++].Value);
-                else dataPackage.Huminity = int.Parse(match[i++].Value);
+                dataPackage.PressureList[j] = ((data[i] << 8) + data[i + 1]) << 2;
+                dataPackage.TimeSeries[j] = dataPackage.Time.AddMilliseconds(100 * j);
+                i += 2;
             }
-            else dataPackage = null;
             return dataPackage;
         }
     }
