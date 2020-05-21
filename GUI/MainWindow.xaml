@@ -6,9 +6,14 @@
         xmlns:s="http://schemas.abtsoftware.co.uk/scichart"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
-        Title="FIT Hurricane House Monitor" Height="600" Width="800" MinHeight="600" MinWidth="800">
+        Title="FIT Hurricane House Monitor" Height="600" Width="800" MinHeight="600" MinWidth="800"
+        Closing="Window_Closing">
 
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="161*"/>
+            <ColumnDefinition Width="634*"/>
+        </Grid.ColumnDefinitions>
         <GroupBox Header="Network Status" HorizontalAlignment="Left" Margin="10,50,0,190.5" VerticalAlignment="Stretch" Width="144">
             <TreeView Name="NodeList" ItemsSource="{Binding SensorInfos}" HorizontalAlignment="Stretch" Height="auto" VerticalAlignment="Stretch" Width="118" Margin="0,10,0,10" Background="#FFF8F9E4">
                 <TreeView.ItemTemplate>
@@ -43,7 +48,7 @@
                 </TreeViewItem>-->
             </TreeView>
         </GroupBox>
-        <GroupBox Name="Status" Header="Sensor Status" HorizontalAlignment="Stretch" Height="170" Margin="10,0,10,15" VerticalAlignment="Bottom" Width="auto" Background="#FFF8F9E4">
+        <GroupBox Name="Status" Header="Sensor Status" HorizontalAlignment="Stretch" Height="170" Margin="10,0,10,14.5" VerticalAlignment="Bottom" Width="auto" Background="#FFF8F9E4" Grid.ColumnSpan="2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -132,7 +137,7 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox Name="Monitor" Header="Real-time Monitor" HorizontalAlignment="Stretch" Margin="159,50,10,190.5" VerticalAlignment="Stretch" Background="#FFF8F9E4" >
+        <GroupBox Name="Monitor" Header="Real-time Monitor" HorizontalAlignment="Stretch" Margin="159,50,10,190.5" VerticalAlignment="Stretch" Background="#FFF8F9E4" Grid.ColumnSpan="2" >
             <Grid>
                 <!--  Create the chart surface  -->
                 <!-- where xmlns:s="http://schemas.abtsoftware.co.uk/scichart" -->
@@ -177,12 +182,12 @@
                 </s:SciChartSurface>
             </Grid>
         </GroupBox>
-        <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Height="auto" Margin="0,15,20,0" Width="auto" Orientation="Horizontal">
+        <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Height="auto" Margin="0,15,20,0" Width="auto" Orientation="Horizontal" Grid.Column="1">
             <Label Content="Serial port:" />
             <ComboBox Name="PortList" ItemsSource="{Binding Path=PortListData}" MinWidth="50" />
             <Button Name="ConnectBtn" Content="Start" Click="ConnectBtn_Click" />
         </StackPanel>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Height="30" Margin="0,15,0,0" >
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Height="30" Margin="29,15,191,0" Grid.Column="1" >
             <Label Content="Time Period:"/>
             <Label Name ="lll" Content="{Binding Scale}" Width="35" Margin="-5,0,0,0"/>
             <Label Content="min" Width="auto" Margin="-10,0,0,0"/>

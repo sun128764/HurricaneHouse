@@ -48,7 +48,7 @@ bool lock;
 unsigned long LastMillis;
 unsigned long StartTime;
 unsigned long CurrentMillis;
-const unsigned long LMask = 15;
+const unsigned long LMask = 255;
 const unsigned int PMask = 255;
 byte SerBuf[30];
 

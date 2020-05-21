@@ -125,6 +125,7 @@ namespace Format
         public int BoardTime;
         public int[] PressureList;
         public DateTime[] TimeSeries;
+        public string DataString;
         public static DataPackage Decode(byte[] data)
         {
             DataPackage dataPackage = new DataPackage();
@@ -139,14 +140,28 @@ namespace Format
             dataPackage.BoardTime = (data[6] << 24) + (data[7] << 16) + (data[8] << 8) + data[9];
             dataPackage.Pressure = ((data[10] << 8) + data[11]) << 2;
             dataPackage.Time = DateTime.Now;
+
+            dataPackage.DataString += DateTime.Now.ToString("o");
+            dataPackage.DataString += "," + "5001";
+            dataPackage.DataString += "," + dataPackage.SensorID.ToString();
+            dataPackage.DataString += "," + dataPackage.SensorTYpe.ToString();
+            dataPackage.DataString += "," + dataPackage.BoardTime.ToString();
+            dataPackage.DataString += "," + dataPackage.Temperature.ToString();
+            dataPackage.DataString += "," + dataPackage.Battery.ToString();
+            dataPackage.DataString += "," + dataPackage.WindSpeed.ToString();
+            dataPackage.DataString += "," + dataPackage.WindDirection.ToString();
+            dataPackage.DataString += "," + dataPackage.Huminity.ToString();
+
             dataPackage.PressureList = new int[10];
             int i = 10;
             for (int j = 0; j < 10; j++)
             {
                 dataPackage.PressureList[j] = ((data[i] << 8) + data[i + 1]) << 2;
                 dataPackage.TimeSeries[j] = dataPackage.Time.AddMilliseconds(100 * j);
+                dataPackage.DataString += "," + dataPackage.PressureList[j].ToString();
                 i += 2;
             }
+
             return dataPackage;
         }
     }
