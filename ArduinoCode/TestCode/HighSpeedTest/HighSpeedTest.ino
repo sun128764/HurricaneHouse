@@ -1,11 +1,12 @@
 // parameters
 const unsigned int NetworkID = 5001; //
 const unsigned int BoardID = 2; //
-const unsigned int BoardType = 2; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
+const unsigned int BoardType = 3; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
 
 const unsigned int Fs = 50; // sample reading per second (per sensor)
 const unsigned int nSensors = 5;
 const unsigned int nPaylad = 40; // for each transaction (per sensor)
+
 
 int loop_time = 1000 / Fs; // in milli-second
 
@@ -39,12 +40,17 @@ void led(unsigned int color, unsigned int n) {
   }
 }
 
-long reading;
-int pressure;
+unsigned int Pressure[10];
+int PressureIndex = 0;
+int reading;
 int number;
 bool lock;
 unsigned long LastMillis;
+unsigned long StartTime;
 unsigned long CurrentMillis;
+const unsigned long LMask = 255;
+const unsigned int PMask = 255;
+byte SerBuf[30];
 
 void ForwardData() {
   if (Serial2.available()) {
@@ -55,24 +61,26 @@ void ForwardData() {
 }
 
 void SendSample() {
-  Serial2.print(NetworkID);
-  Serial2.print(",");
-  Serial2.print(BoardID);
-  Serial2.print(",");
-  Serial2.print(BoardType);
-  Serial2.print(",");
-  Serial2.print(analogRead(A0)); //Temperature
-  Serial2.print(",");
-  Serial2.print(analogRead(A1)); //Battery
-  Serial2.print(",");
-  Serial2.print(pressure);
-  Serial2.print(",");
-  Serial2.print(analogRead(A3)); //Extention A3
-  Serial2.print(",");
-  Serial2.println(analogRead(A4)); // Expansion A4
-  number = 0;
-  LastMillis = CurrentMillis;
-  lock = true;
+  analogReadResolution(8);
+  SerBuf[0] = BoardID;
+  SerBuf[1] = BoardType;
+  SerBuf[2] = analogRead(A0);//Temperature
+  SerBuf[3] = analogRead(A1);//Battery
+  SerBuf[4] = analogRead(A3);//Extention A3
+  SerBuf[5] = analogRead(A4);// Expansion A4
+  //Mills() to Byte[]
+  SerBuf[6] = (StartTime >> 24) & LMask;
+  SerBuf[7] = (StartTime >> 16) & LMask;
+  SerBuf[8] = (StartTime >> 8) & LMask;
+  SerBuf[9] = (StartTime) & LMask;
+  int i=10;
+  for (int j = 0; j < 10; j++) {
+    SerBuf[i++] = (Pressure[j] >> 8) & PMask;
+    SerBuf[i++] = (Pressure[j]) & PMask;
+  }
+  Serial2.write(255);
+  Serial2.write(SerBuf, 30);
+  analogReadResolution(14);
 }
 
 void setup() {
@@ -87,7 +95,7 @@ void setup() {
   pinMode(green, OUTPUT);
   pinMode(blue, OUTPUT);
   // Default ADC's resolution of the Atmel's ATSAM21 is 10bit (reading range from 0 to 1023).
-  analogReadResolution(16);
+  analogReadResolution(14);
   Serial2.begin(9600);
   pinPeripheral(XBeeRX, PIO_SERCOM_ALT);
   pinPeripheral(XBeeTX, PIO_SERCOM_ALT);
@@ -117,7 +125,6 @@ void setup() {
     Serial.write( Serial2.read() ); // display response
   }
   number = 0;
-  pressure = 0;
   LastMillis = millis();
   lock = true;
 }
@@ -127,18 +134,25 @@ void loop() { // while true
     ForwardData();
   }
   CurrentMillis = millis();
-  if ((CurrentMillis - LastMillis) >= 500 && !lock) {
-    SendSample();
+  if ((CurrentMillis - LastMillis) >= 100 && !lock) {
+    lock = true;
+    StartTime = CurrentMillis;
   }
   if (number < 1024 && lock) {
     reading += analogRead(A5);
     number++;
-    delay(1);
   }
-  if (number >= 512 && lock) {
-    lock = false;
-    pressure = reading >> 9;
+  if (number >= 1024 && lock) {
+    Pressure[PressureIndex++] = reading >> 10;
     reading = 0;
+    lock = false;
+    number = 0;
+    LastMillis = (CurrentMillis / 100) * 100;
+  }
+
+  if (PressureIndex > 9) {
+    PressureIndex = 0;
+    SendSample();
   }
   // XCTU https://www.digi.com/products/embedded-systems/digi-xbee/digi-xbee-tools/xctu#productsupport-utilities
 }

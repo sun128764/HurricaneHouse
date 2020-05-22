@@ -21,13 +21,14 @@ namespace GUI
         public string[] PortListData { get; set; }
         public List<SensorInfo> SensorInfos { set; get; }
         public SensorInfo SelectedSensor { set; get; }
-
+        public List<string> datastring;
         public MainWindow()
         {
             InitializeComponent();
+            datastring = new List<string>();
             SensorInfos = new List<SensorInfo>();
-            SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor1", NetWorkID = 5001, SensorID = 1, SensorStatus = SensorInfo.Status.Ok, SensorType = SensorInfo.Types.Humidity };
-            SensorInfo sensorInfo2 = new SensorInfo() { Name = "New Sensor2", NetWorkID = 5001, SensorID = 2, SensorStatus = SensorInfo.Status.Ok, SensorType = SensorInfo.Types.Anemometer };
+            SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor1", NetWorkID = 5001, SensorID = 2, SensorStatus = SensorInfo.Status.Ok, SensorType = SensorInfo.Types.Humidity };
+            SensorInfo sensorInfo2 = new SensorInfo() { Name = "New Sensor2", NetWorkID = 5001, SensorID = 1, SensorStatus = SensorInfo.Status.Ok, SensorType = SensorInfo.Types.Anemometer };
             SensorInfos.Add(sensorInfo);
             SensorInfos.Add(sensorInfo2);
             NodeList.Items.Refresh();
@@ -38,6 +39,7 @@ namespace GUI
             sll.DataContext = SelectedSensor.SensorData.PlotControl;
             lll.DataContext = SelectedSensor.SensorData.PlotControl;
             Status.DataContext = SelectedSensor.SensorData;
+            
         }
 
         public SerialPort serialPort;//串口对象类
@@ -46,7 +48,7 @@ namespace GUI
         {
             serialPort = new SerialPort(PortName, 9600, Parity.None, 8, StopBits.One);
             serialPort.DataReceived += new SerialDataReceivedEventHandler(SerialPort_DataReceived);//DataReceived事件委托
-            serialPort.ReceivedBytesThreshold = 1;
+            serialPort.ReceivedBytesThreshold = 31;
             serialPort.RtsEnable = true;
             return OpenPort();//串口打开
         }
@@ -55,8 +57,12 @@ namespace GUI
         {
             // Thread.Sleep(2000);
             //serialPort.Read(readBuffer, 0, readBuffer.Length);
-            string str = serialPort.ReadLine();
-            Format.DataPackage dataPackage = Format.DataPackage.Decode(str);
+            while (serialPort.ReadByte() != 255);
+            while (serialPort.BytesToRead < 30) ;
+            byte[] data = new byte[30];
+            serialPort.Read(data, 0, 30);
+            Format.DataPackage dataPackage = Format.DataPackage.Decode(data);
+            datastring.Add( dataPackage.DataString);
             if (dataPackage != null)
             {
                 SensorInfo sensorInfo = SensorInfos.Find(x => x.SensorID == dataPackage.SensorID);
@@ -128,6 +134,24 @@ namespace GUI
             SensorInfos.Clear();
             SensorInfos.AddRange(settingWindow.SensorInfos);
             NodeList.Items.Refresh();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (datastring.Count > 0)
+            {
+                using (StreamWriter writer = File.CreateText("data.csv"))
+                {
+                    writer.WriteLine("Base computer time stamp(UTC), Network ID, Board ID, Type," +
+                        " Sensor local time stamp, Temperature, Battery, Wind Speed, Wind Direction, " +
+                        "Humidity, Pressure 1, Pressure 2, Pressure 3, Pressure 4, Pressure 5," +
+                        " Pressure 6, Pressure 7, Pressure 8, Pressure 9, Pressure 10");
+                    foreach (string t in datastring)
+                    {
+                        writer.WriteLine(t);
+                    }
+                }
+            }
         }
     }
 }
