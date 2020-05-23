@@ -22,6 +22,7 @@ namespace GUI
         public List<SensorInfo> SensorInfos { set; get; }
         public SensorInfo SelectedSensor { set; get; }
         public List<string> datastring;
+        public SensorInfo WindSensor { set; get; }
         public MainWindow()
         {
             InitializeComponent();
@@ -34,7 +35,9 @@ namespace GUI
             NodeList.Items.Refresh();
             PortListData = SerialPort.GetPortNames();
             SelectedSensor = SensorInfos[0];
+            WindSensor = SensorInfos[1];
             DataContext = this;
+            WindInfo.DataContext = WindSensor.SensorData;
             sciChartSurface.DataContext = SelectedSensor.SensorData.PlotControl;
             sll.DataContext = SelectedSensor.SensorData.PlotControl;
             lll.DataContext = SelectedSensor.SensorData.PlotControl;
@@ -75,6 +78,13 @@ namespace GUI
                         {
                             SelectedSensor.SensorData.PlotControl.RefreshLimit(DateTime.Now);
                             LineSeries.DataSeries = SelectedSensor.SensorData.PressureLine;
+                        }
+                    }
+                    if(sensorInfo == WindSensor)
+                    {
+                        using (sciChartSurface.SuspendUpdates())
+                        {
+                            WindSeries.DataSeries = WindSensor.SensorData.WindPlot;
                         }
                     }
                 }

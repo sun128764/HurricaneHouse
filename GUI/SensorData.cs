@@ -38,6 +38,7 @@ namespace GUI
         public List<Format.TimeSeries> Temperature5m = new List<Format.TimeSeries>();
 
         public XyDataSeries<DateTime, double> PressureLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure" };
+        public XyDataSeries<double, double> WindPlot = new XyDataSeries<double, double>();
 
         //public XyDataSeries<DateTime, double> Pressure1mLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure1m" };
         //public XyDataSeries<DateTime, double> Pressure5mLine = new XyDataSeries<DateTime, double>();
@@ -313,12 +314,12 @@ namespace GUI
                     if (isSI) return res.ToString("F3"); //+ "kPa";
                     else return (res * 0.145037738).ToString("F3") + "PSI";
                 case Type.WindSpeed:
-                    if (SensorType == SensorInfo.Types.Anemometer) return (voltage * (57.6 + 150) / 57.6 * 20).ToString("F1") + "m//s";
+                    if (SensorType == SensorInfo.Types.Anemometer) return (voltage * (57.6 + 150) / 57.6 * 20).ToString("F1") + "m/s";
                     else return "N/A";
                 case Type.WindDirection:
                     double direction = (voltage * (57.6 + 150) / 57.6 * 72);
                     string name = windName[(int)(direction % 360 / 22.5)];
-                    if (SensorType == SensorInfo.Types.Anemometer) return name + " " + direction.ToString("F2") + "º";
+                    if (SensorType == SensorInfo.Types.Anemometer) return name + " " + direction.ToString("F0") + "º";
                     else return "N/A";
                 case Type.Huminity:
                     double sRH = (voltage / RefVol - 0.1515) / 0.00636;
@@ -330,6 +331,39 @@ namespace GUI
                     return "error";
             }
         }
+        private double ConvertToDouble(int value, Type type)
+        {
+            double voltage = (double)value / (2 << (BitDepth - 1)) * RefVol;
+            double res;
+            switch (type)
+            {
+                case Type.Temprature:
+                    res = (voltage - 0.5) / 0.01;
+                    if (isSI) return res;
+                    else return (res * 1.8 + 32);
+                case Type.Battery:
+                    return (voltage * 2);
+                case Type.Pressure:
+                    res = (voltage / RefVol + 0.095) / 0.009;
+                    if (isSI) return res; //+ "kPa";
+                    else return (res * 0.145037738);
+                case Type.WindSpeed:
+                    if (SensorType == SensorInfo.Types.Anemometer) return (voltage * (57.6 + 150) / 57.6 * 20);
+                    else return 0;
+                case Type.WindDirection:
+                    double direction = (voltage * (57.6 + 150) / 57.6 * 72);
+                    if (SensorType == SensorInfo.Types.Anemometer) return direction;
+                    else return 0;
+                case Type.Huminity:
+                    double sRH = (voltage / RefVol - 0.1515) / 0.00636;
+                    double temp = ((Temperature / (2 << (BitDepth - 1)) * RefVol) - 0.5) / 0.01;
+                    double tRH = sRH / (1.0546 - 0.00216 * temp);
+                    if (SensorType == SensorInfo.Types.Humidity) return tRH;
+                    else return 0;
+                default:
+                    return 0;
+            }
+        }
         public void GetSensorData(Format.DataPackage package)
         {
             Temperature = package.Temperature;
@@ -339,11 +373,11 @@ namespace GUI
             WindDirection = package.WindDirection;
             Huminity = package.Huminity;
             double[] pressureL = new double[10];
-            for(int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++)
             {
-                pressureL[i]= (package.PressureList[i] / 65536d + 0.095) / 0.009;
+                pressureL[i] = (package.PressureList[i] / 65536d + 0.095) / 0.009;
             }
-            
+
             PressureLine.Append(package.TimeSeries, pressureL);
 
             AddData(ref Pressure3s, package.TimeSeries, package.PressureList, -3);
@@ -354,6 +388,12 @@ namespace GUI
             NotifyPropertyChanged("PressureAvg5m");
             NotifyPropertyChanged("PressureMax5m");
             NotifyPropertyChanged("PressureMin5m");
+            if (this.SensorType == SensorInfo.Types.Anemometer)
+            {
+                WindPlot.Clear();
+                WindPlot.Append(ConvertToDouble(WindDirection, Type.WindDirection), ConvertToDouble(WindSpeed, Type.WindSpeed));
+                //WindPlot.Append(10d, 10d);
+            }
             //AddData(ref Pressure30m, package.Time, _pressure, -30);
             //AddData(ref Temperature5m, package.Time, _temperature, -5);
             //AddData(ref Huminity5m, package.Time, _huminity, -5);
@@ -369,9 +409,9 @@ namespace GUI
         private void AddData(ref List<Format.TimeSeries> series, DateTime[] time, int[] value, double interval)
         {
             //series.Add(new Format.TimeSeries(time, value));
-            if(time.Length == value.Length)
+            if (time.Length == value.Length)
             {
-                for(int i = 0; i < time.Length; i++)
+                for (int i = 0; i < time.Length; i++)
                 {
                     series.Add(new Format.TimeSeries(time[i], value[i]));
                 }

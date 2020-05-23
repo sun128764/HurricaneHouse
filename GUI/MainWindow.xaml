@@ -41,7 +41,7 @@
                 </TreeView.ItemTemplate>
             </TreeView>
         </GroupBox>
-        <GroupBox Name="Status" Header="Sensor Status" HorizontalAlignment="Stretch" Height="170" Margin="10,0,10,14.5" VerticalAlignment="Bottom" Width="auto" Background="#FFF8F9E4" Grid.ColumnSpan="2">
+        <GroupBox Name="Status" Header="Sensor Status" HorizontalAlignment="Stretch" Height="180" Margin="10,0,10,10.5" VerticalAlignment="Bottom" Width="auto" Background="#FFF8F9E4" Grid.ColumnSpan="2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -53,13 +53,13 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <GroupBox Header="Battery" Grid.Row="0" Grid.Column="0" Margin="5" Height="auto">
+                <GroupBox Header="Battery" Grid.Row="0" Grid.Column="0" Margin="3" Height="auto">
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Voltage:"/>
                         <Label Content="{Binding BatteryLevelString}" Margin="0,0,0,0" Width="auto"/>
                     </StackPanel>
                 </GroupBox>
-                <GroupBox Header="Pressure" Margin="5" Grid.Row="0" Grid.Column="1">
+                <GroupBox Header="Pressure" Margin="3" Grid.Row="0" Grid.Column="1">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
@@ -92,9 +92,52 @@
                     </Grid>
 
                 </GroupBox>
-                <GroupBox Header="Wind" Grid.Row="0" Grid.Column="2" Margin="5" Height="auto">
+                <GroupBox Header="Wind" Grid.Row="0" Grid.Column="2" Margin="3" Height="auto">
                     <Grid>
                         <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <s:SciChartSurface Grid.Row="0" s:ThemeManager.Theme="BrightSpark" Height="105">
+                            <s:SciChartSurface.RenderableSeries>
+                                <s:XyScatterRenderableSeries x:Name="WindSeries">
+                                    <s:XyScatterRenderableSeries.PointMarker>
+                                        <s:EllipsePointMarker Width="9" Height="9" Fill="SteelBlue" Stroke="LightSteelBlue" StrokeThickness="2"/>
+                                    </s:XyScatterRenderableSeries.PointMarker>
+                                </s:XyScatterRenderableSeries>
+                            </s:SciChartSurface.RenderableSeries>
+                            <s:SciChartSurface.XAxis>
+                                <s:PolarXAxis AutoRange="Never"
+                                              VisibleRange="0,360"
+                                              DrawLabels="False"
+                                              DrawMajorTicks="True"
+                                              DrawMinorTicks="True"
+                                              RotationAngle="90"
+                                              AutoTicks="False"
+                                              MajorDelta="45"
+                                              MinorDelta="45"
+                                              />
+                            </s:SciChartSurface.XAxis>
+                            <s:SciChartSurface.YAxis>
+                                <s:PolarYAxis AutoRange="Never"
+                                              DrawLabels="False"
+                                              VisibleRange="0,20"
+                                              DrawMajorTicks="False"
+                                              DrawMinorTicks="False"
+                                              GrowBy="0,0.2" />
+                            </s:SciChartSurface.YAxis>
+                            <s:SciChartSurface.ChartModifier>
+                                <s:ModifierGroup>
+                                </s:ModifierGroup>
+                            </s:SciChartSurface.ChartModifier>
+                        </s:SciChartSurface>
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" x:Name="WindInfo">
+                            <Label Content="{Binding WindDirectionString}"/>
+                            <Label Content="{Binding WindSpeedString}"/>
+                        </StackPanel>
+                    </Grid>
+                    <!--<Grid>-->
+                    <!--<Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="70"/>
                             <RowDefinition Height="auto"/>
@@ -112,10 +155,10 @@
                             <Label Content="Speed:"/>
                             <Label Content="{Binding WindSpeedString}"/>
                         </StackPanel>
-                    </Grid>
+                    </Grid>-->
                 </GroupBox>
 
-                <GroupBox Header="Humidity" Margin="5" Grid.Row="0" Grid.Column="3">
+                <GroupBox Header="Humidity" Margin="3" Grid.Row="0" Grid.Column="3">
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
                             <Label Content="Relevant:"/>
@@ -124,7 +167,7 @@
                     </StackPanel>
                 </GroupBox>
 
-                <GroupBox Header="Temperature" Margin="5" Grid.Row="0" Grid.Column="4">
+                <GroupBox Header="Temperature" Margin="3" Grid.Row="0" Grid.Column="4">
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
                             <Label Content="Temp:"/>
