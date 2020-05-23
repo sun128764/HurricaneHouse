@@ -31,7 +31,7 @@ namespace GUI
         public bool isSI = true;
 
         public Format.PlotControl PlotControl = new Format.PlotControl() { Scale = 5 };
-        public List<Format.TimeSeries> Pressure1m = new List<Format.TimeSeries>();
+        public List<Format.TimeSeries> Pressure3s = new List<Format.TimeSeries>();
         public List<Format.TimeSeries> Pressure5m = new List<Format.TimeSeries>();
         public List<Format.TimeSeries> Pressure30m = new List<Format.TimeSeries>();
         public List<Format.TimeSeries> Huminity5m = new List<Format.TimeSeries>();
@@ -222,14 +222,69 @@ namespace GUI
         }
         #endregion
         #region Average Data
-        public string PressureAvg1m
+        public string PressureAvg3s
         {
             get
             {
                 lock (locker)
                 {
-                    if (this.Pressure1m.Count < 1) return "0";
-                    else return ConvertToString((int)this.Pressure1m.Average(t => t.Value), Type.Pressure);
+                    if (this.Pressure3s.Count < 1) return "0";
+                    else return ConvertToString((int)this.Pressure3s.Average(t => t.Value), Type.Pressure);
+                }
+            }
+        }
+        public string PressureMin3s
+        {
+            get
+            {
+                lock (locker)
+                {
+                    if (this.Pressure3s.Count < 1) return "0";
+                    else return ConvertToString((int)this.Pressure3s.Min(t => t.Value), Type.Pressure);
+                }
+            }
+        }
+        public string PressureMax3s
+        {
+            get
+            {
+                lock (locker)
+                {
+                    if (this.Pressure3s.Count < 1) return "0";
+                    else return ConvertToString((int)this.Pressure3s.Max(t => t.Value), Type.Pressure);
+                }
+            }
+        }
+        public string PressureAvg5m
+        {
+            get
+            {
+                lock (locker)
+                {
+                    if (this.Pressure5m.Count < 1) return "0";
+                    else return ConvertToString((int)this.Pressure5m.Average(t => t.Value), Type.Pressure);
+                }
+            }
+        }
+        public string PressureMin5m
+        {
+            get
+            {
+                lock (locker)
+                {
+                    if (this.Pressure5m.Count < 1) return "0";
+                    else return ConvertToString((int)this.Pressure5m.Min(t => t.Value), Type.Pressure);
+                }
+            }
+        }
+        public string PressureMax5m
+        {
+            get
+            {
+                lock (locker)
+                {
+                    if (this.Pressure5m.Count < 1) return "0";
+                    else return ConvertToString((int)this.Pressure5m.Max(t => t.Value), Type.Pressure);
                 }
             }
         }
@@ -255,7 +310,7 @@ namespace GUI
                     return (voltage * 2).ToString("F3") + "V";
                 case Type.Pressure:
                     res = (voltage / RefVol + 0.095) / 0.009;
-                    if (isSI) return res.ToString("F3") + "kPa";
+                    if (isSI) return res.ToString("F3"); //+ "kPa";
                     else return (res * 0.145037738).ToString("F3") + "PSI";
                 case Type.WindSpeed:
                     if (SensorType == SensorInfo.Types.Anemometer) return (voltage * (57.6 + 150) / 57.6 * 20).ToString("F1") + "m//s";
@@ -291,23 +346,43 @@ namespace GUI
             
             PressureLine.Append(package.TimeSeries, pressureL);
 
-            AddData(ref Pressure1m, package.Time, _pressure, -1);
-            NotifyPropertyChanged("PressureAvg1m");
-            AddData(ref Pressure5m, package.Time, _pressure, -5);
-            AddData(ref Pressure30m, package.Time, _pressure, -30);
-            AddData(ref Temperature5m, package.Time, _temperature, -5);
-            AddData(ref Huminity5m, package.Time, _huminity, -5);
+            AddData(ref Pressure3s, package.TimeSeries, package.PressureList, -3);
+            NotifyPropertyChanged("PressureAvg3s");
+            NotifyPropertyChanged("PressureMax3s");
+            NotifyPropertyChanged("PressureMin3s");
+            AddData(ref Pressure5m, package.TimeSeries, package.PressureList, -300);
+            NotifyPropertyChanged("PressureAvg5m");
+            NotifyPropertyChanged("PressureMax5m");
+            NotifyPropertyChanged("PressureMin5m");
+            //AddData(ref Pressure30m, package.Time, _pressure, -30);
+            //AddData(ref Temperature5m, package.Time, _temperature, -5);
+            //AddData(ref Huminity5m, package.Time, _huminity, -5);
 
         }
-        private void AddData(ref List<Format.TimeSeries> series, DateTime time, int value, double interval)
+        /// <summary>
+        /// Add data point to list and remove old values.
+        /// </summary>
+        /// <param name="series">Series to add</param>
+        /// <param name="time">Data time</param>
+        /// <param name="value">Value to add</param>
+        /// <param name="interval">Time interval in second</param>
+        private void AddData(ref List<Format.TimeSeries> series, DateTime[] time, int[] value, double interval)
         {
-            series.Add(new Format.TimeSeries(time, value));
-            List<int> remove = new List<int>();
-            foreach (Format.TimeSeries series1 in series)
+            //series.Add(new Format.TimeSeries(time, value));
+            if(time.Length == value.Length)
             {
-                if (series1.DateTime < time.AddMinutes(interval)) remove.Add(series.IndexOf(series1));
+                for(int i = 0; i < time.Length; i++)
+                {
+                    series.Add(new Format.TimeSeries(time[i], value[i]));
+                }
             }
-            foreach (int i in remove) series.RemoveAt(i);
+            series.RemoveAll(t => t.DateTime < time[time.Length - 1].AddSeconds(interval));
+            //List<int> remove = new List<int>();
+            //foreach (Format.TimeSeries series1 in series)
+            //{
+            //    if (series1.DateTime < time[9].AddSeconds(interval)) remove.Add(series.IndexOf(series1));
+            //}
+            //foreach (int i in remove) series.RemoveAt(i);
         }
     }
 }

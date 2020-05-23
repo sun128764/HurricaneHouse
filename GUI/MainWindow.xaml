@@ -55,7 +55,7 @@
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -67,15 +67,35 @@
                     </StackPanel>
                 </GroupBox>
                 <GroupBox Header="Pressure" Margin="5" Grid.Row="0" Grid.Column="1">
-                    <StackPanel Orientation="Vertical">
-                        <StackPanel Orientation="Horizontal">
-                            <Label Content="Pressure:"/>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.8*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.ColumnSpan="3">
+                            <Label Content="Real-time:"/>
                             <Label Content="{Binding PressureString}" Margin="0,0,0,0" Width="auto"/>
+                            <Label Content="kPa"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Label Content="1-Min Avg:"/>
-                            <Label Content="{Binding PressureAvg1m}" Margin="0,0,0,0" Width="auto"/>
-                        </StackPanel>
+                        <Label Content="Min" Grid.Row="1" Grid.Column="1"/>
+                        <Label Content="Ave" Grid.Row="1" Grid.Column="2"/>
+                        <Label Content="Max" Grid.Row="1" Grid.Column="3"/>
+                        <Label Content="{Binding PressureMin3s}" Grid.Row="2" Grid.Column="1"/>
+                        <Label Content="{Binding PressureAvg3s}" Grid.Row="2" Grid.Column="2"/>
+                        <Label Content="{Binding PressureMax3s}" Grid.Row="2" Grid.Column="3"/>
+                        <Label Content="{Binding PressureMin5m}" Grid.Row="3" Grid.Column="1"/>
+                        <Label Content="{Binding PressureAvg5m}" Grid.Row="3" Grid.Column="2"/>
+                        <Label Content="{Binding PressureMax5m}" Grid.Row="3" Grid.Column="3"/>
+                        <Label Content="3 sec:" Grid.Row="2" Grid.Column="0"/>
+                        <Label Content="5 min:" Grid.Row="3" Grid.Column="0"/>
                         <!--<StackPanel Orientation="Horizontal">
                             <Label Content="5-Min Avg:"/>
                             <Label Content="{Binding PressureString}" Margin="0,0,0,0" Width="auto"/>
@@ -84,7 +104,8 @@
                             <Label Content="30-Min Avg:"/>
                             <Label Content="{Binding PressureString}" Margin="0,0,0,0" Width="auto"/>
                         </StackPanel>-->
-                    </StackPanel>
+                    </Grid>
+
                 </GroupBox>
                 <GroupBox Header="Wind" Grid.Row="0" Grid.Column="2" Margin="5" Height="auto">
                     <Grid>
