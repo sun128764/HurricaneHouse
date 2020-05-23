@@ -147,7 +147,9 @@
                     </s:SciChartSurface.RenderableSeries>
                     <!--  Create an X Axis  -->
                     <s:SciChartSurface.XAxis>
-                        <s:DateTimeAxis AxisTitle="Time" VisibleRange="{Binding XVisibleRange, Mode=TwoWay}"/>
+                        <s:DateTimeAxis AxisTitle="Time" VisibleRange="{Binding XVisibleRange, Mode=TwoWay}"
+                                        TextFormatting="MMM/dd/yyyy"
+                                        SubDayTextFormatting="HH:mm"/>
                     </s:SciChartSurface.XAxis>
                     <!--  Create a Y Axis  -->
                     <s:SciChartSurface.YAxis>
