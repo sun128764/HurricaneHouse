@@ -39,13 +39,6 @@
                         </DataTemplate.Triggers>
                     </DataTemplate>
                 </TreeView.ItemTemplate>
-                <!--<TreeViewItem Header="Network">
-                    <StackPanel Name="Sensor1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="-15,0,0,0">
-                        <CheckBox Name="chk" VerticalAlignment="Center" HorizontalAlignment="Left"></CheckBox>
-                        <Image Source="ok.png" Width="13" VerticalAlignment="Center" />
-                        <Label Content="Sensor1" Height="auto" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" MouseDoubleClick="Label_MouseDoubleClick"/>
-                    </StackPanel>
-                </TreeViewItem>-->
             </TreeView>
         </GroupBox>
         <GroupBox Name="Status" Header="Sensor Status" HorizontalAlignment="Stretch" Height="170" Margin="10,0,10,14.5" VerticalAlignment="Bottom" Width="auto" Background="#FFF8F9E4" Grid.ColumnSpan="2">
@@ -96,14 +89,6 @@
                         <Label Content="{Binding PressureMax5m}" Grid.Row="3" Grid.Column="3"/>
                         <Label Content="3 sec:" Grid.Row="2" Grid.Column="0"/>
                         <Label Content="5 min:" Grid.Row="3" Grid.Column="0"/>
-                        <!--<StackPanel Orientation="Horizontal">
-                            <Label Content="5-Min Avg:"/>
-                            <Label Content="{Binding PressureString}" Margin="0,0,0,0" Width="auto"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Label Content="30-Min Avg:"/>
-                            <Label Content="{Binding PressureString}" Margin="0,0,0,0" Width="auto"/>
-                        </StackPanel>-->
                     </Grid>
 
                 </GroupBox>
@@ -136,10 +121,6 @@
                             <Label Content="Relevant:"/>
                             <Label Content="{Binding HuminityString}" Margin="0,0,0,-0.5" Width="auto"/>
                         </StackPanel>
-                        <!--<StackPanel Orientation="Horizontal">
-                            <Label Content="1-Min Avg:"/>
-                            <Label Content="N/A" Margin="0,0,0,-0.5" Width="auto"/>
-                        </StackPanel>-->
                     </StackPanel>
                 </GroupBox>
 
@@ -149,10 +130,6 @@
                             <Label Content="Temp:"/>
                             <Label Content="{Binding TemperautreString}" Margin="0,0,0,0" Width="auto"/>
                         </StackPanel>
-                        <!--<StackPanel Orientation="Horizontal">
-                            <Label Content="1-Min Avg:"/>
-                            <Label Content="{Binding TemperautreString}" Width="auto"/>
-                        </StackPanel>-->
                     </StackPanel>
                 </GroupBox>
             </Grid>
