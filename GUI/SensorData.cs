@@ -156,6 +156,14 @@ namespace GUI
                 }
             }
         }
+        public string BatteryString
+        {
+            get
+            {
+                double voltage = (4.0 - ConvertToDouble(this.BatteryLevel, Type.Battery)) / (4.0 - 3.2) * 100.0;
+                return voltage.ToString("F0") + "%";
+            }
+        }
         public int Pressure
         {
             get
@@ -305,16 +313,17 @@ namespace GUI
             {
                 case Type.Temprature:
                     res = (voltage - 0.5) / 0.01;
-                    if (isSI) return res.ToString("F1") + "ºC";
-                    else return (res * 1.8 + 32).ToString("F1") + "ºF";
+                    //if (isSI) return res.ToString("F1") + "ºC";
+                    //else return (res * 1.8 + 32).ToString("F1") + "ºF";
+                    return (res * 1.8 + 32).ToString("F2") + "ºF";
                 case Type.Battery:
-                    return (voltage * 2).ToString("F3") + "V";
+                    return (voltage * 2).ToString("F2") + "V";
                 case Type.Pressure:
-                    res = (voltage / RefVol + 0.095) / 0.009;
-                    if (isSI) return res.ToString("F3"); //+ "kPa";
-                    else return (res * 0.145037738).ToString("F3") + "PSI";
+                    res = (voltage / RefVol + 0.095) / 0.009 * 0.1;
+                    if (isSI) return res.ToString("F3"); //+ "mBar";
+                    else return (res * 0.145037738).ToString("F2") + "PSI";
                 case Type.WindSpeed:
-                    if (SensorType == SensorInfo.Types.Anemometer) return (voltage * (57.6 + 150) / 57.6 * 20).ToString("F1") + "m/s";
+                    if (SensorType == SensorInfo.Types.Anemometer) return (voltage * (57.6 + 150) / 57.6 * 20).ToString("F2") + "m/s";
                     else return "N/A";
                 case Type.WindDirection:
                     double direction = (voltage * (57.6 + 150) / 57.6 * 72);
@@ -344,8 +353,8 @@ namespace GUI
                 case Type.Battery:
                     return (voltage * 2);
                 case Type.Pressure:
-                    res = (voltage / RefVol + 0.095) / 0.009;
-                    if (isSI) return res; //+ "kPa";
+                    res = (voltage / RefVol + 0.095) / 0.009 * 0.1;
+                    if (isSI) return res; //+ "mBar";
                     else return (res * 0.145037738);
                 case Type.WindSpeed:
                     if (SensorType == SensorInfo.Types.Anemometer) return (voltage * (57.6 + 150) / 57.6 * 20);
@@ -375,7 +384,7 @@ namespace GUI
             double[] pressureL = new double[10];
             for (int i = 0; i < 10; i++)
             {
-                pressureL[i] = (package.PressureList[i] / 65536d + 0.095) / 0.009;
+                pressureL[i] = ConvertToDouble(package.PressureList[i],Type.Pressure);
             }
 
             PressureLine.Append(package.TimeSeries, pressureL);
@@ -388,6 +397,8 @@ namespace GUI
             NotifyPropertyChanged("PressureAvg5m");
             NotifyPropertyChanged("PressureMax5m");
             NotifyPropertyChanged("PressureMin5m");
+            NotifyPropertyChanged("BatteryString");
+
             if (this.SensorType == SensorInfo.Types.Anemometer)
             {
                 WindPlot.Clear();

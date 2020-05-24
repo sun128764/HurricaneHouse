@@ -54,10 +54,17 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <GroupBox Header="Battery" Grid.Row="0" Grid.Column="0" Margin="3" Height="auto">
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Voltage:"/>
-                        <Label Content="{Binding BatteryLevelString}" Margin="0,0,0,0" Width="auto"/>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Voltage:"/>
+                            <Label Content="{Binding BatteryLevelString}" Margin="0,0,0,0" Width="auto"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Percentage:"/>
+                            <Label Content="{Binding BatteryString}" Margin="0,0,0,0" Width="auto"/>
+                        </StackPanel>
                     </StackPanel>
+
                 </GroupBox>
                 <GroupBox Header="Pressure" Margin="3" Grid.Row="0" Grid.Column="1">
                     <Grid>
@@ -76,7 +83,7 @@
                         <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.ColumnSpan="3">
                             <Label Content="Real-time:"/>
                             <Label Content="{Binding PressureString}" Margin="0,0,0,0" Width="auto"/>
-                            <Label Content="kPa"/>
+                            <Label Content="mBar"/>
                         </StackPanel>
                         <Label Content="Min" Grid.Row="1" Grid.Column="1"/>
                         <Label Content="Ave" Grid.Row="1" Grid.Column="2"/>
@@ -196,7 +203,7 @@
                     </s:SciChartSurface.XAxis>
                     <!--  Create a Y Axis  -->
                     <s:SciChartSurface.YAxis>
-                        <s:NumericAxis AxisTitle="Pressure (kPa)" VisibleRange="{Binding YVisibleRange, Mode=TwoWay}"/>
+                        <s:NumericAxis AxisTitle="Pressure (mBar)" VisibleRange="{Binding YVisibleRange, Mode=TwoWay}"/>
                     </s:SciChartSurface.YAxis>
                     <!--  Specify interactivity modifiers  -->
                     <s:SciChartSurface.ChartModifier>
