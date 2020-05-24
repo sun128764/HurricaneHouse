@@ -31,13 +31,14 @@ namespace GUI
         public bool isSI = true;
 
         public Format.PlotControl PlotControl = new Format.PlotControl() { Scale = 5 };
-        public List<Format.TimeSeries> Pressure1m = new List<Format.TimeSeries>();
+        public List<Format.TimeSeries> Pressure3s = new List<Format.TimeSeries>();
         public List<Format.TimeSeries> Pressure5m = new List<Format.TimeSeries>();
         public List<Format.TimeSeries> Pressure30m = new List<Format.TimeSeries>();
         public List<Format.TimeSeries> Huminity5m = new List<Format.TimeSeries>();
         public List<Format.TimeSeries> Temperature5m = new List<Format.TimeSeries>();
 
         public XyDataSeries<DateTime, double> PressureLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure" };
+        public XyDataSeries<double, double> WindPlot = new XyDataSeries<double, double>();
 
         //public XyDataSeries<DateTime, double> Pressure1mLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure1m" };
         //public XyDataSeries<DateTime, double> Pressure5mLine = new XyDataSeries<DateTime, double>();
@@ -155,6 +156,14 @@ namespace GUI
                 }
             }
         }
+        public string BatteryString
+        {
+            get
+            {
+                double voltage = (4.0 - ConvertToDouble(this.BatteryLevel, Type.Battery)) / (4.0 - 3.2) * 100.0;
+                return voltage.ToString("F0") + "%";
+            }
+        }
         public int Pressure
         {
             get
@@ -222,14 +231,69 @@ namespace GUI
         }
         #endregion
         #region Average Data
-        public string PressureAvg1m
+        public string PressureAvg3s
         {
             get
             {
                 lock (locker)
                 {
-                    if (this.Pressure1m.Count < 1) return "0";
-                    else return ConvertToString((int)this.Pressure1m.Average(t => t.Value), Type.Pressure);
+                    if (this.Pressure3s.Count < 1) return "0";
+                    else return ConvertToString((int)this.Pressure3s.Average(t => t.Value), Type.Pressure);
+                }
+            }
+        }
+        public string PressureMin3s
+        {
+            get
+            {
+                lock (locker)
+                {
+                    if (this.Pressure3s.Count < 1) return "0";
+                    else return ConvertToString((int)this.Pressure3s.Min(t => t.Value), Type.Pressure);
+                }
+            }
+        }
+        public string PressureMax3s
+        {
+            get
+            {
+                lock (locker)
+                {
+                    if (this.Pressure3s.Count < 1) return "0";
+                    else return ConvertToString((int)this.Pressure3s.Max(t => t.Value), Type.Pressure);
+                }
+            }
+        }
+        public string PressureAvg5m
+        {
+            get
+            {
+                lock (locker)
+                {
+                    if (this.Pressure5m.Count < 1) return "0";
+                    else return ConvertToString((int)this.Pressure5m.Average(t => t.Value), Type.Pressure);
+                }
+            }
+        }
+        public string PressureMin5m
+        {
+            get
+            {
+                lock (locker)
+                {
+                    if (this.Pressure5m.Count < 1) return "0";
+                    else return ConvertToString((int)this.Pressure5m.Min(t => t.Value), Type.Pressure);
+                }
+            }
+        }
+        public string PressureMax5m
+        {
+            get
+            {
+                lock (locker)
+                {
+                    if (this.Pressure5m.Count < 1) return "0";
+                    else return ConvertToString((int)this.Pressure5m.Max(t => t.Value), Type.Pressure);
                 }
             }
         }
@@ -249,21 +313,22 @@ namespace GUI
             {
                 case Type.Temprature:
                     res = (voltage - 0.5) / 0.01;
-                    if (isSI) return res.ToString("F1") + "ºC";
-                    else return (res * 1.8 + 32).ToString("F1") + "ºF";
+                    //if (isSI) return res.ToString("F1") + "ºC";
+                    //else return (res * 1.8 + 32).ToString("F1") + "ºF";
+                    return (res * 1.8 + 32).ToString("F2") + "ºF";
                 case Type.Battery:
-                    return (voltage * 2).ToString("F3") + "V";
+                    return (voltage * 2).ToString("F2") + "V";
                 case Type.Pressure:
-                    res = (voltage / RefVol + 0.095) / 0.009;
-                    if (isSI) return res.ToString("F3") + "kPa";
-                    else return (res * 0.145037738).ToString("F3") + "PSI";
+                    res = (voltage / RefVol + 0.095) / 0.009 * 0.1;
+                    if (isSI) return res.ToString("F3"); //+ "mBar";
+                    else return (res * 0.145037738).ToString("F2") + "PSI";
                 case Type.WindSpeed:
-                    if (SensorType == SensorInfo.Types.Anemometer) return (voltage * (57.6 + 150) / 57.6 * 20).ToString("F1") + "m//s";
+                    if (SensorType == SensorInfo.Types.Anemometer) return (voltage * (57.6 + 150) / 57.6 * 20).ToString("F2") + "m/s";
                     else return "N/A";
                 case Type.WindDirection:
                     double direction = (voltage * (57.6 + 150) / 57.6 * 72);
                     string name = windName[(int)(direction % 360 / 22.5)];
-                    if (SensorType == SensorInfo.Types.Anemometer) return name + " " + direction.ToString("F2") + "º";
+                    if (SensorType == SensorInfo.Types.Anemometer) return name + " " + direction.ToString("F0") + "º";
                     else return "N/A";
                 case Type.Huminity:
                     double sRH = (voltage / RefVol - 0.1515) / 0.00636;
@@ -275,6 +340,39 @@ namespace GUI
                     return "error";
             }
         }
+        private double ConvertToDouble(int value, Type type)
+        {
+            double voltage = (double)value / (2 << (BitDepth - 1)) * RefVol;
+            double res;
+            switch (type)
+            {
+                case Type.Temprature:
+                    res = (voltage - 0.5) / 0.01;
+                    if (isSI) return res;
+                    else return (res * 1.8 + 32);
+                case Type.Battery:
+                    return (voltage * 2);
+                case Type.Pressure:
+                    res = (voltage / RefVol + 0.095) / 0.009 * 0.1;
+                    if (isSI) return res; //+ "mBar";
+                    else return (res * 0.145037738);
+                case Type.WindSpeed:
+                    if (SensorType == SensorInfo.Types.Anemometer) return (voltage * (57.6 + 150) / 57.6 * 20);
+                    else return 0;
+                case Type.WindDirection:
+                    double direction = (voltage * (57.6 + 150) / 57.6 * 72);
+                    if (SensorType == SensorInfo.Types.Anemometer) return direction;
+                    else return 0;
+                case Type.Huminity:
+                    double sRH = (voltage / RefVol - 0.1515) / 0.00636;
+                    double temp = ((Temperature / (2 << (BitDepth - 1)) * RefVol) - 0.5) / 0.01;
+                    double tRH = sRH / (1.0546 - 0.00216 * temp);
+                    if (SensorType == SensorInfo.Types.Humidity) return tRH;
+                    else return 0;
+                default:
+                    return 0;
+            }
+        }
         public void GetSensorData(Format.DataPackage package)
         {
             Temperature = package.Temperature;
@@ -284,30 +382,58 @@ namespace GUI
             WindDirection = package.WindDirection;
             Huminity = package.Huminity;
             double[] pressureL = new double[10];
-            for(int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++)
             {
-                pressureL[i]= (package.PressureList[i] / 65536d + 0.095) / 0.009;
+                pressureL[i] = ConvertToDouble(package.PressureList[i],Type.Pressure);
             }
-            
+
             PressureLine.Append(package.TimeSeries, pressureL);
 
-            AddData(ref Pressure1m, package.Time, _pressure, -1);
-            NotifyPropertyChanged("PressureAvg1m");
-            AddData(ref Pressure5m, package.Time, _pressure, -5);
-            AddData(ref Pressure30m, package.Time, _pressure, -30);
-            AddData(ref Temperature5m, package.Time, _temperature, -5);
-            AddData(ref Huminity5m, package.Time, _huminity, -5);
+            AddData(ref Pressure3s, package.TimeSeries, package.PressureList, -3);
+            NotifyPropertyChanged("PressureAvg3s");
+            NotifyPropertyChanged("PressureMax3s");
+            NotifyPropertyChanged("PressureMin3s");
+            AddData(ref Pressure5m, package.TimeSeries, package.PressureList, -300);
+            NotifyPropertyChanged("PressureAvg5m");
+            NotifyPropertyChanged("PressureMax5m");
+            NotifyPropertyChanged("PressureMin5m");
+            NotifyPropertyChanged("BatteryString");
+
+            if (this.SensorType == SensorInfo.Types.Anemometer)
+            {
+                WindPlot.Clear();
+                WindPlot.Append(ConvertToDouble(WindDirection, Type.WindDirection), ConvertToDouble(WindSpeed, Type.WindSpeed));
+                //WindPlot.Append(10d, 10d);
+            }
+            //AddData(ref Pressure30m, package.Time, _pressure, -30);
+            //AddData(ref Temperature5m, package.Time, _temperature, -5);
+            //AddData(ref Huminity5m, package.Time, _huminity, -5);
 
         }
-        private void AddData(ref List<Format.TimeSeries> series, DateTime time, int value, double interval)
+        /// <summary>
+        /// Add data point to list and remove old values.
+        /// </summary>
+        /// <param name="series">Series to add</param>
+        /// <param name="time">Data time</param>
+        /// <param name="value">Value to add</param>
+        /// <param name="interval">Time interval in second</param>
+        private void AddData(ref List<Format.TimeSeries> series, DateTime[] time, int[] value, double interval)
         {
-            series.Add(new Format.TimeSeries(time, value));
-            List<int> remove = new List<int>();
-            foreach (Format.TimeSeries series1 in series)
+            //series.Add(new Format.TimeSeries(time, value));
+            if (time.Length == value.Length)
             {
-                if (series1.DateTime < time.AddMinutes(interval)) remove.Add(series.IndexOf(series1));
+                for (int i = 0; i < time.Length; i++)
+                {
+                    series.Add(new Format.TimeSeries(time[i], value[i]));
+                }
             }
-            foreach (int i in remove) series.RemoveAt(i);
+            series.RemoveAll(t => t.DateTime < time[time.Length - 1].AddSeconds(interval));
+            //List<int> remove = new List<int>();
+            //foreach (Format.TimeSeries series1 in series)
+            //{
+            //    if (series1.DateTime < time[9].AddSeconds(interval)) remove.Add(series.IndexOf(series1));
+            //}
+            //foreach (int i in remove) series.RemoveAt(i);
         }
     }
 }
