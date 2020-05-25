@@ -319,8 +319,8 @@ namespace GUI
                 case Type.Battery:
                     return (voltage * 2).ToString("F2") + "V";
                 case Type.Pressure:
-                    res = (voltage / RefVol + 0.095) / 0.009 * 0.1;
-                    if (isSI) return res.ToString("F3"); //+ "mBar";
+                    res = (voltage / RefVol + 0.095) / 0.009 * 10;
+                    if (isSI) return res.ToString("F2"); //+ "mBar";
                     else return (res * 0.145037738).ToString("F2") + "PSI";
                 case Type.WindSpeed:
                     if (SensorType == SensorInfo.Types.Anemometer) return (voltage * (57.6 + 150) / 57.6 * 20).ToString("F2") + "m/s";
@@ -353,7 +353,7 @@ namespace GUI
                 case Type.Battery:
                     return (voltage * 2);
                 case Type.Pressure:
-                    res = (voltage / RefVol + 0.095) / 0.009 * 0.1;
+                    res = (voltage / RefVol + 0.095) / 0.009 * 10;
                     if (isSI) return res; //+ "mBar";
                     else return (res * 0.145037738);
                 case Type.WindSpeed:
