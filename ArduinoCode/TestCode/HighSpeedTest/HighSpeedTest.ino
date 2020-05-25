@@ -50,7 +50,7 @@ unsigned long StartTime;
 unsigned long CurrentMillis;
 const unsigned long LMask = 255;
 const unsigned int PMask = 255;
-byte SerBuf[30];
+byte SerBuf[31];
 
 void ForwardData() {
   if (Serial2.available()) {
@@ -66,21 +66,26 @@ void SendSample() {
   SerBuf[1] = BoardType;
   SerBuf[2] = analogRead(A0);//Temperature
   SerBuf[3] = analogRead(A1);//Battery
-  SerBuf[4] = analogRead(A3);//Extention A3
-  SerBuf[5] = analogRead(A4);// Expansion A4
+  //SerBuf[4] = analogRead(A3);//Extention A3
+  SerBuf[6] = analogRead(A4);// Expansion A4
   //Mills() to Byte[]
-  SerBuf[6] = (StartTime >> 24) & LMask;
-  SerBuf[7] = (StartTime >> 16) & LMask;
-  SerBuf[8] = (StartTime >> 8) & LMask;
-  SerBuf[9] = (StartTime) & LMask;
-  int i=10;
+  SerBuf[7] = (StartTime >> 24) & LMask;
+  SerBuf[8] = (StartTime >> 16) & LMask;
+  SerBuf[9] = (StartTime >> 8) & LMask;
+  SerBuf[10] = (StartTime) & LMask;
+  int i = 11;
   for (int j = 0; j < 10; j++) {
     SerBuf[i++] = (Pressure[j] >> 8) & PMask;
     SerBuf[i++] = (Pressure[j]) & PMask;
   }
+  analogReadResolution(12);
+  int windSpeed = analogRead(A3);//Extention A3
+  SerBuf[4] = windSpeed >> 8 & LMask;
+  SerBuf[5] = windSpeed & LMask;
   Serial2.write(255);
-  Serial2.write(SerBuf, 30);
+  Serial2.write(SerBuf, 31);
   analogReadResolution(14);
+  //Serial.println(millis());
 }
 
 void setup() {

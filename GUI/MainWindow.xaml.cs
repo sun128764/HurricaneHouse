@@ -61,9 +61,9 @@ namespace GUI
             // Thread.Sleep(2000);
             //serialPort.Read(readBuffer, 0, readBuffer.Length);
             while (serialPort.ReadByte() != 255);
-            while (serialPort.BytesToRead < 30) ;
-            byte[] data = new byte[30];
-            serialPort.Read(data, 0, 30);
+            while (serialPort.BytesToRead < 31) ;
+            byte[] data = new byte[31];
+            serialPort.Read(data, 0, 31);
             Format.DataPackage dataPackage = Format.DataPackage.Decode(data);
             datastring.Add( dataPackage.DataString);
             if (dataPackage != null)
