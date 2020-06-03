@@ -138,7 +138,7 @@ namespace Format
             if (dataPackage.SensorTYpe == 2) dataPackage.WindDirection = data[6] << 8;
             else dataPackage.Huminity = data[6] << 8;
             dataPackage.BoardTime = (data[7] << 24) + (data[8] << 16) + (data[9] << 8) + data[10];
-            dataPackage.Pressure = ((data[11] << 8) + data[12]) << 2;
+            dataPackage.Pressure = ((data[11] << 8) + data[12]);
             dataPackage.Time = DateTime.Now;
 
             dataPackage.DataString += DateTime.Now.ToString("o");
@@ -156,7 +156,7 @@ namespace Format
             int i = 11;
             for (int j = 0; j < 10; j++)
             {
-                dataPackage.PressureList[j] = ((data[i] << 8) + data[i + 1]) << 2;
+                dataPackage.PressureList[j] = ((data[i] << 8) + data[i + 1]);
                 dataPackage.TimeSeries[j] = dataPackage.Time.AddMilliseconds(100 * j);
                 dataPackage.DataString += "," + dataPackage.PressureList[j].ToString();
                 i += 2;

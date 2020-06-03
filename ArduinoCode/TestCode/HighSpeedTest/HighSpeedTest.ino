@@ -1,7 +1,7 @@
 // parameters
 const unsigned int NetworkID = 5001; //
-const unsigned int BoardID = 1; //
-const unsigned int BoardType = 2; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
+const unsigned int BoardID = 3; //
+const unsigned int BoardType = 3; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
 
 const unsigned int Fs = 50; // sample reading per second (per sensor)
 const unsigned int nSensors = 5;
@@ -84,8 +84,8 @@ void SendSample() {
   SerBuf[5] = windSpeed & LMask;
   Serial2.write(255);
   Serial2.write(SerBuf, 31);
-  analogReadResolution(14);
-  //Serial.println(millis());
+  analogReadResolution(16);
+  Serial.println(StartTime);
 }
 
 void setup() {
@@ -100,7 +100,7 @@ void setup() {
   pinMode(green, OUTPUT);
   pinMode(blue, OUTPUT);
   // Default ADC's resolution of the Atmel's ATSAM21 is 10bit (reading range from 0 to 1023).
-  analogReadResolution(14);
+  analogReadResolution(16);
   Serial2.begin(9600);
   pinPeripheral(XBeeRX, PIO_SERCOM_ALT);
   pinPeripheral(XBeeTX, PIO_SERCOM_ALT);
@@ -143,16 +143,16 @@ void loop() { // while true
     lock = true;
     StartTime = CurrentMillis;
   }
-  if (number < 1024 && lock) {
+  if (number < 4096 && lock) {
     reading += analogRead(A5);
     number++;
   }
-  if (number >= 1024 && lock) {
-    Pressure[PressureIndex++] = reading >> 10;
+  if (number >= 4096 && lock) {
+    Pressure[PressureIndex++] = reading >> 12;
     reading = 0;
     lock = false;
     number = 0;
-    LastMillis = (CurrentMillis / 100) * 100;
+    LastMillis = (CurrentMillis/100)*100; //Round
   }
 
   if (PressureIndex > 9) {

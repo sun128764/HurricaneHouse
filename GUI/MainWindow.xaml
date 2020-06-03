@@ -128,7 +128,7 @@
                             <s:SciChartSurface.YAxis>
                                 <s:PolarYAxis AutoRange="Never"
                                               DrawLabels="False"
-                                              VisibleRange="0,20"
+                                              VisibleRange="0,10"
                                               DrawMajorTicks="False"
                                               DrawMinorTicks="False"
                                               GrowBy="0,0.2" />
