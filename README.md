@@ -57,3 +57,7 @@ Contain all data and information from sensors.
 ## Nunit Test Project 1
 
 This is a empty test project which is design to verify the methods of the project.
+
+## Known issue
+
+* pip install tapis-cli -> non-Unicode application, enable UTF-8
