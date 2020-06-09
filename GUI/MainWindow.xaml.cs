@@ -23,6 +23,7 @@ namespace GUI
         public SensorInfo SelectedSensor { set; get; }
         public List<string> datastring;
         public SensorInfo WindSensor { set; get; }
+        DataUpload dataUpload;
         public MainWindow()
         {
             InitializeComponent();
@@ -42,7 +43,8 @@ namespace GUI
             sll.DataContext = SelectedSensor.SensorData.PlotControl;
             lll.DataContext = SelectedSensor.SensorData.PlotControl;
             Status.DataContext = SelectedSensor.SensorData;
-            
+            dataUpload = new DataUpload();
+            //MessageBox.Show(dataUpload.CheckEnv().ToString());
         }
 
         public SerialPort serialPort;//串口对象类
@@ -161,6 +163,7 @@ namespace GUI
                         writer.WriteLine(t);
                     }
                 }
+                dataUpload.Upload(Environment.CurrentDirectory + "\\" + "data.csv");
             }
         }
     }

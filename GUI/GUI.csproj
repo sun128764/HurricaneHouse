@@ -82,6 +82,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DataUpload.cs" />
     <Compile Include="SensorInfo.cs" />
     <Compile Include="SettingMaker.xaml.cs">
       <DependentUpon>SettingMaker.xaml</DependentUpon>
