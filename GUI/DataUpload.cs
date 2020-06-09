@@ -47,7 +47,7 @@ namespace GUI
             try
             {
                 p.Start();
-                p.StandardInput.WriteLine("pip show --files tapis-cli");
+                p.StandardInput.WriteLine("tapis --help");
                 p.StandardInput.AutoFlush = true;
                 p.StandardInput.WriteLine("exit");
                 StreamReader reader = p.StandardOutput;
@@ -55,7 +55,7 @@ namespace GUI
                 reader.Close(); //close进程
                 p.WaitForExit();  //等待程序执行完退出进程
                 p.Close();
-                if (output.Contains("tapis-cli") && output.Contains("Version:")) return true;
+                if (output.Contains("Tapis CLI")) return true;
                 else return false;
             }
             catch (SystemException e)
