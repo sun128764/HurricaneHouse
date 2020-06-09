@@ -30,8 +30,10 @@ namespace GUI
             SensorInfos = new List<SensorInfo>();
             SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor1", NetWorkID = 5001, SensorID = 2, SensorStatus = SensorInfo.Status.Ok, SensorType = SensorInfo.Types.Humidity };
             SensorInfo sensorInfo2 = new SensorInfo() { Name = "New Sensor2", NetWorkID = 5001, SensorID = 1, SensorStatus = SensorInfo.Status.Ok, SensorType = SensorInfo.Types.Anemometer };
+            SensorInfo sensorInfo3 = new SensorInfo() { Name = "New Sensor3", NetWorkID = 5001, SensorID = 3, SensorStatus = SensorInfo.Status.Ok, SensorType = SensorInfo.Types.Humidity };
             SensorInfos.Add(sensorInfo);
             SensorInfos.Add(sensorInfo2);
+            SensorInfos.Add(sensorInfo3);
             NodeList.Items.Refresh();
             PortListData = SerialPort.GetPortNames();
             SelectedSensor = SensorInfos[0];
@@ -61,9 +63,9 @@ namespace GUI
             // Thread.Sleep(2000);
             //serialPort.Read(readBuffer, 0, readBuffer.Length);
             while (serialPort.ReadByte() != 255);
-            while (serialPort.BytesToRead < 30) ;
-            byte[] data = new byte[30];
-            serialPort.Read(data, 0, 30);
+            while (serialPort.BytesToRead < 31) ;
+            byte[] data = new byte[31];
+            serialPort.Read(data, 0, 31);
             Format.DataPackage dataPackage = Format.DataPackage.Decode(data);
             datastring.Add( dataPackage.DataString);
             if (dataPackage != null)

@@ -1,7 +1,7 @@
 // parameters
 const unsigned int NetworkID = 5001; //
-const unsigned int BoardID = 1; //
-const unsigned int BoardType = 2; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
+const unsigned int BoardID = 3; //
+const unsigned int BoardType = 3; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
 
 const unsigned int Fs = 50; // sample reading per second (per sensor)
 const unsigned int nSensors = 5;
@@ -50,7 +50,7 @@ unsigned long StartTime;
 unsigned long CurrentMillis;
 const unsigned long LMask = 255;
 const unsigned int PMask = 255;
-byte SerBuf[30];
+byte SerBuf[31];
 
 void ForwardData() {
   if (Serial2.available()) {
@@ -66,21 +66,26 @@ void SendSample() {
   SerBuf[1] = BoardType;
   SerBuf[2] = analogRead(A0);//Temperature
   SerBuf[3] = analogRead(A1);//Battery
-  SerBuf[4] = analogRead(A3);//Extention A3
-  SerBuf[5] = analogRead(A4);// Expansion A4
+  //SerBuf[4] = analogRead(A3);//Extention A3
+  SerBuf[6] = analogRead(A4);// Expansion A4
   //Mills() to Byte[]
-  SerBuf[6] = (StartTime >> 24) & LMask;
-  SerBuf[7] = (StartTime >> 16) & LMask;
-  SerBuf[8] = (StartTime >> 8) & LMask;
-  SerBuf[9] = (StartTime) & LMask;
-  int i=10;
+  SerBuf[7] = (StartTime >> 24) & LMask;
+  SerBuf[8] = (StartTime >> 16) & LMask;
+  SerBuf[9] = (StartTime >> 8) & LMask;
+  SerBuf[10] = (StartTime) & LMask;
+  int i = 11;
   for (int j = 0; j < 10; j++) {
     SerBuf[i++] = (Pressure[j] >> 8) & PMask;
     SerBuf[i++] = (Pressure[j]) & PMask;
   }
+  analogReadResolution(12);
+  int windSpeed = analogRead(A3);//Extention A3
+  SerBuf[4] = windSpeed >> 8 & LMask;
+  SerBuf[5] = windSpeed & LMask;
   Serial2.write(255);
-  Serial2.write(SerBuf, 30);
-  analogReadResolution(14);
+  Serial2.write(SerBuf, 31);
+  analogReadResolution(16);
+  Serial.println(StartTime);
 }
 
 void setup() {
@@ -95,7 +100,7 @@ void setup() {
   pinMode(green, OUTPUT);
   pinMode(blue, OUTPUT);
   // Default ADC's resolution of the Atmel's ATSAM21 is 10bit (reading range from 0 to 1023).
-  analogReadResolution(14);
+  analogReadResolution(16);
   Serial2.begin(9600);
   pinPeripheral(XBeeRX, PIO_SERCOM_ALT);
   pinPeripheral(XBeeTX, PIO_SERCOM_ALT);
@@ -138,16 +143,16 @@ void loop() { // while true
     lock = true;
     StartTime = CurrentMillis;
   }
-  if (number < 1024 && lock) {
+  if (number < 4096 && lock) {
     reading += analogRead(A5);
     number++;
   }
-  if (number >= 1024 && lock) {
-    Pressure[PressureIndex++] = reading >> 10;
+  if (number >= 4096 && lock) {
+    Pressure[PressureIndex++] = reading >> 12;
     reading = 0;
     lock = false;
     number = 0;
-    LastMillis = (CurrentMillis / 100) * 100;
+    LastMillis = (CurrentMillis/100)*100; //Round
   }
 
   if (PressureIndex > 9) {
