@@ -165,7 +165,7 @@ namespace GUI
                         writer.WriteLine(t);
                     }
                 }
-                dataUpload.Upload(Environment.CurrentDirectory + "\\" + "data.csv");
+                dataUpload.Upload(Environment.CurrentDirectory + "\\" + "data.csv", "project-6284144844314644966-242ac11c-0001-012/GUI_Test/");
             }
         }
     }

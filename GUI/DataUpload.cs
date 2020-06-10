@@ -12,6 +12,8 @@ namespace GUI
     {
         private string fileName;
         private readonly Process p;
+        private DateTime lastTime;
+        private TimeSpan tokenRefreshTime;
         public DataUpload()
         {
             p = new Process();
@@ -20,67 +22,67 @@ namespace GUI
             p.StartInfo.RedirectStandardInput = true;  // 重定向输入    
             p.StartInfo.RedirectStandardOutput = true; // 重定向标准输出    
             p.StartInfo.RedirectStandardError = true;  // 重定向错误输出  
+            p.StandardInput.AutoFlush = true;
+
             p.StartInfo.FileName = "cmd.exe";
+            tokenRefreshTime = new TimeSpan(0, 50, 0);
         }
         public void Init()
         {
-            try
-            {
-                p.Start();
-                p.StandardInput.WriteLine("tapis auth tokens create");
-                p.StandardInput.AutoFlush = true;
-                p.StandardInput.WriteLine("exit");
-                StreamReader reader = p.StandardOutput;
-                string output = reader.ReadToEnd(); //获取错误信息到error
-                reader.Close(); //close进程
-                p.WaitForExit();  //等待程序执行完退出进程
-                p.Close();
-            }
-            catch (SystemException e)
-            {
-                
-            }
+            runCMD("tapis auth tokens create");
+            lastTime = DateTime.Now;
         }
-        
+
         public bool CheckEnv()
         {
-            try
+            string output = runCMD("tapis --help");
+            if (output.Contains("Tapis CLI"))
             {
-                p.Start();
-                p.StandardInput.WriteLine("tapis --help");
-                p.StandardInput.AutoFlush = true;
-                p.StandardInput.WriteLine("exit");
-                StreamReader reader = p.StandardOutput;
-                string output = reader.ReadToEnd(); //获取错误信息到error
-                reader.Close(); //close进程
-                p.WaitForExit();  //等待程序执行完退出进程
-                p.Close();
-                if (output.Contains("Tapis CLI")) return true;
-                else return false;
+                return true;
             }
-            catch (SystemException e)
+            else
             {
                 return false;
             }
         }
-
-        public void Upload(string filePath)
+        /// <summary>
+        /// Upload local to DesignSafe-CI by tapis files upload comand
+        /// </summary>
+        /// <param name="filePath">Local file path</param>
+        /// <param name="cloudPath">Cloud destination path.(i.e. project-6284144844314644966-242ac11c-0001-012/GUI_Test/)</param>
+        public void Upload(string filePath, string cloudPath)
+        {
+            if ((DateTime.Now - lastTime) > tokenRefreshTime)
+            {
+                refreshToken();
+            }
+            runCMD("tapis files upload agave://" + cloudPath + " " + filePath);
+        }
+        private void refreshToken()
+        {
+            string output = runCMD("tapis auth tokens refresh");
+            if (output == "Error")
+            {
+                runCMD("tapis auth tokens refresh");
+            }
+        }
+        private string runCMD(string command)
         {
             try
             {
                 p.Start();
-                p.StandardInput.WriteLine("tapis files upload agave://project-6284144844314644966-242ac11c-0001-012/GUI_Test/ "+filePath);
-                p.StandardInput.AutoFlush = true;
+                p.StandardInput.WriteLine(command);
                 p.StandardInput.WriteLine("exit");
                 StreamReader reader = p.StandardOutput;
                 string output = reader.ReadToEnd(); //获取错误信息到error
                 reader.Close(); //close进程
                 p.WaitForExit();  //等待程序执行完退出进程
                 p.Close();
+                return output;
             }
-            catch (SystemException e)
+            catch (SystemException)
             {
-
+                return "Error";
             }
         }
     }
