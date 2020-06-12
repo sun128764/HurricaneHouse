@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
+using System.Timers;
 
 namespace GUI
 {
@@ -14,6 +15,7 @@ namespace GUI
         private readonly Process p;
         private DateTime lastTime;
         private TimeSpan tokenRefreshTime;
+        private Timer timer;
         public DataUpload()
         {
             p = new Process();
@@ -22,14 +24,13 @@ namespace GUI
             p.StartInfo.RedirectStandardInput = true;  // 重定向输入    
             p.StartInfo.RedirectStandardOutput = true; // 重定向标准输出    
             p.StartInfo.RedirectStandardError = true;  // 重定向错误输出  
-            p.StandardInput.AutoFlush = true;
-
             p.StartInfo.FileName = "cmd.exe";
             tokenRefreshTime = new TimeSpan(0, 50, 0);
         }
         public void Init()
         {
             runCMD("tapis auth tokens create");
+            SetTimer(5000);
             lastTime = DateTime.Now;
         }
 
@@ -72,6 +73,7 @@ namespace GUI
             {
                 p.Start();
                 p.StandardInput.WriteLine(command);
+                p.StandardInput.AutoFlush = true;
                 p.StandardInput.WriteLine("exit");
                 StreamReader reader = p.StandardOutput;
                 string output = reader.ReadToEnd(); //获取错误信息到error
@@ -84,6 +86,19 @@ namespace GUI
             {
                 return "Error";
             }
+        }
+        private void SetTimer(double milli)
+        {
+            // Create a timer with a two second interval.
+            timer = new System.Timers.Timer(milli);
+            // Hook up the Elapsed event for the timer. 
+            timer.Elapsed += OnTimedEvent;
+            timer.AutoReset = true;
+            timer.Enabled = true;
+        }
+        private void OnTimedEvent(Object source, ElapsedEventArgs e)
+        {
+
         }
     }
 }
