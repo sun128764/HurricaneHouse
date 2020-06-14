@@ -19,24 +19,24 @@ namespace GUI
         public DataUpload()
         {
             p = new Process();
-            p.StartInfo.CreateNoWindow = true;         // 不创建新窗口    
-            p.StartInfo.UseShellExecute = false;       //不启用shell启动进程  
-            p.StartInfo.RedirectStandardInput = true;  // 重定向输入    
-            p.StartInfo.RedirectStandardOutput = true; // 重定向标准输出    
-            p.StartInfo.RedirectStandardError = true;  // 重定向错误输出  
-            p.StartInfo.FileName = "cmd.exe";
+            p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.RedirectStandardInput = true;
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.RedirectStandardError = true;
+            p.StartInfo.FileName = "tapis";
             tokenRefreshTime = new TimeSpan(0, 50, 0);
         }
         public void Init()
         {
-            runCMD("tapis auth tokens create");
+            RunTapis("auth tokens create");
             SetTimer(5000);
             lastTime = DateTime.Now;
         }
 
         public bool CheckEnv()
         {
-            string output = runCMD("tapis --help");
+            string output = RunTapis("--help");
             if (output.Contains("Tapis CLI"))
             {
                 return true;
@@ -57,28 +57,33 @@ namespace GUI
             {
                 refreshToken();
             }
-            runCMD("tapis files upload agave://" + cloudPath + " " + filePath);
+            RunTapis("files upload agave://" + cloudPath + " " + filePath);
         }
         private void refreshToken()
         {
-            string output = runCMD("tapis auth tokens refresh");
+            string output = RunTapis("auth tokens refresh");
             if (output == "Error")
             {
-                runCMD("tapis auth tokens refresh");
+                RunTapis("auth tokens refresh");
             }
         }
-        private string runCMD(string command)
+        /// <summary>
+        /// Call Tapis.
+        /// </summary>
+        /// <param name="command">Arguments</param>
+        /// <returns>Tapis output</returns>
+        private string RunTapis(string command)
         {
             try
             {
+                p.StartInfo.Arguments = command;
                 p.Start();
-                p.StandardInput.WriteLine(command);
                 p.StandardInput.AutoFlush = true;
                 p.StandardInput.WriteLine("exit");
                 StreamReader reader = p.StandardOutput;
-                string output = reader.ReadToEnd(); //获取错误信息到error
-                reader.Close(); //close进程
-                p.WaitForExit();  //等待程序执行完退出进程
+                string output = reader.ReadToEnd();
+                reader.Close();
+                p.WaitForExit();
                 p.Close();
                 return output;
             }
