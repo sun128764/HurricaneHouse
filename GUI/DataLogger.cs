@@ -9,14 +9,20 @@ using System.Timers;
 
 namespace GUI
 {
-    class DataUpload
+    class DataLogger
     {
         private string fileName;
         private readonly Process p;
         private DateTime lastTime;
         private TimeSpan tokenRefreshTime;
         private Timer timer;
-        public DataUpload()
+        private readonly List<string> dataString;
+        private TimeSpan uploadSpan;
+        private string projectName;
+        private int fileCount;
+        private delegate void uploadDelegate(string cloudPath);
+        private uploadDelegate upload;
+        public DataLogger()
         {
             p = new Process();
             p.StartInfo.CreateNoWindow = true;
@@ -26,12 +32,17 @@ namespace GUI
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.FileName = "tapis";
             tokenRefreshTime = new TimeSpan(0, 50, 0);
+            dataString = new List<string>();
+            uploadSpan = new TimeSpan(0, 1, 0);
+            upload = new uploadDelegate(Upload);
         }
         public void Init()
         {
             RunTapis("auth tokens create");
             SetTimer(5000);
             lastTime = DateTime.Now;
+            projectName = "test";
+            fileCount = 0;
         }
 
         public bool CheckEnv()
@@ -51,15 +62,45 @@ namespace GUI
         /// </summary>
         /// <param name="filePath">Local file path</param>
         /// <param name="cloudPath">Cloud destination path.(i.e. project-6284144844314644966-242ac11c-0001-012/GUI_Test/)</param>
-        public void Upload(string filePath, string cloudPath)
+        public void Upload(string cloudPath)
         {
             if ((DateTime.Now - lastTime) > tokenRefreshTime)
             {
                 refreshToken();
             }
-            RunTapis("files upload agave://" + cloudPath + " " + filePath);
+            string filename = projectName + "-" + fileCount.ToString() + ".csv";
+            using (StreamWriter writer = File.CreateText(filename))
+            {
+                writer.WriteLine("Base computer time stamp(UTC), Network ID, Board ID, Type," +
+                    " Sensor local time stamp, Temperature, Battery, Wind Speed, Wind Direction, " +
+                    "Humidity, Pressure 1, Pressure 2, Pressure 3, Pressure 4, Pressure 5," +
+                    " Pressure 6, Pressure 7, Pressure 8, Pressure 9, Pressure 10");
+                foreach (string t in dataString)
+                {
+                    writer.WriteLine(t);
+                }
+            }
+            dataString.Clear();
+            fileCount++;
+            lastTime = DateTime.Now;
+            RunTapis("files upload agave://" + Environment.CurrentDirectory + "\\" + cloudPath + " " + filename);
         }
-        private void refreshToken()
+        /// <summary>
+        /// Add data to data buffer. Auto upload to DesignSafe. Use Null input to enforce upload.
+        /// </summary>
+        /// <param name="data">Sensor data. Use Null to enforce upload</param>
+        public void AddData(string data)
+        {
+            this.dataString.Add(data);
+            if ((((DateTime.Now - lastTime) > uploadSpan)||(data == null)) && dataString.Count > 0)
+            {
+                //Upload("project-6284144844314644966-242ac11c-0001-012/GUI_Test/");
+                upload.BeginInvoke("project-6284144844314644966-242ac11c-0001-012/GUI_Test/", null, null);
+                //upload(Environment.CurrentDirectory + "\\" + filename, "project-6284144844314644966-242ac11c-0001-012/GUI_Test/");
+                //Upload(Environment.CurrentDirectory + "\\" + filename, "project-6284144844314644966-242ac11c-0001-012/GUI_Test/");
+            }
+        }
+            private void refreshToken()
         {
             string output = RunTapis("auth tokens refresh");
             if (output == "Error")
@@ -105,5 +146,6 @@ namespace GUI
         {
 
         }
+        
     }
 }

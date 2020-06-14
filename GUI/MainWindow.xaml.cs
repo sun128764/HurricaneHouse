@@ -23,15 +23,7 @@ namespace GUI
         public SensorInfo SelectedSensor { set; get; }
         public List<string> datastring;
         public SensorInfo WindSensor { set; get; }
-        private DataUpload dataUpload;
-        private string ProjectName;
-        private DateTime LastTime;
-        private TimeSpan Span;
-        private int fileCount;
-        private delegate void uploadDelegate(string file, string path);
-        private uploadDelegate upload;
-
-
+        private DataLogger dataLogger;
         public MainWindow()
         {
             InitializeComponent();
@@ -53,13 +45,7 @@ namespace GUI
             sll.DataContext = SelectedSensor.SensorData.PlotControl;
             lll.DataContext = SelectedSensor.SensorData.PlotControl;
             Status.DataContext = SelectedSensor.SensorData;
-            dataUpload = new DataUpload();
-            ProjectName = "TEST01";
-            LastTime = new DateTime();
-            fileCount = 0;
-            Span = new TimeSpan(0, 1, 0);
-            upload = new uploadDelegate(dataUpload.Upload);
-            //MessageBox.Show(dataUpload.CheckEnv().ToString());
+            dataLogger = new DataLogger();
         }
 
         public SerialPort serialPort;//串口对象类
@@ -70,7 +56,6 @@ namespace GUI
             serialPort.DataReceived += new SerialDataReceivedEventHandler(SerialPort_DataReceived);//DataReceived事件委托
             serialPort.ReceivedBytesThreshold = 31;
             serialPort.RtsEnable = true;
-            LastTime = DateTime.Now;
             return OpenPort();//串口打开
         }
 
@@ -84,7 +69,8 @@ namespace GUI
             byte[] data = new byte[31];
             serialPort.Read(data, 0, 31);
             Format.DataPackage dataPackage = Format.DataPackage.Decode(data);
-            datastring.Add(dataPackage.DataString);
+            //dataString.Add(dataPackage.DataString);
+            dataLogger.AddData(dataPackage.DataString);
             if (dataPackage != null)
             {
                 SensorInfo sensorInfo = SensorInfos.Find(x => x.SensorID == dataPackage.SensorID);
@@ -107,27 +93,6 @@ namespace GUI
                         }
                     }
                 }
-            }
-            if((DateTime.Now - LastTime) > Span && datastring.Count > 0)
-            {
-                string filename = ProjectName + "-" + fileCount.ToString()+".csv";
-                using (StreamWriter writer = File.CreateText(filename))
-                {
-                    writer.WriteLine("Base computer time stamp(UTC), Network ID, Board ID, Type," +
-                        " Sensor local time stamp, Temperature, Battery, Wind Speed, Wind Direction, " +
-                        "Humidity, Pressure 1, Pressure 2, Pressure 3, Pressure 4, Pressure 5," +
-                        " Pressure 6, Pressure 7, Pressure 8, Pressure 9, Pressure 10");
-                    foreach (string t in datastring)
-                    {
-                        writer.WriteLine(t);
-                    }
-                }
-                datastring.Clear();
-                fileCount++;
-                LastTime = DateTime.Now;
-                upload.BeginInvoke(Environment.CurrentDirectory + "\\" + filename, "project-6284144844314644966-242ac11c-0001-012/GUI_Test/", null, null);
-                //upload(Environment.CurrentDirectory + "\\" + filename, "project-6284144844314644966-242ac11c-0001-012/GUI_Test/");
-                //dataUpload.Upload(Environment.CurrentDirectory + "\\" + filename, "project-6284144844314644966-242ac11c-0001-012/GUI_Test/");
             }
         }
         //打开串口的方法
@@ -188,21 +153,7 @@ namespace GUI
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (datastring.Count > 0)
-            {
-                using (StreamWriter writer = File.CreateText("data.csv"))
-                {
-                    writer.WriteLine("Base computer time stamp(UTC), Network ID, Board ID, Type," +
-                        " Sensor local time stamp, Temperature, Battery, Wind Speed, Wind Direction, " +
-                        "Humidity, Pressure 1, Pressure 2, Pressure 3, Pressure 4, Pressure 5," +
-                        " Pressure 6, Pressure 7, Pressure 8, Pressure 9, Pressure 10");
-                    foreach (string t in datastring)
-                    {
-                        writer.WriteLine(t);
-                    }
-                }
-                dataUpload.Upload(Environment.CurrentDirectory + "\\" + "data.csv", "project-6284144844314644966-242ac11c-0001-012/GUI_Test/");
-            }
+            dataLogger.AddData(null);
         }
     }
 }
