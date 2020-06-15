@@ -21,7 +21,8 @@ namespace GUI
         private string projectName;
         private int fileCount;
         private delegate void uploadDelegate(string cloudPath);
-        private uploadDelegate upload;
+        private readonly uploadDelegate upload;
+        private readonly string CloudPath = "project-2213334571396698601-242ac11a-0001-012/GUI_Test/";
         public DataLogger()
         {
             p = new Process();
@@ -35,14 +36,14 @@ namespace GUI
             dataString = new List<string>();
             uploadSpan = new TimeSpan(0, 1, 0);
             upload = new uploadDelegate(Upload);
+            lastTime = DateTime.Now;
+            projectName = "test";
+            fileCount = 0;
         }
         public void Init()
         {
             RunTapis("auth tokens create");
             SetTimer(5000);
-            lastTime = DateTime.Now;
-            projectName = "test";
-            fileCount = 0;
         }
 
         public bool CheckEnv()
@@ -83,7 +84,7 @@ namespace GUI
             dataString.Clear();
             fileCount++;
             lastTime = DateTime.Now;
-            RunTapis("files upload agave://" + Environment.CurrentDirectory + "\\" + cloudPath + " " + filename);
+            RunTapis("files upload agave://" + cloudPath + " " + Environment.CurrentDirectory + "\\" + filename);
         }
         /// <summary>
         /// Add data to data buffer. Auto upload to DesignSafe. Use Null input to enforce upload.
@@ -95,7 +96,8 @@ namespace GUI
             if ((((DateTime.Now - lastTime) > uploadSpan)||(data == null)) && dataString.Count > 0)
             {
                 //Upload("project-6284144844314644966-242ac11c-0001-012/GUI_Test/");
-                upload.BeginInvoke("project-6284144844314644966-242ac11c-0001-012/GUI_Test/", null, null);
+                upload.BeginInvoke(CloudPath, null, null);
+                //upload.BeginInvoke("project-6284144844314644966-242ac11c-0001-012/GUI_Test/", null, null);
                 //upload(Environment.CurrentDirectory + "\\" + filename, "project-6284144844314644966-242ac11c-0001-012/GUI_Test/");
                 //Upload(Environment.CurrentDirectory + "\\" + filename, "project-6284144844314644966-242ac11c-0001-012/GUI_Test/");
             }
