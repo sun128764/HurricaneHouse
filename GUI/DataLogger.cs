@@ -23,6 +23,7 @@ namespace GUI
         private delegate void uploadDelegate(string cloudPath);
         private readonly uploadDelegate upload;
         private readonly string CloudPath = "project-2213334571396698601-242ac11a-0001-012/GUI_Test/";
+        private Format.ProgramSetting programSetting;
         public DataLogger()
         {
             p = new Process();

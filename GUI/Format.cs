@@ -161,8 +161,19 @@ namespace Format
                 dataPackage.DataString += "," + dataPackage.PressureList[j].ToString();
                 i += 2;
             }
-
             return dataPackage;
         }
+    }
+    public class ProgramSetting
+    {
+        public string CloudPath;
+        public string LocalPath;
+        public string SensorConfPath;
+        public TimeSpan UploadSpan;
+        public TimeSpan TokenRefreshSpan;
+        public string Username;
+        public string Password;
+        public string ProtName;
+        public int BaudRate;
     }
 }
