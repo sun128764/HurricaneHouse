@@ -166,14 +166,36 @@ namespace Format
     }
     public class ProgramSetting
     {
-        public string CloudPath;
-        public string LocalPath;
-        public string SensorConfPath;
-        public TimeSpan UploadSpan;
-        public TimeSpan TokenRefreshSpan;
-        public string Username;
-        public string Password;
-        public string ProtName;
-        public int BaudRate;
+        public string CloudPath { set; get; }
+        public string LocalPath { set; get; }
+        public string SensorConfPath { set; get; }
+        private TimeSpan _uploadSpan;
+        public string UploadSpan
+        {
+            set
+            {
+                _uploadSpan = TimeSpan.FromMinutes(int.Parse(value));
+            }
+            get
+            {
+                return _uploadSpan.TotalMinutes.ToString("F0");
+            }
+        }
+        private TimeSpan _tokenRefreshSpan;
+        public string TokenRefreshSpan
+        {
+            set
+            {
+                _tokenRefreshSpan = TimeSpan.FromMinutes(int.Parse(value));
+            }
+            get
+            {
+                return _tokenRefreshSpan.TotalMinutes.ToString("F0");
+            }
+        }
+        public string Username { set; get; }
+        public string Password { set; get; }
+        public string ProtName { set; get; }
+        public int BaudRate { set; get; }
     }
 }

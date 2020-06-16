@@ -149,6 +149,8 @@ namespace GUI
             SensorInfos.Clear();
             SensorInfos.AddRange(settingWindow.SensorInfos);
             NodeList.Items.Refresh();
+            var wizard = new Wizard();
+            wizard.ShowDialog();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

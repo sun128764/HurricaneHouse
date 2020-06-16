@@ -6,9 +6,120 @@
         xmlns:local="clr-namespace:GUI"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="Wizard" Height="450" Width="800">
+        Title="Set up Wizard" Height="450" Width="600
+        ">
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="3"/>
+        </Style>
+        <Style TargetType="ListBox">
+            <Setter Property="Margin" Value="3"/>
+        </Style>
+    </Window.Resources>
     <Grid>
-        <xctk:Wizard FinishButtonClosesWindow="True"/>
-
+        <xctk:Wizard FinishButtonClosesWindow="True">
+            <xctk:WizardPage x:Name="IntroPage"
+                             NextPage="{Binding ElementName=SelectSettingFile}"
+                             Title="Welcome to program setting Wizerd"
+                             Description="This Wizard will walk you though how to set up this program."/>
+            <xctk:WizardPage x:Name="SelectSettingFile"
+                             CanSelectNextPage="True"
+                             NextPage="{Binding ElementName=CloudSetting}"
+                             Title="Select or creat program setting file"
+                             Description="Plase select the exsit setting file or create a new setting file.">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button Grid.Row="0" Content="Read" Click="Read_Click"/>
+                    <Button Grid.Row="1" Content="Create"/>
+                </Grid>
+            </xctk:WizardPage>
+            <xctk:WizardPage x:Name="CloudSetting"
+                             NextPage="{Binding ElementName=COMSetting}"
+                             Title="Cloud Setting"
+                             Description="Setting up cloud upload parameters.">
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="24"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0">Cloud data folder path:</Label>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CloudPath}"/>
+                    <Button x:Name="BrowseCloudPath" Grid.Row="0" Grid.Column="2" Margin="3">...</Button>
+                    <Label Grid.Row="1" Grid.Column="0">Local data folder path:</Label>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding LocalPath}"/>
+                    <Button x:Name="BrowseLocalPath" Grid.Row="1" Grid.Column="2" Margin="3">...</Button>
+                    <Label Grid.Row="2" Grid.Column="0">Data upload interval(minutes):</Label>
+                    <TextBox Grid.Row="2" Grid.Column="1" Width="50" HorizontalAlignment="Left"/>
+                    <Label Grid.Row="3" Grid.Column="0">Token refresh interval(minutes):</Label>
+                    <TextBox Grid.Row="3" Grid.Column="1" Width="50" HorizontalAlignment="Left"/>
+                </Grid>
+            </xctk:WizardPage>
+            <xctk:WizardPage x:Name="COMSetting"
+                             NextPage="{Binding ElementName=Validation}"
+                             Title="Serial communication setting"
+                             Description="Setting up serial communication parameters.">
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="24"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0">Serial port:</Label>
+                    <ListBox Grid.Row="0" Grid.Column="1"/>
+                    <Button x:Name="RefreshCOM" Grid.Row="0" Grid.Column="2" Margin="3">↻</Button>
+                    <Label Grid.Row="1" Grid.Column="0">Baud rate:</Label>
+                    <ListBox Grid.Row="1" Grid.Column="1"/>
+                    <Label Grid.Row="2" Grid.Column="0">Parity:</Label>
+                    <ListBox Grid.Row="2" Grid.Column="1" Width="40" HorizontalAlignment="Left"/>
+                    <Label Grid.Row="3" Grid.Column="0">Data bits:</Label>
+                    <ListBox Grid.Row="3" Grid.Column="1" Width="40" HorizontalAlignment="Left"/>
+                    <Label Grid.Row="4" Grid.Column="0">Stop bits:</Label>
+                    <ListBox Grid.Row="4" Grid.Column="1" Width="40" HorizontalAlignment="Left"/>
+                </Grid>
+            </xctk:WizardPage>
+            <xctk:WizardPage x:Name="Validation"
+                             Title="Parameters Validation"
+                             Description="Please go through all steps to validate input parameters.">
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0">Serial port check:</Label>
+                    <Label Grid.Row="0" Grid.Column="1"/>
+                    <Button x:Name="COMChk" Grid.Row="0" Grid.Column="2" Margin="3">Run</Button>
+                    <Label Grid.Row="1" Grid.Column="0">Network check</Label>
+                    <Label Grid.Row="1" Grid.Column="1"/>
+                    <Label Grid.Row="2" Grid.Column="0">Tapis check</Label>
+                    <Label Grid.Row="2" Grid.Column="1" Width="40" HorizontalAlignment="Left"/>
+                    <Label Grid.Row="3" Grid.Column="0">Upload check</Label>
+                    <Label Grid.Row="3" Grid.Column="1" Width="40" HorizontalAlignment="Left"/>
+                </Grid>
+            </xctk:WizardPage>
+        </xctk:Wizard>
     </Grid>
 </Window>
