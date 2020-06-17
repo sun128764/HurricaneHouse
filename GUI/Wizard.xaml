@@ -12,18 +12,18 @@
         <Style TargetType="TextBox">
             <Setter Property="Margin" Value="3"/>
         </Style>
-        <Style TargetType="ListBox">
+        <Style TargetType="ComboBox">
             <Setter Property="Margin" Value="3"/>
         </Style>
     </Window.Resources>
     <Grid>
-        <xctk:Wizard FinishButtonClosesWindow="True">
+        <xctk:Wizard x:Name="WizardWindow" FinishButtonClosesWindow="True">
             <xctk:WizardPage x:Name="IntroPage"
                              NextPage="{Binding ElementName=SelectSettingFile}"
                              Title="Welcome to program setting Wizerd"
                              Description="This Wizard will walk you though how to set up this program."/>
             <xctk:WizardPage x:Name="SelectSettingFile"
-                             CanSelectNextPage="True"
+                             CanSelectNextPage="False"
                              NextPage="{Binding ElementName=CloudSetting}"
                              Title="Select or creat program setting file"
                              Description="Plase select the exsit setting file or create a new setting file.">
@@ -33,10 +33,11 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Button Grid.Row="0" Content="Read" Click="Read_Click"/>
-                    <Button Grid.Row="1" Content="Create"/>
+                    <Button Grid.Row="1" Content="Create" Click="Create_Click"/>
                 </Grid>
             </xctk:WizardPage>
             <xctk:WizardPage x:Name="CloudSetting"
+                             PreviousPage="{Binding ElementName=SelectSettingFile}"
                              NextPage="{Binding ElementName=COMSetting}"
                              Title="Cloud Setting"
                              Description="Setting up cloud upload parameters.">
@@ -82,19 +83,20 @@
                         <RowDefinition Height="24"/>
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" Grid.Column="0">Serial port:</Label>
-                    <ListBox Grid.Row="0" Grid.Column="1"/>
-                    <Button x:Name="RefreshCOM" Grid.Row="0" Grid.Column="2" Margin="3">↻</Button>
+                    <ComboBox Name="PortListBox" Grid.Row="0" Grid.Column="1"/>
+                    <Button x:Name="RefreshCOM" Grid.Row="0" Grid.Column="2" Margin="3" Click="RefreshPort_Click">↻</Button>
                     <Label Grid.Row="1" Grid.Column="0">Baud rate:</Label>
-                    <ListBox Grid.Row="1" Grid.Column="1"/>
-                    <Label Grid.Row="2" Grid.Column="0">Parity:</Label>
-                    <ListBox Grid.Row="2" Grid.Column="1" Width="40" HorizontalAlignment="Left"/>
-                    <Label Grid.Row="3" Grid.Column="0">Data bits:</Label>
-                    <ListBox Grid.Row="3" Grid.Column="1" Width="40" HorizontalAlignment="Left"/>
+                    <ComboBox x:Name="BaudRateBox" Grid.Row="1" Grid.Column="1" IsEditable="True" SelectedIndex="0"/>
+                    <Label Grid.Row="2" Grid.Column="0">Data bits:</Label>
+                    <ComboBox x:Name="DataBitsBox" Grid.Row="2" Grid.Column="1" SelectedIndex="1"/>
+                    <Label Grid.Row="3" Grid.Column="0">Parity:</Label>
+                    <ComboBox x:Name="ParityBox" Grid.Row="3" Grid.Column="1" SelectedIndex="0"/>
                     <Label Grid.Row="4" Grid.Column="0">Stop bits:</Label>
-                    <ListBox Grid.Row="4" Grid.Column="1" Width="40" HorizontalAlignment="Left"/>
+                    <ComboBox x:Name="StopBitsBox" Grid.Row="4" Grid.Column="1" SelectedIndex="0"/>
                 </Grid>
             </xctk:WizardPage>
             <xctk:WizardPage x:Name="Validation"
+                             CanFinish="True"
                              Title="Parameters Validation"
                              Description="Please go through all steps to validate input parameters.">
                 <Grid Margin="5">

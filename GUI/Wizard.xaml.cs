@@ -15,6 +15,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Xceed.Wpf.Toolkit;
 
 namespace GUI
 {
@@ -24,7 +25,7 @@ namespace GUI
     public partial class Wizard : Window
     {
         public Format.ProgramSetting ProgramSetting { set; get; }
-        private string[] portList { set; get; }
+        public string[] PortList { set; get; }
         private bool isCreate;
         private string savePath;
         public Wizard()
@@ -33,7 +34,32 @@ namespace GUI
             ProgramSetting = new Format.ProgramSetting();
             DataContext = ProgramSetting;
             RefreshPort_Click(null, null);
+            BaudRateBox.ItemsSource = new string[] { "9600" };
+            DataBitsBox.ItemsSource = new string[] { "7", "8" };
+            ParityBox.ItemsSource = new string[] { "None", "Even", "Mark", "Odd", "Space" };
+            StopBitsBox.ItemsSource = new string[] { "1", "2" };
+            WizardWindow.Finish += WizardWindow_Finish;
         }
+
+        private void WizardWindow_Finish(object sender, Xceed.Wpf.Toolkit.Core.CancelRoutedEventArgs e)
+        {
+            if (isCreate)
+            {
+                string setting = JsonConvert.SerializeObject(ProgramSetting, Formatting.Indented);
+                SaveFileDialog saveFileDialog = new SaveFileDialog
+                {
+                    Filter = "Setting files (*.json)|*.json",
+                    AddExtension = true,
+                    OverwritePrompt = true
+                };
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    File.WriteAllText(saveFileDialog.FileName, setting);
+                }
+            }
+            throw new NotImplementedException();
+        }
+
         private void Read_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -49,21 +75,18 @@ namespace GUI
         }
         private void Create_Click(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog
-            {
-                Filter = "Setting files (*.json)|*.json",
-                AddExtension = true,
-                OverwritePrompt = true
-            };
-            if (saveFileDialog.ShowDialog() == true)
-            {
-                savePath = saveFileDialog.FileName;
-            }
             isCreate = true;
+            WizardWindow.CurrentPage = CloudSetting;
         }
         private void RefreshPort_Click(object sender, RoutedEventArgs e)
         {
-            portList = SerialPort.GetPortNames();
+            PortList = SerialPort.GetPortNames();
+            PortListBox.ItemsSource = PortList;
+            PortListBox.SelectedIndex = 0;
+        }
+        private void BrowseLocalPath_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
