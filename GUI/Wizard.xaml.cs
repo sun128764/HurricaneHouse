@@ -57,7 +57,6 @@ namespace GUI
                     File.WriteAllText(saveFileDialog.FileName, setting);
                 }
             }
-            throw new NotImplementedException();
         }
 
         private void Read_Click(object sender, RoutedEventArgs e)

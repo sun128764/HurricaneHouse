@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
 using System.Timers;
+using System.Text.RegularExpressions;
+using SciChart.Core.Extensions;
 
 namespace GUI
 {
@@ -24,6 +26,8 @@ namespace GUI
         private readonly uploadDelegate upload;
         private readonly string CloudPath = "project-2213334571396698601-242ac11a-0001-012/GUI_Test/";
         private Format.ProgramSetting programSetting;
+        private List<string> failedFilePathList;
+        private readonly Regex regex = new Regex(@"\|\s*(uploaded|skipped)\s*\|\s*1\s*\|");
         public DataLogger()
         {
             p = new Process();
@@ -40,6 +44,7 @@ namespace GUI
             lastTime = DateTime.Now;
             projectName = "test";
             fileCount = 0;
+            failedFilePathList = new List<string>();
         }
         public void Init()
         {
@@ -85,7 +90,27 @@ namespace GUI
             dataString.Clear();
             fileCount++;
             lastTime = DateTime.Now;
-            RunTapis("files upload agave://" + cloudPath + " " + Environment.CurrentDirectory + "\\" + filename);
+            string output = RunTapis("files upload agave://" + cloudPath + " " + Environment.CurrentDirectory + "\\" + filename);
+            if (!regex.IsMatch(output))
+            {
+                failedFilePathList.Add(Environment.CurrentDirectory + "\\" + filename);
+            }
+            if (failedFilePathList.Count > 0)
+            {
+                List<string> successFiles = new List<string>();
+                foreach(string file in failedFilePathList)
+                {
+                    string outputt = RunTapis("files upload agave://" + cloudPath + " " + file);
+                    if (regex.IsMatch(outputt))
+                    {
+                        successFiles.Add(file);
+                    }
+                }
+                foreach(string file in successFiles)
+                {
+                    failedFilePathList.Remove(file);
+                }
+            }
         }
         /// <summary>
         /// Add data to data buffer. Auto upload to DesignSafe. Use Null input to enforce upload.
