@@ -23,7 +23,7 @@ namespace GUI
         public SensorInfo SelectedSensor { set; get; }
         public List<string> datastring;
         public SensorInfo WindSensor { set; get; }
-        private DataLogger dataLogger;
+        private DataLoger dataLogger;
         public MainWindow()
         {
             InitializeComponent();
@@ -45,7 +45,7 @@ namespace GUI
             sll.DataContext = SelectedSensor.SensorData.PlotControl;
             lll.DataContext = SelectedSensor.SensorData.PlotControl;
             Status.DataContext = SelectedSensor.SensorData;
-            dataLogger = new DataLogger();
+            dataLogger = new DataLoger();
         }
 
         public SerialPort serialPort;//串口对象类

@@ -11,7 +11,7 @@ using SciChart.Core.Extensions;
 
 namespace GUI
 {
-    class DataLogger
+    class DataLoger
     {
         private string fileName;
         private readonly Process p;
@@ -28,7 +28,7 @@ namespace GUI
         private Format.ProgramSetting programSetting;
         private List<string> failedFilePathList;
         private readonly Regex regex = new Regex(@"\|\s*(uploaded|skipped)\s*\|\s*1\s*\|");
-        public DataLogger()
+        public DataLoger()
         {
             p = new Process();
             p.StartInfo.CreateNoWindow = true;
