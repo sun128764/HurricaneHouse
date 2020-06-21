@@ -1,21 +1,13 @@
-﻿using Microsoft.Win32;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
 using System.IO;
 using System.IO.Ports;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
+using System.Windows.Forms;
+using System.Windows.Controls;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Xceed.Wpf.Toolkit;
+using Xceed.Wpf.AvalonDock.Controls;
 
 namespace GUI
 {
@@ -25,9 +17,9 @@ namespace GUI
     public partial class Wizard : Window
     {
         public Format.ProgramSetting ProgramSetting { set; get; }
+        private string oldProgramSettingString;
         public string[] PortList { set; get; }
         private bool isCreate;
-        private string savePath;
         public Wizard()
         {
             InitializeComponent();
@@ -43,16 +35,33 @@ namespace GUI
 
         private void WizardWindow_Finish(object sender, Xceed.Wpf.Toolkit.Core.CancelRoutedEventArgs e)
         {
+            string setting = JsonConvert.SerializeObject(ProgramSetting, Formatting.Indented);
+            if (!isCreate && (setting != oldProgramSettingString))
+            {
+                MessageBoxResult boxResult  = System.Windows.MessageBox.Show("Setting has been changed. Do you want to save this setting?", "Setting changed", MessageBoxButton.YesNoCancel);
+                switch (boxResult)
+                {
+                    case MessageBoxResult.Yes:
+                        isCreate = true;
+                        break;
+                    case MessageBoxResult.No:
+                        isCreate = false;
+                        break;
+                    case MessageBoxResult.Cancel:
+                        return;
+                    default:
+                        return;
+                }
+            }
             if (isCreate)
             {
-                string setting = JsonConvert.SerializeObject(ProgramSetting, Formatting.Indented);
                 SaveFileDialog saveFileDialog = new SaveFileDialog
                 {
                     Filter = "Setting files (*.json)|*.json",
                     AddExtension = true,
                     OverwritePrompt = true
                 };
-                if (saveFileDialog.ShowDialog() == true)
+                if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     File.WriteAllText(saveFileDialog.FileName, setting);
                 }
@@ -65,12 +74,22 @@ namespace GUI
             {
                 Filter = "Setting files (*.json)|*.json"
             };
-            if (openFileDialog.ShowDialog() == true)
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                var setting = File.ReadAllText(openFileDialog.FileName);
-                ProgramSetting = JsonConvert.DeserializeObject<Format.ProgramSetting>(setting);
+                oldProgramSettingString = File.ReadAllText(openFileDialog.FileName);
+                try
+                {
+                    ProgramSetting = JsonConvert.DeserializeObject<Format.ProgramSetting>(oldProgramSettingString);
+                }
+                catch (JsonSerializationException)
+                {
+                    System.Windows.MessageBox.Show("Can not read setting file. Please choose correct file.");
+                    return;
+                }
             }
             isCreate = false;
+            DataContext = ProgramSetting;
+            WizardWindow.CurrentPage = CloudSetting;
         }
         private void Create_Click(object sender, RoutedEventArgs e)
         {
@@ -85,7 +104,20 @@ namespace GUI
         }
         private void BrowseLocalPath_Click(object sender, RoutedEventArgs e)
         {
-
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog
+            {
+                ShowNewFolderButton = true
+            };
+            if (folderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                ProgramSetting.LocalPath = folderBrowserDialog.SelectedPath;
+                LocalPath.GetBindingExpression(System.Windows.Controls.TextBox.TextProperty).UpdateTarget();
+            }
+        }
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
         }
     }
 }

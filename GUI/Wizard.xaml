@@ -54,15 +54,15 @@
                         <RowDefinition Height="24"/>
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" Grid.Column="0">Cloud data folder path:</Label>
-                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CloudPath}"/>
+                    <TextBox x:Name="pathBox" Grid.Row="0" Grid.Column="1" Text="{Binding CloudPath}"/>
                     <Button x:Name="BrowseCloudPath" Grid.Row="0" Grid.Column="2" Margin="3">...</Button>
                     <Label Grid.Row="1" Grid.Column="0">Local data folder path:</Label>
-                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding LocalPath}"/>
-                    <Button x:Name="BrowseLocalPath" Grid.Row="1" Grid.Column="2" Margin="3">...</Button>
+                    <TextBox x:Name="LocalPath" Grid.Row="1" Grid.Column="1" Text="{Binding LocalPath}"/>
+                    <Button Grid.Row="1" Grid.Column="2" Margin="3" Click="BrowseLocalPath_Click">...</Button>
                     <Label Grid.Row="2" Grid.Column="0">Data upload interval(minutes):</Label>
-                    <TextBox Grid.Row="2" Grid.Column="1" Width="50" HorizontalAlignment="Left"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Width="50" HorizontalAlignment="Left" Text="{Binding UploadSpan}" PreviewTextInput="NumberValidationTextBox"/>
                     <Label Grid.Row="3" Grid.Column="0">Token refresh interval(minutes):</Label>
-                    <TextBox Grid.Row="3" Grid.Column="1" Width="50" HorizontalAlignment="Left"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" Width="50" HorizontalAlignment="Left" Text="{Binding TokenRefreshSpan}" PreviewTextInput="NumberValidationTextBox"/>
                 </Grid>
             </xctk:WizardPage>
             <xctk:WizardPage x:Name="COMSetting"
