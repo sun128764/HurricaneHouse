@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using Xceed.Wpf.AvalonDock.Controls;
+using System.Collections.Generic;
 
 namespace GUI
 {
@@ -20,10 +21,11 @@ namespace GUI
         private string oldProgramSettingString;
         public string[] PortList { set; get; }
         private bool isCreate;
+        public bool isFinished;
         public Wizard()
         {
             InitializeComponent();
-            ProgramSetting = new Format.ProgramSetting();
+            ProgramSetting = new Format.ProgramSetting() { UploadSpan = "5", TokenRefreshSpan = "1000" };
             DataContext = ProgramSetting;
             RefreshPort_Click(null, null);
             BaudRateBox.ItemsSource = new string[] { "9600" };
@@ -31,6 +33,7 @@ namespace GUI
             ParityBox.ItemsSource = new string[] { "None", "Even", "Mark", "Odd", "Space" };
             StopBitsBox.ItemsSource = new string[] { "1", "2" };
             WizardWindow.Finish += WizardWindow_Finish;
+            isFinished = false;
         }
 
         private void WizardWindow_Finish(object sender, Xceed.Wpf.Toolkit.Core.CancelRoutedEventArgs e)
@@ -38,7 +41,7 @@ namespace GUI
             string setting = JsonConvert.SerializeObject(ProgramSetting, Formatting.Indented);
             if (!isCreate && (setting != oldProgramSettingString))
             {
-                MessageBoxResult boxResult  = System.Windows.MessageBox.Show("Setting has been changed. Do you want to save this setting?", "Setting changed", MessageBoxButton.YesNoCancel);
+                MessageBoxResult boxResult = System.Windows.MessageBox.Show("Setting has been changed. Do you want to save this setting?", "Setting changed", MessageBoxButton.YesNoCancel);
                 switch (boxResult)
                 {
                     case MessageBoxResult.Yes:
@@ -66,6 +69,7 @@ namespace GUI
                     File.WriteAllText(saveFileDialog.FileName, setting);
                 }
             }
+            isFinished = true;
         }
 
         private void Read_Click(object sender, RoutedEventArgs e)
@@ -118,6 +122,33 @@ namespace GUI
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
+        }
+        private void CheckTapis(object sender, RoutedEventArgs e)
+        {
+            DataLoger dataLoger = new DataLoger();
+        }
+        private void SensorSettingBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Setting files (*.json)|*.json"
+            };
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string SensorInfoString = File.ReadAllText(openFileDialog.FileName);
+                try
+                {
+                    List<SensorInfo> sensorInfos = JsonConvert.DeserializeObject<List<SensorInfo>>(SensorInfoString);
+                }
+                catch (JsonSerializationException)
+                {
+                    System.Windows.MessageBox.Show("Can not read setting file. Please choose correct file.");
+                    return;
+                }
+                ProgramSetting.SensorConfPath = openFileDialog.FileName;
+                ConfPath.GetBindingExpression(System.Windows.Controls.TextBox.TextProperty).UpdateTarget();
+            }
+
         }
     }
 }

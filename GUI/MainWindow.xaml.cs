@@ -9,6 +9,7 @@ using SciChart.Charting.Visuals;
 using SciChart.Charting.ChartModifiers;
 using System.Threading;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace GUI
 {
@@ -46,6 +47,23 @@ namespace GUI
             lll.DataContext = SelectedSensor.SensorData.PlotControl;
             Status.DataContext = SelectedSensor.SensorData;
             dataLogger = new DataLoger();
+        }
+        public void InitRecording(Format.ProgramSetting setting)
+        {
+            SensorInfos.Clear();
+            string conf = File.ReadAllText(setting.SensorConfPath);
+            SensorInfos.AddRange(JsonConvert.DeserializeObject<List<SensorInfo>>(conf));
+            NodeList.Items.Refresh();
+            SelectedSensor = SensorInfos[0];
+            WindSensor = SensorInfos.Find(t => t.SensorType == SensorInfo.Types.Anemometer);
+            WindInfo.DataContext = WindSensor.SensorData;
+            sciChartSurface.DataContext = SelectedSensor.SensorData.PlotControl;
+            sll.DataContext = SelectedSensor.SensorData.PlotControl;
+            lll.DataContext = SelectedSensor.SensorData.PlotControl;
+            Status.DataContext = SelectedSensor.SensorData;
+            dataLogger = new DataLoger();
+            dataLogger.Init(setting);
+            InitCOM(setting.PortName);
         }
 
         public SerialPort serialPort;//串口对象类
@@ -144,13 +162,17 @@ namespace GUI
         }
         private void SettingBtn_Click(object sender, RoutedEventArgs e)
         {
-            var settingWindow = new SettingMaker();
-            settingWindow.ShowDialog();
-            SensorInfos.Clear();
-            SensorInfos.AddRange(settingWindow.SensorInfos);
-            NodeList.Items.Refresh();
+            //var settingWindow = new SettingMaker();
+            //settingWindow.ShowDialog();
+            //SensorInfos.Clear();
+            //SensorInfos.AddRange(settingWindow.SensorInfos);
+            //NodeList.Items.Refresh();
             var wizard = new Wizard();
             wizard.ShowDialog();
+            if (wizard.isFinished)
+            {
+                InitRecording(wizard.ProgramSetting);
+            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

@@ -41,7 +41,7 @@ namespace Format
         {
             set
             {
-                if(_autoRange!= value)
+                if (_autoRange != value)
                 {
                     _autoRange = value;
                     NotifyPropertyChanged();
@@ -192,27 +192,28 @@ namespace Format
     }
     public class ProgramSetting
     {
+        public string ProjectName { set; get; }
         public string CloudPath { set; get; }
         public string LocalPath { set; get; }
         public string SensorConfPath { set; get; }
-        private TimeSpan _uploadSpan;
+        public TimeSpan _uploadSpan;
         public string UploadSpan
         {
             set
             {
-                _uploadSpan = TimeSpan.FromMinutes(int.Parse(value));
+                _uploadSpan = TimeSpan.FromMinutes(Math.Max(1, int.Parse(value)));
             }
             get
             {
                 return _uploadSpan.TotalMinutes.ToString("F0");
             }
         }
-        private TimeSpan _tokenRefreshSpan;
+        public TimeSpan _tokenRefreshSpan;
         public string TokenRefreshSpan
         {
             set
             {
-                _tokenRefreshSpan = TimeSpan.FromMinutes(int.Parse(value));
+                _tokenRefreshSpan = TimeSpan.FromMinutes(Math.Max(60, int.Parse(value)));
             }
             get
             {
@@ -221,7 +222,7 @@ namespace Format
         }
         public string Username { set; get; }
         public string Password { set; get; }
-        public string ProtName { set; get; }
+        public string PortName { set; get; }
         public int BaudRate { set; get; }
     }
 }

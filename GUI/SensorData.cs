@@ -37,7 +37,7 @@ namespace GUI
         public List<Format.TimeSeries> Huminity5m = new List<Format.TimeSeries>();
         public List<Format.TimeSeries> Temperature5m = new List<Format.TimeSeries>();
 
-        public XyDataSeries<DateTime, double> PressureLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure" };
+        public XyDataSeries<DateTime, double> PressureLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure", AcceptsUnsortedData = true };
         public XyDataSeries<double, double> WindPlot = new XyDataSeries<double, double>();
 
         //public XyDataSeries<DateTime, double> Pressure1mLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure1m" };
@@ -386,7 +386,7 @@ namespace GUI
             double[] pressureL = new double[10];
             for (int i = 0; i < 10; i++)
             {
-                pressureL[i] = ConvertToDouble(package.PressureList[i],Type.Pressure);
+                pressureL[i] = ConvertToDouble(package.PressureList[i], Type.Pressure);
             }
 
             PressureLine.Append(package.TimeSeries, pressureL);

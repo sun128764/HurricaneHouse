@@ -8,26 +8,27 @@ using System.IO;
 using System.Timers;
 using System.Text.RegularExpressions;
 using SciChart.Core.Extensions;
+using System.Windows.Documents;
 
 namespace GUI
 {
     class DataLoger
     {
-        private string fileName;
         private readonly Process p;
         private DateTime lastTime;
-        private TimeSpan tokenRefreshTime;
-        private Timer timer;
+        private TimeSpan tokenRefreshSpan;
         private readonly List<string> dataString;
         private TimeSpan uploadSpan;
         private string projectName;
         private int fileCount;
         private delegate void uploadDelegate(string cloudPath);
         private readonly uploadDelegate upload;
-        private readonly string CloudPath = "project-2213334571396698601-242ac11a-0001-012/GUI_Test/";
+        private string CloudPath;
+        private string LocalPath;
         private Format.ProgramSetting programSetting;
         private List<string> failedFilePathList;
         private readonly Regex regex = new Regex(@"\|\s*(uploaded|skipped)\s*\|\s*1\s*\|");
+        private readonly string testFile = "TEST.tmp";
         public DataLoger()
         {
             p = new Process();
@@ -37,21 +38,48 @@ namespace GUI
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.FileName = "tapis";
-            tokenRefreshTime = new TimeSpan(0, 50, 0);
+            tokenRefreshSpan = new TimeSpan(0, 50, 0);
             dataString = new List<string>();
             uploadSpan = new TimeSpan(0, 1, 0);
             upload = new uploadDelegate(Upload);
             lastTime = DateTime.Now;
             projectName = "test";
+            CloudPath = "project-2213334571396698601-242ac11a-0001-012/GUI_Test/";
+            LocalPath = "C:\\Users\\sun12\\Desktop\\TEST";
             fileCount = 0;
             failedFilePathList = new List<string>();
         }
-        public void Init()
+        public string Init(Format.ProgramSetting setting)
         {
-            RunTapis("auth tokens create");
-            SetTimer(5000);
+            string output;
+            projectName = setting.ProjectName;
+            CloudPath = setting.CloudPath;
+            LocalPath = setting.LocalPath;
+            uploadSpan = setting._uploadSpan;
+            tokenRefreshSpan = setting._tokenRefreshSpan;
+            //output = RunTapis("auth tokens create");
+            output = RefreshToken();
+            return output;
         }
-
+        public string TryUpload()
+        {
+            string str = DateTime.Now.ToString();
+            using (StreamWriter writer = File.CreateText(testFile))
+            {
+                writer.WriteLine(str);
+            }
+            string output = RunTapis("files upload agave://" + CloudPath + " " + LocalPath + "\\" + testFile);
+            if (!regex.IsMatch(output))
+            {
+                return "Unable to upload";
+            }
+            //TO DO
+            //Check cloud path
+            //Download file
+            //Check file
+            //Delete file on cloud
+            return "Pass";
+        }
         public bool CheckEnv()
         {
             string output = RunTapis("--help");
@@ -71,11 +99,11 @@ namespace GUI
         /// <param name="cloudPath">Cloud destination path.(i.e. project-6284144844314644966-242ac11c-0001-012/GUI_Test/)</param>
         public void Upload(string cloudPath)
         {
-            if ((DateTime.Now - lastTime) > tokenRefreshTime)
+            if ((DateTime.Now - lastTime) > tokenRefreshSpan)
             {
-                refreshToken();
+                RefreshToken();
             }
-            string filename = projectName + "-" + fileCount.ToString() + ".csv";
+            string filename = LocalPath + "\\" + projectName + "-" + fileCount.ToString() + ".csv";
             using (StreamWriter writer = File.CreateText(filename))
             {
                 writer.WriteLine("Base computer time stamp(UTC), Network ID, Board ID, Type," +
@@ -90,15 +118,15 @@ namespace GUI
             dataString.Clear();
             fileCount++;
             lastTime = DateTime.Now;
-            string output = RunTapis("files upload agave://" + cloudPath + " " + Environment.CurrentDirectory + "\\" + filename);
+            string output = RunTapis("files upload agave://" + cloudPath + " " + filename);
             if (!regex.IsMatch(output))
             {
-                failedFilePathList.Add(Environment.CurrentDirectory + "\\" + filename);
+                failedFilePathList.Add(filename);
             }
             if (failedFilePathList.Count > 0)
             {
                 List<string> successFiles = new List<string>();
-                foreach(string file in failedFilePathList)
+                foreach (string file in failedFilePathList)
                 {
                     string outputt = RunTapis("files upload agave://" + cloudPath + " " + file);
                     if (regex.IsMatch(outputt))
@@ -106,7 +134,7 @@ namespace GUI
                         successFiles.Add(file);
                     }
                 }
-                foreach(string file in successFiles)
+                foreach (string file in successFiles)
                 {
                     failedFilePathList.Remove(file);
                 }
@@ -119,7 +147,7 @@ namespace GUI
         public void AddData(string data)
         {
             this.dataString.Add(data);
-            if ((((DateTime.Now - lastTime) > uploadSpan)||(data == null)) && dataString.Count > 0)
+            if ((((DateTime.Now - lastTime) > uploadSpan) || (data == null)) && dataString.Count > 0)
             {
                 //Upload("project-6284144844314644966-242ac11c-0001-012/GUI_Test/");
                 upload.BeginInvoke(CloudPath, null, null);
@@ -128,13 +156,14 @@ namespace GUI
                 //Upload(Environment.CurrentDirectory + "\\" + filename, "project-6284144844314644966-242ac11c-0001-012/GUI_Test/");
             }
         }
-            private void refreshToken()
+        private string RefreshToken()
         {
             string output = RunTapis("auth tokens refresh");
             if (output == "Error")
             {
-                RunTapis("auth tokens refresh");
+                output = RunTapis("auth tokens refresh");
             }
+            return output;
         }
         /// <summary>
         /// Call Tapis.
@@ -161,19 +190,5 @@ namespace GUI
                 return "Error";
             }
         }
-        private void SetTimer(double milli)
-        {
-            // Create a timer with a two second interval.
-            timer = new System.Timers.Timer(milli);
-            // Hook up the Elapsed event for the timer. 
-            timer.Elapsed += OnTimedEvent;
-            timer.AutoReset = true;
-            timer.Enabled = true;
-        }
-        private void OnTimedEvent(Object source, ElapsedEventArgs e)
-        {
-
-        }
-        
     }
 }
