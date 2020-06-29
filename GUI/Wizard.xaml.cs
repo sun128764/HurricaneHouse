@@ -126,6 +126,8 @@ namespace GUI
         private void CheckTapis(object sender, RoutedEventArgs e)
         {
             DataLoger dataLoger = new DataLoger();
+            dataLoger.Init(ProgramSetting);
+            UpChk.Text = dataLoger.TryUpload();
         }
         private void SensorSettingBrowse_Click(object sender, RoutedEventArgs e)
         {

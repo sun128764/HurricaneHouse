@@ -120,13 +120,14 @@
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" Grid.Column="0">Serial port check:</Label>
                     <Label Grid.Row="0" Grid.Column="1"/>
-                    <Button x:Name="COMChk" Grid.Row="0" Grid.Column="2" Margin="3">Run</Button>
+                    <Button Grid.Row="0" Grid.Column="2" Margin="3">Run</Button>
                     <Label Grid.Row="1" Grid.Column="0">Network check</Label>
                     <Label Grid.Row="1" Grid.Column="1"/>
                     <Label Grid.Row="2" Grid.Column="0">Tapis check</Label>
                     <Label Grid.Row="2" Grid.Column="1" Width="40" HorizontalAlignment="Left"/>
                     <Label Grid.Row="3" Grid.Column="0">Upload check</Label>
-                    <Label Grid.Row="3" Grid.Column="1" Width="40" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="UpChk" Grid.Row="3" Grid.Column="1" Width="40" HorizontalAlignment="Left"/>
+                    <Button Grid.Row="3" Grid.Column="3" Margin="3" Click="CheckTapis">Run</Button>
                 </Grid>
             </xctk:WizardPage>
         </xctk:Wizard>

@@ -27,8 +27,8 @@ namespace GUI
         private string LocalPath;
         private Format.ProgramSetting programSetting;
         private List<string> failedFilePathList;
-        private readonly Regex regex = new Regex(@"\|\s*(uploaded|skipped)\s*\|\s*1\s*\|");
-        private readonly string testFile = "TEST.tmp";
+        private readonly Regex uploadRegex = new Regex(@"\|\s*(uploaded|skipped)\s*\|\s*1\s*\|");
+        private readonly Regex listFolderRegex = new Regex(@"\|\s*(\S*)\s*\|.*");
         public DataLoger()
         {
             p = new Process();
@@ -61,23 +61,30 @@ namespace GUI
             output = RefreshToken();
             return output;
         }
+        /// <summary>
+        /// Try to create a .temp file in Local path and upload it to Cloud Path.
+        /// If file is upload successfully, it will clean up the .temp file.
+        /// </summary>
+        /// <returns>Check result.</returns>
         public string TryUpload()
         {
             string str = DateTime.Now.ToString();
-            using (StreamWriter writer = File.CreateText(testFile))
+            string testFile = Convert.ToBase64String(Encoding.ASCII.GetBytes(str)).Substring(10) + ".temp"; //random file name
+            using (StreamWriter writer = File.CreateText(LocalPath + "\\" + testFile))
             {
                 writer.WriteLine(str);
             }
             string output = RunTapis("files upload agave://" + CloudPath + " " + LocalPath + "\\" + testFile);
-            if (!regex.IsMatch(output))
+            if (!uploadRegex.IsMatch(output))
             {
                 return "Unable to upload";
             }
-            //TO DO
-            //Check cloud path
-            //Download file
-            //Check file
-            //Delete file on cloud
+            List<string> fileList = ListFolder(CloudPath);
+            if (fileList.Contains(testFile))
+            {
+                DeleteFile(CloudPath + "/" + testFile);
+                File.Delete(LocalPath + "\\" + testFile);
+            }
             return "Pass";
         }
         public bool CheckEnv()
@@ -119,7 +126,7 @@ namespace GUI
             fileCount++;
             lastTime = DateTime.Now;
             string output = RunTapis("files upload agave://" + cloudPath + " " + filename);
-            if (!regex.IsMatch(output))
+            if (!uploadRegex.IsMatch(output))
             {
                 failedFilePathList.Add(filename);
             }
@@ -129,7 +136,7 @@ namespace GUI
                 foreach (string file in failedFilePathList)
                 {
                     string outputt = RunTapis("files upload agave://" + cloudPath + " " + file);
-                    if (regex.IsMatch(outputt))
+                    if (uploadRegex.IsMatch(outputt))
                     {
                         successFiles.Add(file);
                     }
@@ -189,6 +196,30 @@ namespace GUI
             {
                 return "Error";
             }
+        }
+        public List<string> ListFolder(string path)
+        {
+            List<string> fileList = new List<string>();
+            string output = RunTapis("files list agave://" + path);
+            if (output == "Error")
+            {
+                return fileList;
+            }
+            MatchCollection matchCollection = listFolderRegex.Matches(output);
+            foreach (Match match in matchCollection)
+            {
+                fileList.Add(match.Groups[1].Value);
+            }
+            if (fileList.Count > 0)
+            {
+                fileList.RemoveAt(0); //Remove first element.| name | lastModified | length |
+            }
+            return fileList;
+        }
+        public bool DeleteFile(string path)
+        {
+            string output = RunTapis("files list agave://" + path);
+            return uploadRegex.IsMatch(output);
         }
     }
 }
