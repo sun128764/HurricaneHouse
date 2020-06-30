@@ -9,6 +9,8 @@ using System.Text.RegularExpressions;
 using System.Windows.Input;
 using Xceed.Wpf.AvalonDock.Controls;
 using System.Collections.Generic;
+using Application = System.Windows.Application;
+using Cursors = System.Windows.Input.Cursors;
 
 namespace GUI
 {
@@ -125,9 +127,17 @@ namespace GUI
         }
         private void CheckTapis(object sender, RoutedEventArgs e)
         {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Mouse.OverrideCursor = Cursors.Wait;
+            });
             DataLoger dataLoger = new DataLoger();
             dataLoger.Init(ProgramSetting);
             UpChk.Text = dataLoger.TryUpload();
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Mouse.OverrideCursor = null;
+            });
         }
         private void SensorSettingBrowse_Click(object sender, RoutedEventArgs e)
         {
