@@ -10,6 +10,7 @@ using SciChart.Charting.ChartModifiers;
 using System.Threading;
 using System.IO;
 using Newtonsoft.Json;
+using System.Windows.Input;
 
 namespace GUI
 {
@@ -30,33 +31,29 @@ namespace GUI
             InitializeComponent();
             datastring = new List<string>();
             SensorInfos = new List<SensorInfo>();
-            SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor1", NetWorkID = 5001, SensorID = 2, SensorStatus = SensorInfo.Status.Ok, SensorType = SensorInfo.Types.Humidity };
-            SensorInfo sensorInfo2 = new SensorInfo() { Name = "New Sensor2", NetWorkID = 5001, SensorID = 1, SensorStatus = SensorInfo.Status.Ok, SensorType = SensorInfo.Types.Anemometer };
-            SensorInfo sensorInfo3 = new SensorInfo() { Name = "New Sensor3", NetWorkID = 5001, SensorID = 3, SensorStatus = SensorInfo.Status.Ok, SensorType = SensorInfo.Types.Humidity };
-            SensorInfos.Add(sensorInfo);
-            SensorInfos.Add(sensorInfo2);
-            SensorInfos.Add(sensorInfo3);
-            NodeList.Items.Refresh();
             PortListData = SerialPort.GetPortNames();
-            SelectedSensor = SensorInfos[0];
-            WindSensor = SensorInfos[1];
             DataContext = this;
-            WindInfo.DataContext = WindSensor.SensorData;
-            sciChartSurface.DataContext = SelectedSensor.SensorData.PlotControl;
-            sll.DataContext = SelectedSensor.SensorData.PlotControl;
-            lll.DataContext = SelectedSensor.SensorData.PlotControl;
-            Status.DataContext = SelectedSensor.SensorData;
-            dataLogger = new DataLoger();
         }
         public void InitRecording(Format.ProgramSetting setting)
         {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Mouse.OverrideCursor = Cursors.Wait;
+            });
             SensorInfos.Clear();
             string conf = File.ReadAllText(setting.SensorConfPath);
             SensorInfos.AddRange(JsonConvert.DeserializeObject<List<SensorInfo>>(conf));
             NodeList.Items.Refresh();
             SelectedSensor = SensorInfos[0];
             WindSensor = SensorInfos.Find(t => t.SensorType == SensorInfo.Types.Anemometer);
-            WindInfo.DataContext = WindSensor.SensorData;
+            if (WindSensor == null)
+            {
+                MessageBox.Show("No anemometer found in sensor list.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            else
+            {
+                WindInfo.DataContext = WindSensor.SensorData;
+            }
             sciChartSurface.DataContext = SelectedSensor.SensorData.PlotControl;
             sll.DataContext = SelectedSensor.SensorData.PlotControl;
             lll.DataContext = SelectedSensor.SensorData.PlotControl;
@@ -64,6 +61,10 @@ namespace GUI
             dataLogger = new DataLoger();
             dataLogger.Init(setting);
             InitCOM(setting.PortName);
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Mouse.OverrideCursor = null;
+            });
         }
 
         public SerialPort serialPort;//串口对象类
@@ -162,8 +163,8 @@ namespace GUI
         }
         private void SettingBtn_Click(object sender, RoutedEventArgs e)
         {
-            //var settingWindow = new SettingMaker();
-            //settingWindow.ShowDialog();
+            var settingWindow = new SettingMaker();
+            settingWindow.ShowDialog();
             //SensorInfos.Clear();
             //SensorInfos.AddRange(settingWindow.SensorInfos);
             //NodeList.Items.Refresh();

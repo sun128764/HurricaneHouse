@@ -104,6 +104,9 @@
     <Compile Include="SettingMaker.xaml.cs">
       <DependentUpon>SettingMaker.xaml</DependentUpon>
     </Compile>
+    <Compile Include="URLReader.xaml.cs">
+      <DependentUpon>URLReader.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Wizard.xaml.cs">
       <DependentUpon>Wizard.xaml</DependentUpon>
     </Compile>
@@ -122,6 +125,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="SettingMaker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="URLReader.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
