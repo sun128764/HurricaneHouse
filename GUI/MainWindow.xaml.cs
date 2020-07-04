@@ -38,14 +38,15 @@ namespace GUI
         public void InitRecording(Format.ProgramSetting setting)
         {
             Mouse.OverrideCursor = Cursors.Wait;
-            Busy.IsBusy = true;
+            Busy.IsBusy = true; //Enable busy indicator to bolck main window
+            //Use background thread to execute initialization
             ThreadPool.QueueUserWorkItem((object state) =>
             {
                 SensorInfos.Clear();
                 string conf = File.ReadAllText(setting.SensorConfPath);
                 SensorInfos.AddRange(JsonConvert.DeserializeObject<List<SensorInfo>>(conf));
                 SelectedSensor = SensorInfos[0];
-                WindSensor = SensorInfos.Find(t => t.SensorType == SensorInfo.Types.Anemometer);
+                WindSensor = SensorInfos.Find(t => t.SensorType == SensorInfo.Types.Anemometer); //Find Anemometer
                 if (WindSensor == null)
                 {
                     MessageBox.Show("No anemometer found in sensor list.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -56,13 +57,13 @@ namespace GUI
                 }
                 dataLogger = new DataLoger();
                 string result = dataLogger.Init(setting);
-                if (result == "Error")
+                if (result == "Error") //If the Tapis is not available, abort init.
                 {
                     MessageBox.Show("Unable to refresh Tapis token.Please creat token manually.");
                     return;
                 }
                 InitCOM(setting.PortName);
-                Application.Current.Dispatcher.Invoke(() =>
+                Application.Current.Dispatcher.Invoke(() => //Use invoke to refresh UI elements
                 {
                     NodeList.Items.Refresh();
                     sciChartSurface.DataContext = SelectedSensor.SensorData.PlotControl;
@@ -70,7 +71,7 @@ namespace GUI
                     lll.DataContext = SelectedSensor.SensorData.PlotControl;
                     Status.DataContext = SelectedSensor.SensorData;
                     Mouse.OverrideCursor = null;
-                    Busy.IsBusy = false;
+                    Busy.IsBusy = false; //Disable busy indicator.
                 });
             }, null);
         }
@@ -165,7 +166,6 @@ namespace GUI
                 sll.DataContext = SelectedSensor.SensorData.PlotControl;
                 lll.DataContext = SelectedSensor.SensorData.PlotControl;
             }
-            //System.Diagnostics.Process.Start("Explorer.exe", @"/select,C:\mylog.log");
         }
         private void SettingBtn_Click(object sender, RoutedEventArgs e)
         {

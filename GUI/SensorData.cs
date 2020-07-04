@@ -40,9 +40,6 @@ namespace GUI
         public XyDataSeries<DateTime, double> PressureLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure", AcceptsUnsortedData = true };
         public XyDataSeries<double, double> WindPlot = new XyDataSeries<double, double>();
 
-        //public XyDataSeries<DateTime, double> Pressure1mLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure1m" };
-        //public XyDataSeries<DateTime, double> Pressure5mLine = new XyDataSeries<DateTime, double>();
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         // This method is called by the Set accessor of each property.
