@@ -11,6 +11,7 @@ using System.Threading;
 using System.IO;
 using Newtonsoft.Json;
 using System.Windows.Input;
+using System.Threading.Tasks;
 
 namespace GUI
 {
@@ -36,35 +37,42 @@ namespace GUI
         }
         public void InitRecording(Format.ProgramSetting setting)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            Mouse.OverrideCursor = Cursors.Wait;
+            Busy.IsBusy = true;
+            ThreadPool.QueueUserWorkItem((object state) =>
             {
-                Mouse.OverrideCursor = Cursors.Wait;
-            });
-            SensorInfos.Clear();
-            string conf = File.ReadAllText(setting.SensorConfPath);
-            SensorInfos.AddRange(JsonConvert.DeserializeObject<List<SensorInfo>>(conf));
-            NodeList.Items.Refresh();
-            SelectedSensor = SensorInfos[0];
-            WindSensor = SensorInfos.Find(t => t.SensorType == SensorInfo.Types.Anemometer);
-            if (WindSensor == null)
-            {
-                MessageBox.Show("No anemometer found in sensor list.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-            else
-            {
-                WindInfo.DataContext = WindSensor.SensorData;
-            }
-            sciChartSurface.DataContext = SelectedSensor.SensorData.PlotControl;
-            sll.DataContext = SelectedSensor.SensorData.PlotControl;
-            lll.DataContext = SelectedSensor.SensorData.PlotControl;
-            Status.DataContext = SelectedSensor.SensorData;
-            dataLogger = new DataLoger();
-            dataLogger.Init(setting);
-            InitCOM(setting.PortName);
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                Mouse.OverrideCursor = null;
-            });
+                SensorInfos.Clear();
+                string conf = File.ReadAllText(setting.SensorConfPath);
+                SensorInfos.AddRange(JsonConvert.DeserializeObject<List<SensorInfo>>(conf));
+                SelectedSensor = SensorInfos[0];
+                WindSensor = SensorInfos.Find(t => t.SensorType == SensorInfo.Types.Anemometer);
+                if (WindSensor == null)
+                {
+                    MessageBox.Show("No anemometer found in sensor list.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+                else
+                {
+                    WindInfo.DataContext = WindSensor.SensorData;
+                }
+                dataLogger = new DataLoger();
+                string result = dataLogger.Init(setting);
+                if (result == "Error")
+                {
+                    MessageBox.Show("Unable to refresh Tapis token.Please creat token manually.");
+                    return;
+                }
+                InitCOM(setting.PortName);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    NodeList.Items.Refresh();
+                    sciChartSurface.DataContext = SelectedSensor.SensorData.PlotControl;
+                    sll.DataContext = SelectedSensor.SensorData.PlotControl;
+                    lll.DataContext = SelectedSensor.SensorData.PlotControl;
+                    Status.DataContext = SelectedSensor.SensorData;
+                    Mouse.OverrideCursor = null;
+                    Busy.IsBusy = false;
+                });
+            }, null);
         }
 
         public SerialPort serialPort;//串口对象类
@@ -88,8 +96,6 @@ namespace GUI
             byte[] data = new byte[31];
             serialPort.Read(data, 0, 31);
             Format.DataPackage dataPackage = Format.DataPackage.Decode(data);
-            //dataString.Add(dataPackage.DataString);
-            dataLogger.AddData(dataPackage.DataString);
             if (dataPackage != null)
             {
                 SensorInfo sensorInfo = SensorInfos.Find(x => x.SensorID == dataPackage.SensorID);
@@ -165,9 +171,6 @@ namespace GUI
         {
             var settingWindow = new SettingMaker();
             settingWindow.ShowDialog();
-            //SensorInfos.Clear();
-            //SensorInfos.AddRange(settingWindow.SensorInfos);
-            //NodeList.Items.Refresh();
             var wizard = new Wizard();
             wizard.ShowDialog();
             if (wizard.isFinished)
