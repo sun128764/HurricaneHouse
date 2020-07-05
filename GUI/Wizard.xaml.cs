@@ -120,6 +120,15 @@ namespace GUI
                 LocalPath.GetBindingExpression(System.Windows.Controls.TextBox.TextProperty).UpdateTarget();
             }
         }
+        private void BrowseCloudPath_Click(object sender, RoutedEventArgs e)
+        {
+            var uRLReader = new URLReader();
+            uRLReader.ShowDialog();
+            if (uRLReader.CloudPath.Length > 0)
+            {
+                pathBox.Text = uRLReader.CloudPath;
+            }
+        }
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
@@ -160,7 +169,6 @@ namespace GUI
                 ProgramSetting.SensorConfPath = openFileDialog.FileName;
                 ConfPath.GetBindingExpression(System.Windows.Controls.TextBox.TextProperty).UpdateTarget();
             }
-
         }
     }
 }

@@ -25,7 +25,6 @@ namespace GUI
         private readonly uploadDelegate upload;
         private string CloudPath;
         private string LocalPath;
-        private Format.ProgramSetting programSetting;
         private List<string> failedFilePathList;
         private readonly Regex uploadRegex = new Regex(@"\|\s*(uploaded|skipped)\s*\|\s*1\s*\|");
         private readonly Regex listFolderRegex = new Regex(@"\|\s*(\S*)\s*\|.*");

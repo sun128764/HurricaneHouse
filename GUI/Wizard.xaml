@@ -59,7 +59,7 @@
                     <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ProjectName}"/>
                     <Label Grid.Row="1" Grid.Column="0">Cloud data folder path:</Label>
                     <TextBox x:Name="pathBox" Grid.Row="1" Grid.Column="1" Text="{Binding CloudPath}"/>
-                    <Button x:Name="BrowseCloudPath" Grid.Row="1" Grid.Column="2" Margin="3">...</Button>
+                    <Button x:Name="BrowseCloudPath" Grid.Row="1" Grid.Column="2" Margin="3" Click="BrowseCloudPath_Click">...</Button>
                     <Label Grid.Row="2" Grid.Column="0">Local data folder path:</Label>
                     <TextBox x:Name="LocalPath" Grid.Row="2" Grid.Column="1" Text="{Binding LocalPath}"/>
                     <Button Grid.Row="2" Grid.Column="2" Margin="3" Click="BrowseLocalPath_Click">...</Button>

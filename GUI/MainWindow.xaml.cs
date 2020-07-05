@@ -181,7 +181,7 @@ namespace GUI
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            dataLogger.AddData(null);
+            dataLogger?.AddData(null);
         }
     }
 }
