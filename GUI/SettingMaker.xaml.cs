@@ -32,6 +32,7 @@ namespace GUI
             SensorInfos = new List<SensorInfo>();
             SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor" };
             SensorInfos.Add(sensorInfo);
+            
         }
 
         private void ExitBtn_Click(object sender, RoutedEventArgs e)

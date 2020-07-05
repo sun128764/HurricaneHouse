@@ -4,12 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:s="http://schemas.abtsoftware.co.uk/scichart"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
         Title="FIT Hurricane House Monitor" Height="600" Width="800" MinHeight="600" MinWidth="800"
         Closing="Window_Closing">
-
-    <Grid>
+    <xctk:BusyIndicator x:Name="Busy" IsBusy="False" >
+        <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="161*"/>
             <ColumnDefinition Width="634*"/>
@@ -203,7 +204,7 @@
                     </s:SciChartSurface.XAxis>
                     <!--  Create a Y Axis  -->
                     <s:SciChartSurface.YAxis>
-                        <s:NumericAxis AxisTitle="Pressure (mBar)" VisibleRange="{Binding YVisibleRange, Mode=TwoWay}"/>
+                        <s:NumericAxis AxisTitle="Pressure (mBar)" VisibleRange="{Binding YVisibleRange, Mode=TwoWay}" AutoRange="{Binding AutoRange}"/>
                     </s:SciChartSurface.YAxis>
                     <!--  Specify interactivity modifiers  -->
                     <s:SciChartSurface.ChartModifier>
@@ -234,7 +235,7 @@
         </GroupBox>
         <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Height="auto" Margin="0,15,20,0" Width="auto" Orientation="Horizontal" Grid.Column="1">
             <Label Content="Serial port:" />
-            <ComboBox Name="PortList" ItemsSource="{Binding Path=PortListData}" MinWidth="50" />
+            <ComboBox Name="PortList" ItemsSource="{Binding PortListData}" MinWidth="50" />
             <Button Name="ConnectBtn" Content="Start" Click="ConnectBtn_Click" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Height="30" Margin="29,15,191,0" Grid.Column="1" >
@@ -245,4 +246,5 @@
         </StackPanel>
         <Button Name="SettingBtn" Content="Setting" HorizontalAlignment="Left" Margin="40,15,0,0" VerticalAlignment="Top" Width="76" Click="SettingBtn_Click"/>
     </Grid>
+    </xctk:BusyIndicator>
 </Window>

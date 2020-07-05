@@ -1,7 +1,7 @@
 // parameters
 const unsigned int NetworkID = 5001; //
-const unsigned int BoardID = 3; //
-const unsigned int BoardType = 3; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
+const unsigned int BoardID = 10; //
+const unsigned int BoardType = 4; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
 
 const unsigned int Fs = 50; // sample reading per second (per sensor)
 const unsigned int nSensors = 5;
@@ -135,7 +135,7 @@ void setup() {
 }
 
 void loop() { // while true
-  if (BoardType == 2) {
+  if (BoardType == 1) {
     ForwardData();
   }
   CurrentMillis = millis();

@@ -9,6 +9,9 @@ using SciChart.Charting.Visuals;
 using SciChart.Charting.ChartModifiers;
 using System.Threading;
 using System.IO;
+using Newtonsoft.Json;
+using System.Windows.Input;
+using System.Threading.Tasks;
 
 namespace GUI
 {
@@ -23,28 +26,54 @@ namespace GUI
         public SensorInfo SelectedSensor { set; get; }
         public List<string> datastring;
         public SensorInfo WindSensor { set; get; }
+        private DataLoger dataLogger;
         public MainWindow()
         {
             InitializeComponent();
             datastring = new List<string>();
             SensorInfos = new List<SensorInfo>();
-            SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor1", NetWorkID = 5001, SensorID = 2, SensorStatus = SensorInfo.Status.Ok, SensorType = SensorInfo.Types.Humidity };
-            SensorInfo sensorInfo2 = new SensorInfo() { Name = "New Sensor2", NetWorkID = 5001, SensorID = 1, SensorStatus = SensorInfo.Status.Ok, SensorType = SensorInfo.Types.Anemometer };
-            SensorInfo sensorInfo3 = new SensorInfo() { Name = "New Sensor3", NetWorkID = 5001, SensorID = 3, SensorStatus = SensorInfo.Status.Ok, SensorType = SensorInfo.Types.Humidity };
-            SensorInfos.Add(sensorInfo);
-            SensorInfos.Add(sensorInfo2);
-            SensorInfos.Add(sensorInfo3);
-            NodeList.Items.Refresh();
             PortListData = SerialPort.GetPortNames();
-            SelectedSensor = SensorInfos[0];
-            WindSensor = SensorInfos[1];
             DataContext = this;
-            WindInfo.DataContext = WindSensor.SensorData;
-            sciChartSurface.DataContext = SelectedSensor.SensorData.PlotControl;
-            sll.DataContext = SelectedSensor.SensorData.PlotControl;
-            lll.DataContext = SelectedSensor.SensorData.PlotControl;
-            Status.DataContext = SelectedSensor.SensorData;
-            
+        }
+        public void InitRecording(Format.ProgramSetting setting)
+        {
+            Mouse.OverrideCursor = Cursors.Wait;
+            Busy.IsBusy = true; //Enable busy indicator to bolck main window
+            //Use background thread to execute initialization
+            ThreadPool.QueueUserWorkItem((object state) =>
+            {
+                SensorInfos.Clear();
+                string conf = File.ReadAllText(setting.SensorConfPath);
+                SensorInfos.AddRange(JsonConvert.DeserializeObject<List<SensorInfo>>(conf));
+                SelectedSensor = SensorInfos[0];
+                WindSensor = SensorInfos.Find(t => t.SensorType == SensorInfo.Types.Anemometer); //Find Anemometer
+                if (WindSensor == null)
+                {
+                    MessageBox.Show("No anemometer found in sensor list.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+                else
+                {
+                    WindInfo.DataContext = WindSensor.SensorData;
+                }
+                dataLogger = new DataLoger();
+                string result = dataLogger.Init(setting);
+                if (result == "Error") //If the Tapis is not available, abort init.
+                {
+                    MessageBox.Show("Unable to refresh Tapis token.Please creat token manually.");
+                    return;
+                }
+                InitCOM(setting.PortName);
+                Application.Current.Dispatcher.Invoke(() => //Use invoke to refresh UI elements
+                {
+                    NodeList.Items.Refresh();
+                    sciChartSurface.DataContext = SelectedSensor.SensorData.PlotControl;
+                    sll.DataContext = SelectedSensor.SensorData.PlotControl;
+                    lll.DataContext = SelectedSensor.SensorData.PlotControl;
+                    Status.DataContext = SelectedSensor.SensorData;
+                    Mouse.OverrideCursor = null;
+                    Busy.IsBusy = false; //Disable busy indicator.
+                });
+            }, null);
         }
 
         public SerialPort serialPort;//串口对象类
@@ -57,17 +86,17 @@ namespace GUI
             serialPort.RtsEnable = true;
             return OpenPort();//串口打开
         }
+
         /// 数据接收事件
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             // Thread.Sleep(2000);
             //serialPort.Read(readBuffer, 0, readBuffer.Length);
-            while (serialPort.ReadByte() != 255);
+            while (serialPort.ReadByte() != 255) ;
             while (serialPort.BytesToRead < 31) ;
             byte[] data = new byte[31];
             serialPort.Read(data, 0, 31);
             Format.DataPackage dataPackage = Format.DataPackage.Decode(data);
-            datastring.Add( dataPackage.DataString);
             if (dataPackage != null)
             {
                 SensorInfo sensorInfo = SensorInfos.Find(x => x.SensorID == dataPackage.SensorID);
@@ -82,7 +111,7 @@ namespace GUI
                             LineSeries.DataSeries = SelectedSensor.SensorData.PressureLine;
                         }
                     }
-                    if(sensorInfo == WindSensor)
+                    if (sensorInfo == WindSensor)
                     {
                         using (sciChartSurface.SuspendUpdates())
                         {
@@ -137,33 +166,22 @@ namespace GUI
                 sll.DataContext = SelectedSensor.SensorData.PlotControl;
                 lll.DataContext = SelectedSensor.SensorData.PlotControl;
             }
-            //System.Diagnostics.Process.Start("Explorer.exe", @"/select,C:\mylog.log");
         }
         private void SettingBtn_Click(object sender, RoutedEventArgs e)
         {
             var settingWindow = new SettingMaker();
             settingWindow.ShowDialog();
-            SensorInfos.Clear();
-            SensorInfos.AddRange(settingWindow.SensorInfos);
-            NodeList.Items.Refresh();
+            var wizard = new Wizard();
+            wizard.ShowDialog();
+            if (wizard.isFinished)
+            {
+                InitRecording(wizard.ProgramSetting);
+            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (datastring.Count > 0)
-            {
-                using (StreamWriter writer = File.CreateText("data.csv"))
-                {
-                    writer.WriteLine("Base computer time stamp(UTC), Network ID, Board ID, Type," +
-                        " Sensor local time stamp, Temperature, Battery, Wind Speed, Wind Direction, " +
-                        "Humidity, Pressure 1, Pressure 2, Pressure 3, Pressure 4, Pressure 5," +
-                        " Pressure 6, Pressure 7, Pressure 8, Pressure 9, Pressure 10");
-                    foreach (string t in datastring)
-                    {
-                        writer.WriteLine(t);
-                    }
-                }
-            }
+            dataLogger?.AddData(null);
         }
     }
 }

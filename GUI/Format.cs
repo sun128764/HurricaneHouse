@@ -8,6 +8,9 @@ using System.Runtime.CompilerServices;
 using SciChart.Data.Model;
 using SciChart.Charting.Visuals;
 using System.Text.RegularExpressions;
+using SciChart.Charting.Model.DataSeries;
+using SciChart.Charting.Visuals.Axes;
+using System.Drawing.Printing;
 
 namespace Format
 {
@@ -33,7 +36,22 @@ namespace Format
         public event PropertyChangedEventHandler PropertyChanged;
         private DateTime _max;
         private DateTime _min;
-
+        private AutoRange _autoRange;
+        public AutoRange AutoRange
+        {
+            set
+            {
+                if (_autoRange != value)
+                {
+                    _autoRange = value;
+                    NotifyPropertyChanged();
+                }
+            }
+            get
+            {
+                return _autoRange;
+            }
+        }
         private IRange _xVisibleRange;
         public IRange XVisibleRange
         {
@@ -43,7 +61,7 @@ namespace Format
                 if (_xVisibleRange != value)
                 {
                     _xVisibleRange = value;
-                    NotifyPropertyChanged("XVisibleRange");
+                    NotifyPropertyChanged();
                 }
             }
         }
@@ -56,7 +74,7 @@ namespace Format
                 if (_yVisibleRange != value)
                 {
                     _yVisibleRange = value;
-                    NotifyPropertyChanged("YVisibleRange");
+                    NotifyPropertyChanged();
                 }
             }
         }
@@ -70,7 +88,7 @@ namespace Format
                 if (_zoomeState != value)
                 {
                     _zoomeState = value;
-                    NotifyPropertyChanged("ZoomState");
+                    NotifyPropertyChanged();
                 }
             }
         }
@@ -105,8 +123,16 @@ namespace Format
             this.Max = dateTime;
             this.Min = dateTime.AddMinutes(-Scale);
             IRange range = XVisibleRange;
-            if (ZoomState == ZoomStates.UserZooming) XVisibleRange = range;
-            else XVisibleRange = new DateRange(this.Min, this.Max);
+            if (ZoomState == ZoomStates.UserZooming)
+            {
+                XVisibleRange = range;
+                AutoRange = AutoRange.Never;
+            }
+            else
+            {
+                XVisibleRange = new DateRange(this.Min, this.Max);
+                AutoRange = AutoRange.Always;
+            }
         }
     }
 
@@ -161,8 +187,42 @@ namespace Format
                 dataPackage.DataString += "," + dataPackage.PressureList[j].ToString();
                 i += 2;
             }
-
             return dataPackage;
         }
+    }
+    public class ProgramSetting
+    {
+        public string ProjectName { set; get; }
+        public string CloudPath { set; get; }
+        public string LocalPath { set; get; }
+        public string SensorConfPath { set; get; }
+        public TimeSpan _uploadSpan;
+        public string UploadSpan
+        {
+            set
+            {
+                _uploadSpan = TimeSpan.FromMinutes(Math.Max(1, int.Parse(value)));
+            }
+            get
+            {
+                return _uploadSpan.TotalMinutes.ToString("F0");
+            }
+        }
+        public TimeSpan _tokenRefreshSpan;
+        public string TokenRefreshSpan
+        {
+            set
+            {
+                _tokenRefreshSpan = TimeSpan.FromMinutes(Math.Max(60, int.Parse(value)));
+            }
+            get
+            {
+                return _tokenRefreshSpan.TotalMinutes.ToString("F0");
+            }
+        }
+        public string Username { set; get; }
+        public string Password { set; get; }
+        public string PortName { set; get; }
+        public int BaudRate { set; get; }
     }
 }
