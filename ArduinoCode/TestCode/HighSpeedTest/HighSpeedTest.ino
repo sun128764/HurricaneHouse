@@ -1,6 +1,6 @@
 // parameters
 const unsigned int NetworkID = 5001; //
-const unsigned int BoardID = 1; //
+const unsigned int BoardID = 5; //
 const unsigned int BoardType = 4; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
 
 const unsigned int Fs = 50; // sample reading per second (per sensor)
@@ -129,6 +129,8 @@ void setup() {
   Serial2.print("ATJV 1\r" ); // Set JV to 1 so that if you switch coordinators, your routers will search for the new one on startup. 
   delay(100);
   Serial2.print("ATNP\r" ); // read the max payload of a packet. (determined from encryption and type of coommunication)
+  delay(100);
+  Serial2.print("ATWR\r" ); // Send a WR (Write) command to save the changes. 
   delay(100);
   Serial2.print("ATCN\r" ); //Exit command mode.
   while (Serial2.available()) {
