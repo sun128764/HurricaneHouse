@@ -12,6 +12,7 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Windows.Input;
 using System.Threading.Tasks;
+using SciChart.Data.Model;
 
 namespace GUI
 {
@@ -27,6 +28,7 @@ namespace GUI
         public List<string> datastring;
         public SensorInfo WindSensor { set; get; }
         private DataLoger dataLogger;
+        public IRange FixRange => new DoubleRange(0, 360);
         public MainWindow()
         {
             InitializeComponent();
@@ -97,6 +99,7 @@ namespace GUI
             byte[] data = new byte[31];
             serialPort.Read(data, 0, 31);
             Format.DataPackage dataPackage = Format.DataPackage.Decode(data);
+            dataLogger.AddData(dataPackage.DataString);
             if (dataPackage != null)
             {
                 SensorInfo sensorInfo = SensorInfos.Find(x => x.SensorID == dataPackage.SensorID);

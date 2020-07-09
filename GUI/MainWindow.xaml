@@ -116,7 +116,7 @@
                                 </s:SciChartSurface.RenderableSeries>
                                 <s:SciChartSurface.XAxis>
                                     <s:PolarXAxis AutoRange="Never"
-                                              VisibleRange="0,360"
+                                              VisibleRange="{Binding FixRange}"
                                               DrawLabels="False"
                                               DrawMajorTicks="True"
                                               DrawMinorTicks="True"
@@ -135,6 +135,7 @@
                                 </s:SciChartSurface.YAxis>
                                 <s:SciChartSurface.ChartModifier>
                                     <s:ModifierGroup>
+                                        <s:MouseWheelZoomModifier/>
                                     </s:ModifierGroup>
                                 </s:SciChartSurface.ChartModifier>
                             </s:SciChartSurface>
