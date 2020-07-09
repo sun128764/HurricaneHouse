@@ -184,7 +184,7 @@
                         </s:SciChartSurface.XAxis>
                         <!--  Create a Y Axis  -->
                         <s:SciChartSurface.YAxis>
-                            <s:NumericAxis AxisTitle="Pressure (mBar)" VisibleRange="{Binding YVisibleRange, Mode=TwoWay}" AutoRange="{Binding AutoRange}"/>
+                            <s:NumericAxis AxisTitle="Pressure (mBar)" AutoRange="{Binding AutoRange}"/>
                         </s:SciChartSurface.YAxis>
                         <!--  Specify interactivity modifiers  -->
                         <s:SciChartSurface.ChartModifier>

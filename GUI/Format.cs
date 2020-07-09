@@ -65,20 +65,6 @@ namespace Format
                 }
             }
         }
-        private IRange _yVisibleRange;
-        public IRange YVisibleRange
-        {
-            get { return _yVisibleRange; }
-            set
-            {
-                if (_yVisibleRange != value)
-                {
-                    _yVisibleRange = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-
         private ZoomStates _zoomeState;
         public ZoomStates ZoomState
         {
