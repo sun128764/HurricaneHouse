@@ -1,6 +1,6 @@
 // parameters
 const unsigned int NetworkID = 5001; //
-const unsigned int BoardID = 10; //
+const unsigned int BoardID = 1; //
 const unsigned int BoardType = 4; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
 
 const unsigned int Fs = 50; // sample reading per second (per sensor)
@@ -85,7 +85,6 @@ void SendSample() {
   Serial2.write(255);
   Serial2.write(SerBuf, 31);
   analogReadResolution(16);
-  Serial.println(StartTime);
 }
 
 void setup() {
@@ -122,6 +121,12 @@ void setup() {
   Serial2.print("ATEE 1\r" ); // enable encryption (secure communication)
   delay(100);
   Serial2.print("ATKY AAAAABBBBBCCCCCDDDDDEEEEEFFFFF12\r" ); // set encryption key 32 Hex digits
+  delay(100);
+  Serial2.print("ATNJ FF\r" ); // Set NJ to FF for unlimited join time.
+  delay(100);
+  Serial2.print("ATNW 1\r" ); // Set NW to 1 (1 minutes) to trigger a rejoin if the network is lost
+  delay(100);
+  Serial2.print("ATJV 1\r" ); // Set JV to 1 so that if you switch coordinators, your routers will search for the new one on startup. 
   delay(100);
   Serial2.print("ATNP\r" ); // read the max payload of a packet. (determined from encryption and type of coommunication)
   delay(100);
