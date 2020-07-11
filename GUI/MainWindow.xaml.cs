@@ -99,9 +99,9 @@ namespace GUI
             byte[] data = new byte[31];
             serialPort.Read(data, 0, 31);
             Format.DataPackage dataPackage = Format.DataPackage.Decode(data);
-            dataLogger.AddData(dataPackage.DataString);
             if (dataPackage != null)
             {
+                dataLogger.AddData(dataPackage.DataString);
                 SensorInfo sensorInfo = SensorInfos.Find(x => x.SensorID == dataPackage.SensorID);
                 if (sensorInfo != null)
                 {
