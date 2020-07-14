@@ -213,11 +213,6 @@
                     </s:SciChartSurface>
                 </Grid>
             </GroupBox>
-            <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Height="auto" Margin="0,15,20,0" Width="auto" Orientation="Horizontal" Grid.Column="1">
-                <Label Content="Serial port:" />
-                <ComboBox Name="PortList" ItemsSource="{Binding PortListData}" MinWidth="50" />
-                <Button Name="ConnectBtn" Content="Start" Click="ConnectBtn_Click" />
-            </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Height="30" Margin="29,15,191,0" Grid.Column="1" >
                 <Label Content="Time Period:"/>
                 <Label Name ="lll" Content="{Binding Scale}" Width="35" Margin="-5,0,0,0"/>

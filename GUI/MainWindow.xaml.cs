@@ -22,7 +22,6 @@ namespace GUI
     public partial class MainWindow : Window
     {
         public string SettingPath;
-        public string[] PortListData { get; set; }
         public List<SensorInfo> SensorInfos { set; get; }
         public SensorInfo SelectedSensor { set; get; }
         public List<string> datastring;
@@ -34,7 +33,6 @@ namespace GUI
             InitializeComponent();
             datastring = new List<string>();
             SensorInfos = new List<SensorInfo>();
-            PortListData = SerialPort.GetPortNames();
             DataContext = this;
         }
         public void InitRecording(Format.ProgramSetting setting)
@@ -78,22 +76,24 @@ namespace GUI
             }, null);
         }
 
-        public SerialPort serialPort;//串口对象类
+        public SerialPort serialPort;//Serial object
 
         public bool InitCOM(string PortName)
         {
             serialPort = new SerialPort(PortName, 9600, Parity.None, 8, StopBits.One);
-            serialPort.DataReceived += new SerialDataReceivedEventHandler(SerialPort_DataReceived);//DataReceived事件委托
+            serialPort.DataReceived += new SerialDataReceivedEventHandler(SerialPort_DataReceived);//DataReceived event delegate
             serialPort.ReceivedBytesThreshold = 31;
             serialPort.RtsEnable = true;
-            return OpenPort();//串口打开
+            return OpenPort();
         }
 
-        /// 数据接收事件
+        /// <summary>
+        /// Data received event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            // Thread.Sleep(2000);
-            //serialPort.Read(readBuffer, 0, readBuffer.Length);
             while (serialPort.ReadByte() != 255) ;
             while (serialPort.BytesToRead < 31) ;
             byte[] data = new byte[31];
@@ -124,10 +124,13 @@ namespace GUI
                 }
             }
         }
-        //打开串口的方法
+        /// <summary>
+        /// Open serial port
+        /// </summary>
+        /// <returns>If port open success.</returns>
         public bool OpenPort()
         {
-            try//这里写成异常处理的形式以免串口打不开程序崩溃
+            try//Avoid program crash when port open failed.
             {
                 serialPort.Open();
             }
@@ -143,20 +146,16 @@ namespace GUI
             }
         }
 
-        //向串口发送数据
+        /// <summary>
+        /// Send command via serial port
+        /// </summary>
+        /// <param name="CommandString">Command string</param>
         public void SendCommand(string CommandString)
         {
             byte[] WriteBuffer = Encoding.ASCII.GetBytes(CommandString);
             serialPort.Write(WriteBuffer, 0, WriteBuffer.Length);
         }
 
-        private void ConnectBtn_Click(object sender, RoutedEventArgs e)
-        {
-            ComboBox comboBox = PortList;
-            if (comboBox.SelectedItem != null) InitCOM(comboBox.Text);
-            Button button = sender as Button;
-            if (serialPort.IsOpen) button.IsEnabled = false;
-        }
         private void Label_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             SensorInfo sensor = NodeList.SelectedItem as SensorInfo;
@@ -172,8 +171,6 @@ namespace GUI
         }
         private void SettingBtn_Click(object sender, RoutedEventArgs e)
         {
-            var settingWindow = new SettingMaker();
-            settingWindow.ShowDialog();
             var wizard = new Wizard();
             wizard.ShowDialog();
             if (wizard.isFinished)
@@ -184,7 +181,19 @@ namespace GUI
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            dataLogger?.AddData(null);
+            if (serialPort !=null && serialPort.IsOpen)
+            {
+                MessageBoxResult result = MessageBox.Show("Data recording. Do you want to exit?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    dataLogger?.AddData(null);
+                    e.Cancel = false;
+                }
+                else
+                {
+                    e.Cancel = true;
+                }
+            }
         }
     }
 }

@@ -170,5 +170,15 @@ namespace GUI
                 ConfPath.GetBindingExpression(System.Windows.Controls.TextBox.TextProperty).UpdateTarget();
             }
         }
+        private void Tool_Click(object sender, RoutedEventArgs e)
+        {
+            var settingWindow = new SettingMaker();
+            settingWindow.ShowDialog();
+            if(settingWindow.FilePath != null)
+            {
+                ProgramSetting.SensorConfPath = settingWindow.FilePath;
+                ConfPath.GetBindingExpression(System.Windows.Controls.TextBox.TextProperty).UpdateTarget();
+            }
+        }
     }
 }

@@ -25,6 +25,7 @@ namespace GUI
         public string Setting;
 
         public List<SensorInfo> SensorInfos { set; get; }
+        public string FilePath;
         public SettingMaker()
         {
             InitializeComponent();
@@ -32,7 +33,6 @@ namespace GUI
             SensorInfos = new List<SensorInfo>();
             SensorInfo sensorInfo = new SensorInfo() { Name = "New Sensor" };
             SensorInfos.Add(sensorInfo);
-            
         }
 
         private void ExitBtn_Click(object sender, RoutedEventArgs e)
@@ -57,6 +57,7 @@ namespace GUI
                 SensorInfos.Clear();
                 SensorInfos.AddRange(JsonConvert.DeserializeObject<List<SensorInfo>>(Setting));
                 SensorList.Items.Refresh();
+                FilePath = openFileDialog.FileName;
             }
         }
 
@@ -72,6 +73,7 @@ namespace GUI
             if (saveFileDialog.ShowDialog() == true)
             {
                 File.WriteAllText(saveFileDialog.FileName, output);
+                FilePath = saveFileDialog.FileName;
             }
         }
 
@@ -86,16 +88,6 @@ namespace GUI
         {
             SensorInfos.Remove(SensorList.SelectedItem as SensorInfo);
             SensorList.Items.Refresh();
-        }
-
-        private void FinishBtn_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Metadata_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
         }
     }
 }
