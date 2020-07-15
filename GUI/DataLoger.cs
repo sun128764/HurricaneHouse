@@ -28,6 +28,8 @@ namespace GUI
         private List<string> failedFilePathList;
         private readonly Regex uploadRegex = new Regex(@"\|\s*(uploaded|skipped)\s*\|\s*1\s*\|");
         private readonly Regex listFolderRegex = new Regex(@"\|\s*(\S*)\s*\|.*");
+        public string LastFileName { set; get; }
+        public string LastFileTime { set; get; }
         public DataLoger()
         {
             p = new Process();
@@ -56,7 +58,7 @@ namespace GUI
             LocalPath = setting.LocalPath;
             uploadSpan = setting._uploadSpan;
             tokenRefreshSpan = setting._tokenRefreshSpan;
-            //output = RunTapis("auth tokens create");
+            fileCount = FindFileCount(setting.LocalPath) + 1;
             output = RefreshToken();
             return output;
         }
@@ -219,6 +221,26 @@ namespace GUI
         {
             string output = RunTapis("files list agave://" + path);
             return uploadRegex.IsMatch(output);
+        }
+        /// <summary>
+        /// Find the maximum suffix in given folder.
+        /// </summary>
+        /// <param name="path">Data file folder path.</param>
+        /// <returns>Maximum suffix. Start from -1.</returns>
+        private int FindFileCount(string path)
+        {
+            int lastFileCount = -1;
+            string[] fileList = Directory.GetFiles(path);
+            Regex regex = new Regex(@"^" + projectName + @"-([0-9]*).csv$");
+            foreach (string file in fileList)
+            {
+                string fileName = Path.GetFileName(file);
+                if (regex.IsMatch(fileName))
+                {
+                    lastFileCount = Math.Max(lastFileCount, int.Parse(regex.Match(fileName).Groups[1].Value));
+                }
+            }
+            return lastFileCount;
         }
     }
 }
