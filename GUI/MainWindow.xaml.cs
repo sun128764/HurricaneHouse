@@ -70,6 +70,7 @@ namespace GUI
                     sll.DataContext = SelectedSensor.SensorData.PlotControl;
                     lll.DataContext = SelectedSensor.SensorData.PlotControl;
                     Status.DataContext = SelectedSensor.SensorData;
+                    CloudStatus.DataContext = dataLogger;
                     Mouse.OverrideCursor = null;
                     Busy.IsBusy = false; //Disable busy indicator.
                 });

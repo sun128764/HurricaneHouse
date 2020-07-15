@@ -9,10 +9,12 @@ using System.Timers;
 using System.Text.RegularExpressions;
 using SciChart.Core.Extensions;
 using System.Windows.Documents;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace GUI
 {
-    class DataLoger
+    class DataLoger : INotifyPropertyChanged
     {
         private readonly Process p;
         private DateTime lastTime;
@@ -30,6 +32,11 @@ namespace GUI
         private readonly Regex listFolderRegex = new Regex(@"\|\s*(\S*)\s*\|.*");
         public string LastFileName { set; get; }
         public string LastFileTime { set; get; }
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
         public DataLoger()
         {
             p = new Process();
@@ -127,7 +134,14 @@ namespace GUI
             fileCount++;
             lastTime = DateTime.Now;
             string output = RunTapis("files upload agave://" + cloudPath + " " + filename);
-            if (!uploadRegex.IsMatch(output))
+            if (uploadRegex.IsMatch(output))
+            {
+                LastFileName = Path.GetFileName(filename);
+                LastFileTime = lastTime.ToString("g");
+                NotifyPropertyChanged("LastFileName");
+                NotifyPropertyChanged("LastFileTime");
+            }
+            else
             {
                 failedFilePathList.Add(filename);
             }
