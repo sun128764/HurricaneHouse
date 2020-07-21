@@ -7,10 +7,13 @@ using System.Windows.Forms;
 using System.Windows.Controls;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
-using Xceed.Wpf.AvalonDock.Controls;
 using System.Collections.Generic;
 using Application = System.Windows.Application;
 using Cursors = System.Windows.Input.Cursors;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System;
+using System.Threading;
 
 namespace GUI
 {
@@ -19,6 +22,7 @@ namespace GUI
     /// </summary>
     public partial class Wizard : Window
     {
+
         public Format.ProgramSetting ProgramSetting { set; get; }
         private string oldProgramSettingString;
         public string[] PortList { set; get; }
@@ -136,17 +140,24 @@ namespace GUI
         }
         private void CheckTapis(object sender, RoutedEventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                Mouse.OverrideCursor = Cursors.Wait;
-            });
+            CheckBtn.IsEnabled = false;
+            Mouse.OverrideCursor = Cursors.Wait;
             DataLoger dataLoger = new DataLoger();
-            dataLoger.Init(ProgramSetting);
-            UpChk.Text = dataLoger.TryUpload();
-            Application.Current.Dispatcher.Invoke(() =>
+            Validation.DataContext = dataLoger;
+            ThreadPool.QueueUserWorkItem((object state) =>
             {
-                Mouse.OverrideCursor = null;
-            });
+                dataLoger.Init(ProgramSetting);
+                dataLoger.TryUpload();
+                Application.Current.Dispatcher.Invoke(() => //Use invoke to refresh UI elements
+                {
+                    Mouse.OverrideCursor = null;
+                    CheckBtn.IsEnabled = true;
+                    if (dataLoger.isPass)
+                    {
+                        Validation.CanFinish = true;
+                    }
+                });
+            }, null);
         }
         private void SensorSettingBrowse_Click(object sender, RoutedEventArgs e)
         {
@@ -174,11 +185,16 @@ namespace GUI
         {
             var settingWindow = new SettingMaker();
             settingWindow.ShowDialog();
-            if(settingWindow.FilePath != null)
+            if (settingWindow.FilePath != null)
             {
                 ProgramSetting.SensorConfPath = settingWindow.FilePath;
                 ConfPath.GetBindingExpression(System.Windows.Controls.TextBox.TextProperty).UpdateTarget();
             }
+        }
+
+        private void WizardWindow_PageChanged(object sender, RoutedEventArgs e)
+        {
+            Mouse.OverrideCursor = null;
         }
     }
 }

@@ -157,7 +157,7 @@ namespace GUI
         {
             get
             {
-                double voltage = (4.0 - ConvertToDouble(this.BatteryLevel, Type.Battery)) / (4.0 - 3.2) * 100.0;
+                double voltage = (ConvertToDouble(this.BatteryLevel, Type.Battery) - 3.6) / (4.2 - 3.6) * 100.0;
                 if (ConvertToDouble(this.BatteryLevel, Type.Battery) < 3.2) return "N/A";
                 else return voltage.ToString("F0") + "%";
             }

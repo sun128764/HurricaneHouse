@@ -17,7 +17,7 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <xctk:Wizard x:Name="WizardWindow" FinishButtonClosesWindow="True">
+        <xctk:Wizard x:Name="WizardWindow" FinishButtonClosesWindow="True" PageChanged="WizardWindow_PageChanged">
             <xctk:WizardPage x:Name="IntroPage"
                              NextPage="{Binding ElementName=SelectSettingFile}"
                              Title="Welcome to program setting Wizerd"
@@ -105,31 +105,20 @@
                 </Grid>
             </xctk:WizardPage>
             <xctk:WizardPage x:Name="Validation"
-                             CanFinish="True"
+                             CanFinish="{Binding ElementName=SkipChk,Path=IsChecked}"
                              Title="Parameters Validation"
                              Description="Please go through all steps to validate input parameters.">
                 <Grid Margin="5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="100"/>
-                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="auto"/>
                         <RowDefinition Height="25"/>
                         <RowDefinition Height="25"/>
                     </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Grid.Column="0">Serial port check:</Label>
-                    <Label Grid.Row="0" Grid.Column="1"/>
-                    <Button Grid.Row="0" Grid.Column="2" Margin="3">Run</Button>
-                    <Label Grid.Row="1" Grid.Column="0">Network check</Label>
-                    <Label Grid.Row="1" Grid.Column="1"/>
-                    <Label Grid.Row="2" Grid.Column="0">Tapis check</Label>
-                    <Label Grid.Row="2" Grid.Column="1" Width="40" HorizontalAlignment="Left"/>
-                    <Label Grid.Row="3" Grid.Column="0">Upload check</Label>
-                    <TextBlock x:Name="UpChk" Grid.Row="3" Grid.Column="1" Width="40" HorizontalAlignment="Left"/>
-                    <Button Grid.Row="3" Grid.Column="3" Margin="3" Click="CheckTapis">Run</Button>
+                    <Button x:Name="CheckBtn" Grid.Row="0" Content="Srart validation" Click="CheckTapis"/>
+                    <TextBox Grid.Row="1" Height="200" Text="{Binding OutputString}" IsReadOnly="True"/>
+                    <ProgressBar Grid.Row="2" Value="{Binding PBar}"/>
+                    <CheckBox x:Name="SkipChk" Grid.Row="3" Content="Skip validation"/>
                 </Grid>
             </xctk:WizardPage>
         </xctk:Wizard>

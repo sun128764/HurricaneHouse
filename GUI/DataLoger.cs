@@ -11,6 +11,8 @@ using SciChart.Core.Extensions;
 using System.Windows.Documents;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Controls;
+using System.Windows;
 
 namespace GUI
 {
@@ -23,6 +25,7 @@ namespace GUI
         private TimeSpan uploadSpan;
         private string projectName;
         private int fileCount;
+        public bool isPass;
         private delegate void uploadDelegate(string cloudPath);
         private readonly uploadDelegate upload;
         private string CloudPath;
@@ -33,6 +36,39 @@ namespace GUI
         public string LastFileName { set; get; }
         public string LastFileTime { set; get; }
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private string _outputString;
+        public string OutputString
+        {
+            set
+            {
+                if (value != _outputString)
+                {
+                    _outputString = value;
+                    NotifyPropertyChanged();
+                }
+            }
+            get
+            {
+                return _outputString;
+            }
+        }
+        private int _pBar;
+        public int PBar
+        {
+            set
+            {
+                if (value != _pBar)
+                {
+                    _pBar = value;
+                    NotifyPropertyChanged();
+                }
+            }
+            get
+            {
+                return _pBar;
+            }
+        }
         protected void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -56,9 +92,13 @@ namespace GUI
             LocalPath = "C:\\Users\\sun12\\Desktop\\TEST";
             fileCount = 0;
             failedFilePathList = new List<string>();
+            OutputString = "";
+            isPass = true;
         }
         public string Init(Format.ProgramSetting setting)
         {
+            OutputString += "Start initialing upload module...";
+            PBar = 10;
             string output;
             projectName = setting.ProjectName;
             CloudPath = setting.CloudPath;
@@ -67,6 +107,20 @@ namespace GUI
             tokenRefreshSpan = setting._tokenRefreshSpan;
             fileCount = FindFileCount(setting.LocalPath) + 1;
             output = RefreshToken();
+            if (output == "Error")
+            {
+                OutputString += output + Environment.NewLine;
+            }
+            if (output.Contains("access_token"))
+            {
+                OutputString += "Success" + Environment.NewLine;
+                PBar = 40;
+            }
+            else
+            {
+                OutputString += "Fail" + Environment.NewLine;
+                isPass = false;
+            }
             return output;
         }
         /// <summary>
@@ -76,23 +130,42 @@ namespace GUI
         /// <returns>Check result.</returns>
         public string TryUpload()
         {
+            if (!isPass)
+            {
+                return "Failed";
+            }
+            OutputString += "Start uploading test..." + Environment.NewLine;
+            PBar = 45;
             string str = DateTime.Now.ToString();
             string testFile = Convert.ToBase64String(Encoding.ASCII.GetBytes(str)).Substring(10) + ".temp"; //random file name
+            OutputString += "Creating .temp file:" + LocalPath + "\\" + testFile + Environment.NewLine;
+            PBar = 50;
             using (StreamWriter writer = File.CreateText(LocalPath + "\\" + testFile))
             {
                 writer.WriteLine(str);
             }
+            OutputString += "Uploading to:" + "agave://" + CloudPath + Environment.NewLine;
+            PBar = 55;
             string output = RunTapis("files upload agave://" + CloudPath + " " + LocalPath + "\\" + testFile);
             if (!uploadRegex.IsMatch(output))
             {
+                OutputString += "Unable to upload";
+                isPass = false;
                 return "Unable to upload";
             }
+            OutputString += "Checking clould path folder...";
+            PBar = 80;
             List<string> fileList = ListFolder(CloudPath);
             if (fileList.Contains(testFile))
             {
+                OutputString += "Success"+ Environment.NewLine;
+                PBar = 90;
                 DeleteFile(CloudPath + "/" + testFile);
                 File.Delete(LocalPath + "\\" + testFile);
+
             }
+            OutputString += "Validation finished." + Environment.NewLine;
+            PBar = 100;
             return "Pass";
         }
         public bool CheckEnv()

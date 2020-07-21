@@ -174,6 +174,7 @@ namespace GUI
         {
             var wizard = new Wizard();
             wizard.ShowDialog();
+            Mouse.OverrideCursor = null;
             if (wizard.isFinished)
             {
                 InitRecording(wizard.ProgramSetting);
