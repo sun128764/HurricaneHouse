@@ -181,6 +181,7 @@ namespace Format
         public string ProjectName { set; get; }
         public string CloudPath { set; get; }
         public string LocalPath { set; get; }
+        public string ProjectLocation { set; get; }
         public string SensorConfPath { set; get; }
         public TimeSpan _uploadSpan;
         public string UploadSpan

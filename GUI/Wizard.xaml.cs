@@ -191,10 +191,15 @@ namespace GUI
                 ConfPath.GetBindingExpression(System.Windows.Controls.TextBox.TextProperty).UpdateTarget();
             }
         }
-
+        private void Location_Click(object sender, RoutedEventArgs e)
+        {
+            var webBrowse = new WebMap();
+            webBrowse.ShowDialog();
+        }
         private void WizardWindow_PageChanged(object sender, RoutedEventArgs e)
         {
             Mouse.OverrideCursor = null;
         }
+        
     }
 }

@@ -7,6 +7,6 @@
         mc:Ignorable="d"
         Title="WebMap" Height="450" Width="800">
     <Grid>
-        <WebBrowser AllowDrop="False"/>
+        <WebBrowser Name="WebPage"/>
     </Grid>
 </Window>
