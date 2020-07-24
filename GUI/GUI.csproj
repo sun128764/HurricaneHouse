@@ -95,6 +95,9 @@
     <Compile Include="URLReader.xaml.cs">
       <DependentUpon>URLReader.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WebMap.xaml.cs">
+      <DependentUpon>WebMap.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Wizard.xaml.cs">
       <DependentUpon>Wizard.xaml</DependentUpon>
     </Compile>
@@ -117,6 +120,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="URLReader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WebMap.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

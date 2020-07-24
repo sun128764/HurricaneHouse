@@ -1,6 +1,6 @@
 // parameters
 const unsigned int NetworkID = 5001; //
-const unsigned int BoardID = 15; //
+const unsigned int BoardID = 101; //
 const unsigned int BoardType = 4; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
 
 const unsigned int Fs = 50; // sample reading per second (per sensor)
