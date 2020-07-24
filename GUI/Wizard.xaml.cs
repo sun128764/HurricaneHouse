@@ -96,13 +96,15 @@ namespace GUI
                     System.Windows.MessageBox.Show("Can not read setting file. Please choose correct file.");
                     return;
                 }
+                isCreate = false;
+                DataContext = ProgramSetting;
+                WizardWindow.CurrentPage = CloudSetting;
             }
-            isCreate = false;
-            DataContext = ProgramSetting;
-            WizardWindow.CurrentPage = CloudSetting;
         }
         private void Create_Click(object sender, RoutedEventArgs e)
         {
+            ProgramSetting = new Format.ProgramSetting();
+            DataContext = ProgramSetting;
             isCreate = true;
             WizardWindow.CurrentPage = CloudSetting;
         }
