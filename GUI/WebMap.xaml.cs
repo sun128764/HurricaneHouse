@@ -22,6 +22,7 @@ namespace GUI
         public WebMap()
         {
             InitializeComponent();
+            //Set IE 11 to avoid js error.
             WebBrowserSetting.SetWebBrowserFeatures(11);
             WebPage.Navigate("https://maps.google.com/");
         }
