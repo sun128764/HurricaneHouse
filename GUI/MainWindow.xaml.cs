@@ -53,7 +53,10 @@ namespace GUI
                 }
                 else
                 {
-                    WindInfo.DataContext = WindSensor.SensorData;
+                    Application.Current.Dispatcher.Invoke(() => //Use invoke to refresh UI elements
+                    {
+                        WindInfo.DataContext = WindSensor.SensorData;
+                    });
                 }
                 dataLogger = new DataLoger();
                 string result = dataLogger.Init(setting);
@@ -183,7 +186,7 @@ namespace GUI
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (serialPort !=null && serialPort.IsOpen)
+            if (serialPort != null && serialPort.IsOpen)
             {
                 MessageBoxResult result = MessageBox.Show("Data recording. Do you want to exit?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)

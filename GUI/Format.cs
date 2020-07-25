@@ -146,8 +146,8 @@ namespace Format
             dataPackage.SensorTYpe = data[1];
             dataPackage.Temperature = data[2] << 8;
             dataPackage.Battery = data[3] << 8;
-            dataPackage.WindSpeed = ((data[4] << 8) + data[5]) << 4;
-            if (dataPackage.SensorTYpe == 2) dataPackage.WindDirection = data[6] << 8;
+            dataPackage.WindDirection  = ((data[4] << 8) + data[5]) << 4;
+            if (dataPackage.SensorTYpe == 2) dataPackage.WindSpeed = data[6] << 8;
             else dataPackage.Huminity = data[6] << 8;
             dataPackage.BoardTime = (data[7] << 24) + (data[8] << 16) + (data[9] << 8) + data[10];
             dataPackage.Pressure = ((data[11] << 8) + data[12]);
