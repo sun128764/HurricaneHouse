@@ -7,24 +7,24 @@ namespace GUI
     class WebBrowserSetting
     {
         /// <summary>  
-        /// 修改注册表信息来兼容当前程序  
-        ///   
+        /// Edit Registry to change the IE version.
         /// </summary>  
+        /// 
         public static void SetWebBrowserFeatures(int ieVersion)
         {
             // don't change the registry if running in-proc inside Visual Studio  
             if (LicenseManager.UsageMode != LicenseUsageMode.Runtime)
                 return;
-            //获取程序及名称  
+            //Get app name
             var appName = System.IO.Path.GetFileName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-            //得到浏览器的模式的值  
+            //Get the value of the web browser version 
             UInt32 ieMode = GeoEmulationModee(ieVersion);
             var featureControlRegKey = @"HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main\FeatureControl\";
-            //设置浏览器对应用程序（appName）以什么模式（ieMode）运行  
+            //Set the ieMode for specific appName  
             Registry.SetValue(featureControlRegKey + "FEATURE_BROWSER_EMULATION",
                 appName, ieMode, RegistryValueKind.DWord);
             // enable the features which are "On" for the full Internet Explorer browser  
-            //不晓得设置有什么用  
+            //WTF setting here? 
             Registry.SetValue(featureControlRegKey + "FEATURE_ENABLE_CLIPCHILDREN_OPTIMIZATION",
                 appName, 1, RegistryValueKind.DWord);
 
@@ -45,7 +45,7 @@ namespace GUI
             //    appName, 0, RegistryValueKind.DWord);  
         }
         /// <summary>  
-        /// 获取浏览器的版本  
+        /// Get Browser version.
         /// </summary>  
         /// <returns></returns>  
         public static int GetBrowserVersion()
@@ -64,15 +64,15 @@ namespace GUI
                 }
                 int.TryParse(version.ToString().Split('.')[0], out browserVersion);
             }
-            //如果小于7  
+            //if less than 7
             if (browserVersion < 7)
             {
-                throw new ApplicationException("不支持的浏览器版本!");
+                throw new ApplicationException("This browser version is not supported!");
             }
             return browserVersion;
         }
         /// <summary>  
-        /// 通过版本得到浏览器模式的值  
+        /// Get IE mode value by IE version
         /// </summary>  
         /// <param name="browserVersion"></param>  
         /// <returns></returns>  
