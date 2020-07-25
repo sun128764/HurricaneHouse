@@ -22,6 +22,7 @@ namespace GUI
         public WebMap()
         {
             InitializeComponent();
+            WebBrowserSetting.SetWebBrowserFeatures(11);
             WebPage.Navigate("https://maps.google.com/");
         }
     }

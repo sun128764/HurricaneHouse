@@ -195,8 +195,8 @@ namespace GUI
         }
         private void Location_Click(object sender, RoutedEventArgs e)
         {
-            var webBrowse = new WebMap();
-            webBrowse.ShowDialog();
+            var webMap = new WebMap();
+            webMap.ShowDialog();
         }
         private void WizardWindow_PageChanged(object sender, RoutedEventArgs e)
         {
