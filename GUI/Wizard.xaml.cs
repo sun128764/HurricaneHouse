@@ -197,6 +197,11 @@ namespace GUI
         {
             var webMap = new WebMap();
             webMap.ShowDialog();
+            if (webMap.LocationStr.Text.Length > 0)
+            {
+                ProgramSetting.ProjectLocation = webMap.LocationStr.Text;
+                Location.GetBindingExpression(System.Windows.Controls.TextBox.TextProperty).UpdateTarget();
+            }
         }
         private void WizardWindow_PageChanged(object sender, RoutedEventArgs e)
         {
