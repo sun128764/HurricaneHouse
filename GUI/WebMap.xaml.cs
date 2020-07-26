@@ -65,6 +65,7 @@ namespace GUI
         private void Cancle_Click(object sender, RoutedEventArgs e)
         {
             LocationStr.Text = "";
+            Close();
         }
     }
 }

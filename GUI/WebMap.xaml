@@ -6,6 +6,7 @@
         xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
+        WindowStyle="ToolWindow"
         Title="WebMap" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
