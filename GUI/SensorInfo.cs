@@ -12,10 +12,8 @@ namespace GUI
 {
     public class SensorInfo
     {
-        public ObservableCollection<SensorInfo> Items { get; set; }
         public enum Types { Router, Anemometer, Humidity, Regular }
 
-        public enum Status { Ok, Lost, Error, Wait };
 
         public string Name { set; get; }
         public int NetWorkID { set; get; }
@@ -45,14 +43,12 @@ namespace GUI
             }
         }
         public string MetaData { set; get; }
+
         [JsonIgnore]
-        public Status SensorStatus { set; get; }
-        [JsonIgnore]
-        public SensorData SensorData = new SensorData();
+        public SensorData SensorData { set; get; }
         public SensorInfo()
         {
-            this.Items = new ObservableCollection<SensorInfo>();
+            SensorData = new SensorData() { Status = SensorData.StatusValue.Lost };
         }
-
     }
 }

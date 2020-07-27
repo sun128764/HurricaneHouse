@@ -27,6 +27,7 @@ namespace GUI
         public List<string> datastring;
         public SensorInfo WindSensor { set; get; }
         private DataLoger dataLogger;
+        private SensorWatcher sensorWatcher;
         public IRange FixRange => new DoubleRange(0, 360);
         public MainWindow()
         {
@@ -34,6 +35,7 @@ namespace GUI
             datastring = new List<string>();
             SensorInfos = new List<SensorInfo>();
             DataContext = this;
+            sensorWatcher = new SensorWatcher();
         }
         public void InitRecording(Format.ProgramSetting setting)
         {
@@ -66,6 +68,7 @@ namespace GUI
                     return;
                 }
                 InitCOM(setting.PortName);
+                sensorWatcher.SetTimer(SensorInfos);
                 Application.Current.Dispatcher.Invoke(() => //Use invoke to refresh UI elements
                 {
                     NodeList.Items.Refresh();
