@@ -35,7 +35,7 @@ namespace GUI
                 Format.IpgeoLocationApi location = JsonConvert.DeserializeObject<Format.IpgeoLocationApi>(res);
                 Application.Current.Dispatcher.Invoke(() => //Use invoke to refresh UI elements
                 {
-                    if (myMap.ZoomLevel == 1)
+                    if (myMap.ZoomLevel < 7)
                     {
                         myMap.Center = new Location(location.latitude, location.longitude);
                         myMap.ZoomLevel = 13;
