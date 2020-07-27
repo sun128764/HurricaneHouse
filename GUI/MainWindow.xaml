@@ -25,16 +25,16 @@
                                 <Label Content="{Binding Name}" Height="auto" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" MouseLeftButtonUp="Label_MouseDoubleClick" MouseDoubleClick="Label_MouseDoubleClick"/>
                             </StackPanel>
                             <DataTemplate.Triggers>
-                                <DataTrigger Binding="{Binding SensorStatus}" Value="Ok">
+                                <DataTrigger Binding="{Binding SensorData.Status}" Value="Ok">
                                     <Setter TargetName="Icon" Property="Source" Value="icons/ok.png"/>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding SensorStatus}" Value="Lost">
+                                <DataTrigger Binding="{Binding SensorData.Status}" Value="Lost">
                                     <Setter TargetName="Icon" Property="Source" Value="icons/lost.png"/>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding SensorStatus}" Value="Error">
+                                <DataTrigger Binding="{Binding SensorData.Status}" Value="Error">
                                     <Setter TargetName="Icon" Property="Source" Value="icons/error.png"/>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding SensorStatus}" Value="Wait">
+                                <DataTrigger Binding="{Binding SensorData.Status}" Value="Wait">
                                     <Setter TargetName="Icon" Property="Source" Value="icons/wait.png"/>
                                 </DataTrigger>
                             </DataTemplate.Triggers>
@@ -116,7 +116,7 @@
                                 </s:SciChartSurface.RenderableSeries>
                                 <s:SciChartSurface.XAxis>
                                     <s:PolarXAxis AutoRange="Never"
-                                              VisibleRange="{Binding FixRange}"
+                                              VisibleRange="0,360"
                                               DrawLabels="False"
                                               DrawMajorTicks="True"
                                               DrawMinorTicks="True"
@@ -128,16 +128,11 @@
                                 <s:SciChartSurface.YAxis>
                                     <s:PolarYAxis AutoRange="Never"
                                               DrawLabels="False"
-                                              VisibleRange="0,10"
+                                              VisibleRange="0,50"
                                               DrawMajorTicks="False"
                                               DrawMinorTicks="False"
                                               GrowBy="0,0.2"/>
                                 </s:SciChartSurface.YAxis>
-                                <s:SciChartSurface.ChartModifier>
-                                    <s:ModifierGroup>
-                                        <s:MouseWheelZoomModifier/>
-                                    </s:ModifierGroup>
-                                </s:SciChartSurface.ChartModifier>
                             </s:SciChartSurface>
                             <StackPanel Orientation="Horizontal" Grid.Row="1" x:Name="WindInfo">
                                 <Label Content="{Binding WindDirectionString}"/>

@@ -103,6 +103,7 @@
     </ApplicationDefinition>
     <Compile Include="DataLoger.cs" />
     <Compile Include="SensorInfo.cs" />
+    <Compile Include="SensorWatcher.cs" />
     <Compile Include="SerialCOM.cs" />
     <Compile Include="SettingMaker.xaml.cs">
       <DependentUpon>SettingMaker.xaml</DependentUpon>

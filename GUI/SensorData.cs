@@ -10,6 +10,8 @@ namespace GUI
     public class SensorData : INotifyPropertyChanged
     {
         private enum Type { Temprature, Battery, Pressure, WindSpeed, WindDirection, Huminity };
+        public enum StatusValue { Ok, Lost, Error, Wait };
+
         private readonly string[] windName = new string[16] { "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW" };
         // These fields hold the values for the public properties.
         private int _temperature;
@@ -18,17 +20,19 @@ namespace GUI
         private int _windSpeed;
         private int _windDirection;
         private int _huminity;
-        //private int _status;
+        private StatusValue _status;
 
-        public int SensorID { get; set; }
-        public int NetworkID { get; set; }
         public SensorInfo.Types SensorType { get; set; }
 
         private const double RefVol = 3.3;
         private const int BitDepth = 16;
+        private TimeSpan WaitTime = new TimeSpan(0, 0, 10);
+        private TimeSpan ErrorTime = new TimeSpan(0, 1, 0);
+        private TimeSpan LostTime = new TimeSpan(1, 0, 0);
         private static readonly object locker = new object();
         private static readonly object Tlocker = new object();
         public bool isSI = true;
+        private DateTime lastUpdate;
 
         public Format.PlotControl PlotControl = new Format.PlotControl() { Scale = 5 };
         public List<Format.TimeSeries> Pressure3s = new List<Format.TimeSeries>();
@@ -227,6 +231,21 @@ namespace GUI
                 }
             }
         }
+        public StatusValue Status
+        {
+            get
+            {
+                return _status;
+            }
+            set
+            {
+                if (value != _status)
+                {
+                    this._status = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
         #endregion
         #region Average Data
         public string PressureAvg3s
@@ -397,17 +416,13 @@ namespace GUI
             NotifyPropertyChanged("PressureMax5m");
             NotifyPropertyChanged("PressureMin5m");
             NotifyPropertyChanged("BatteryString");
-
+            Status = StatusValue.Ok;
+            lastUpdate = DateTime.Now;
             if (this.SensorType == SensorInfo.Types.Anemometer)
             {
                 WindPlot.Clear();
                 WindPlot.Append(ConvertToDouble(WindDirection, Type.WindDirection), ConvertToDouble(WindSpeed, Type.WindSpeed));
-                //WindPlot.Append(10d, 10d);
             }
-            //AddData(ref Pressure30m, package.Time, _pressure, -30);
-            //AddData(ref Temperature5m, package.Time, _temperature, -5);
-            //AddData(ref Huminity5m, package.Time, _huminity, -5);
-
         }
         /// <summary>
         /// Add data point to list and remove old values.
@@ -418,7 +433,6 @@ namespace GUI
         /// <param name="interval">Time interval in second</param>
         private void AddData(ref List<Format.TimeSeries> series, DateTime[] time, int[] value, double interval)
         {
-            //series.Add(new Format.TimeSeries(time, value));
             if (time.Length == value.Length)
             {
                 for (int i = 0; i < time.Length; i++)
@@ -427,12 +441,21 @@ namespace GUI
                 }
             }
             series.RemoveAll(t => t.DateTime < time[time.Length - 1].AddSeconds(interval));
-            //List<int> remove = new List<int>();
-            //foreach (Format.TimeSeries series1 in series)
-            //{
-            //    if (series1.DateTime < time[9].AddSeconds(interval)) remove.Add(series.IndexOf(series1));
-            //}
-            //foreach (int i in remove) series.RemoveAt(i);
+        }
+        public void CheckStatus()
+        {
+            if (DateTime.Now - lastUpdate > WaitTime)
+            {
+                Status = StatusValue.Wait;
+            }
+            if (DateTime.Now - lastUpdate > ErrorTime)
+            {
+                Status = StatusValue.Error;
+            }
+            if (DateTime.Now - lastUpdate > LostTime)
+            {
+                Status = StatusValue.Lost;
+            }
         }
     }
 }
