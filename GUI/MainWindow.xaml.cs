@@ -28,10 +28,8 @@ namespace GUI
         public SensorInfo WindSensor { set; get; }
         private DataLoger dataLogger;
         public IRange FixRange => new DoubleRange(0, 360);
-        private WebMap WebTemp;
         public MainWindow()
         {
-            WebTemp = new WebMap(); //Cache map website.
             InitializeComponent();
             datastring = new List<string>();
             SensorInfos = new List<SensorInfo>();
@@ -188,7 +186,6 @@ namespace GUI
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            WebTemp.Close();//Close background window
             if (serialPort != null && serialPort.IsOpen)
             {
                 MessageBoxResult result = MessageBox.Show("Data recording. Do you want to exit?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Question);

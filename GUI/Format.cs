@@ -146,7 +146,7 @@ namespace Format
             dataPackage.SensorTYpe = data[1];
             dataPackage.Temperature = data[2] << 8;
             dataPackage.Battery = data[3] << 8;
-            dataPackage.WindDirection  = ((data[4] << 8) + data[5]) << 4;
+            dataPackage.WindDirection = ((data[4] << 8) + data[5]) << 4;
             if (dataPackage.SensorTYpe == 2) dataPackage.WindSpeed = data[6] << 8;
             else dataPackage.Huminity = data[6] << 8;
             dataPackage.BoardTime = (data[7] << 24) + (data[8] << 16) + (data[9] << 8) + data[10];
@@ -211,5 +211,85 @@ namespace Format
         public string Password { set; get; }
         public string PortName { set; get; }
         public int BaudRate { set; get; }
+    }
+    public class IpStackApi
+    {
+        public string ip { get; set; }
+        public string type { get; set; }
+        public string continent_code { get; set; }
+        public string continent_name { get; set; }
+        public string country_code { get; set; }
+        public string country_name { get; set; }
+        public string region_code { get; set; }
+        public string region_name { get; set; }
+        public string city { get; set; }
+        public string zip { get; set; }
+        public float latitude { get; set; }
+        public float longitude { get; set; }
+        public Location location { get; set; }
+
+        public class Location
+        {
+            public int geoname_id { get; set; }
+            public string capital { get; set; }
+            public Language[] languages { get; set; }
+            public string country_flag { get; set; }
+            public string country_flag_emoji { get; set; }
+            public string country_flag_emoji_unicode { get; set; }
+            public string calling_code { get; set; }
+            public bool is_eu { get; set; }
+        }
+
+        public class Language
+        {
+            public string code { get; set; }
+            public string name { get; set; }
+            public string native { get; set; }
+        }
+    }
+    public class IpgeoLocationApi
+    {
+        public string ip { get; set; }
+        public string continent_code { get; set; }
+        public string continent_name { get; set; }
+        public string country_code2 { get; set; }
+        public string country_code3 { get; set; }
+        public string country_name { get; set; }
+        public string country_capital { get; set; }
+        public string state_prov { get; set; }
+        public string district { get; set; }
+        public string city { get; set; }
+        public string zipcode { get; set; }
+        public double latitude { get; set; }
+        public double longitude { get; set; }
+        public bool is_eu { get; set; }
+        public string calling_code { get; set; }
+        public string country_tld { get; set; }
+        public string languages { get; set; }
+        public string country_flag { get; set; }
+        public string geoname_id { get; set; }
+        public string isp { get; set; }
+        public string connection_type { get; set; }
+        public string organization { get; set; }
+        public Currency currency { get; set; }
+        public Time_Zone time_zone { get; set; }
+
+        public class Currency
+        {
+            public string code { get; set; }
+            public string name { get; set; }
+            public string symbol { get; set; }
+        }
+
+        public class Time_Zone
+        {
+            public string name { get; set; }
+            public int offset { get; set; }
+            public string current_time { get; set; }
+            public float current_time_unix { get; set; }
+            public bool is_dst { get; set; }
+            public int dst_savings { get; set; }
+        }
+
     }
 }
