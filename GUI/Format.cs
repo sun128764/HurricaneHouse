@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SciChart.Charting.Visuals;
+using SciChart.Charting.Visuals.Axes;
+using SciChart.Data.Model;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using SciChart.Data.Model;
-using SciChart.Charting.Visuals;
-using System.Text.RegularExpressions;
-using SciChart.Charting.Model.DataSeries;
-using SciChart.Charting.Visuals.Axes;
-using System.Drawing.Printing;
 
 namespace Format
 {
