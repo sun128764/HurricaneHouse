@@ -1,18 +1,13 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using SciChart.Data.Model;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.IO.Ports;
 using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Collections.Generic;
-using SciChart.Charting.Model.DataSeries;
-using SciChart.Charting.Visuals;
-using SciChart.Charting.ChartModifiers;
 using System.Threading;
-using System.IO;
-using Newtonsoft.Json;
+using System.Windows;
 using System.Windows.Input;
-using System.Threading.Tasks;
-using SciChart.Data.Model;
 
 namespace GUI
 {

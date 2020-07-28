@@ -1,10 +1,9 @@
-﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
+﻿using SciChart.Charting.Model.DataSeries;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using SciChart.Charting.Model.DataSeries;
+using System.Runtime.CompilerServices;
 namespace GUI
 {
     public class SensorData : INotifyPropertyChanged

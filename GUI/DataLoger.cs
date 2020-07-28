@@ -1,18 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Timers;
-using System.Text.RegularExpressions;
-using SciChart.Core.Extensions;
-using System.Windows.Documents;
-using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows.Controls;
-using System.Windows;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace GUI
 {
@@ -158,7 +151,7 @@ namespace GUI
             List<string> fileList = ListFolder(CloudPath);
             if (fileList.Contains(testFile))
             {
-                OutputString += "Success"+ Environment.NewLine;
+                OutputString += "Success" + Environment.NewLine;
                 PBar = 90;
                 DeleteFile(CloudPath + "/" + testFile);
                 File.Delete(LocalPath + "\\" + testFile);

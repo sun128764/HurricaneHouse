@@ -1,19 +1,14 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
-using System.Windows;
-using System.Windows.Data;
-using System.Windows.Forms;
-using System.Windows.Controls;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Input;
-using System.Collections.Generic;
 using Application = System.Windows.Application;
 using Cursors = System.Windows.Input.Cursors;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System;
-using System.Threading;
 
 namespace GUI
 {
@@ -207,6 +202,6 @@ namespace GUI
         {
             Mouse.OverrideCursor = null;
         }
-        
+
     }
 }
