@@ -62,6 +62,10 @@ namespace GUI
                     MessageBox.Show("Unable to refresh Tapis token.Please creat token manually.");
                     return;
                 }
+                if(serialPort != null && serialPort.IsOpen)
+                {
+                    serialPort.Close();
+                }
                 InitCOM(setting.PortName);
                 sensorWatcher.SetTimer(SensorInfos);
                 Application.Current.Dispatcher.Invoke(() => //Use invoke to refresh UI elements
