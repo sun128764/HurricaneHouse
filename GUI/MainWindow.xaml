@@ -215,7 +215,7 @@
                 <Slider Name="sll" Minimum="5" Maximum="30" Value="{Binding Scale, Mode=TwoWay}" VerticalAlignment="Center" Height="23" Width="280"/>
             </StackPanel>
             <Button Name="SettingBtn" Content="Setting" HorizontalAlignment="Left" Margin="40,15,0,0" VerticalAlignment="Top" Width="76" Click="SettingBtn_Click"/>
-            <Grid x:Name="CloudStatus" Grid.Column="1" HorizontalAlignment="Left" Height="40" Margin="448,10,0,0" VerticalAlignment="Top" Width="176">
+            <Grid x:Name="CloudStatus" Grid.Column="1" HorizontalAlignment="Right" Height="40" Margin="0,10,10,0" VerticalAlignment="Top" Width="176">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition/>
