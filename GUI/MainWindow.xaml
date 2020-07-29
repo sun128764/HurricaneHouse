@@ -16,7 +16,7 @@
                 <ColumnDefinition Width="634*"/>
             </Grid.ColumnDefinitions>
             <GroupBox Header="Network Status" HorizontalAlignment="Left" Margin="10,50,0,190.5" VerticalAlignment="Stretch" Width="144">
-                <TreeView Name="NodeList" ItemsSource="{Binding SensorInfos}" HorizontalAlignment="Stretch" Height="auto" VerticalAlignment="Stretch" Width="118" Margin="0,10,0,10" Background="#FFF8F9E4">
+                <TreeView Name="NodeList" ItemsSource="{Binding SensorInfos}" HorizontalAlignment="Stretch" Height="auto" VerticalAlignment="Stretch" Width="126" Margin="0,5,0,5" Background="#FFF8F9E4">
                     <TreeView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="-15,0,0,0">
