@@ -30,13 +30,6 @@
         </Grid.ColumnDefinitions>
         <GroupBox Header="Sensor List" Grid.Column="0" Grid.Row="0" Width="200" Height="auto" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Stretch">
             <StackPanel Orientation="Vertical">
-                <!--<TreeView Name="SensorList" ItemsSource="{Binding SensorInfos}" Height="300">
-                    <TreeView.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Name}"/>
-                        </DataTemplate>
-                    </TreeView.ItemTemplate>
-                </TreeView>-->
                 <ListView x:Name="SensorList"  Height="300" ItemsSource="{Binding SensorInfos}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
