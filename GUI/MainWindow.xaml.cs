@@ -24,6 +24,7 @@ namespace GUI
         private DataLoger dataLogger;
         private SensorWatcher sensorWatcher;
         public IRange FixRange => new DoubleRange(0, 360);
+        private DataBaseUtils DataBaseUtils;
         public MainWindow()
         {
             InitializeComponent();
@@ -31,7 +32,8 @@ namespace GUI
             SensorInfos = new List<SensorInfo>();
             DataContext = this;
             sensorWatcher = new SensorWatcher();
-        }
+            DataBaseUtils = new DataBaseUtils() { DataBaseAddress = "http://localhost:8086" };
+            }
         public void InitRecording(Format.ProgramSetting setting)
         {
             Mouse.OverrideCursor = Cursors.Wait;
@@ -105,6 +107,7 @@ namespace GUI
             byte[] data = new byte[31];
             serialPort.Read(data, 0, 31);
             Format.DataPackage dataPackage = Format.DataPackage.Decode(data);
+            DataBaseUtils.PostData(dataPackage);
             if (dataPackage != null)
             {
                 dataLogger.AddData(dataPackage.DataString);

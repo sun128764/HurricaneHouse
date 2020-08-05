@@ -104,6 +104,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DataBaseUtils.cs" />
     <Compile Include="DataLoger.cs" />
     <Compile Include="SensorInfo.cs" />
     <Compile Include="SensorWatcher.cs" />
