@@ -62,7 +62,7 @@ namespace GUI
                     MessageBox.Show("Unable to refresh Tapis token.Please creat token manually.");
                     return;
                 }
-                if(serialPort != null && serialPort.IsOpen)
+                if (serialPort != null && serialPort.IsOpen)
                 {
                     serialPort.Close();
                 }
@@ -109,23 +109,43 @@ namespace GUI
             {
                 dataLogger.AddData(dataPackage.DataString);
                 SensorInfo sensorInfo = SensorInfos.Find(x => x.SensorID == dataPackage.SensorID);
-                if (sensorInfo != null)
+                if (sensorInfo == null)
                 {
-                    sensorInfo.SensorData.GetSensorData(dataPackage);
-                    if (sensorInfo == SelectedSensor)
+                    //Add undefined sensor to list.
+                    SensorInfo info = new SensorInfo()
                     {
-                        using (sciChartSurface.SuspendUpdates())
-                        {
-                            SelectedSensor.SensorData.PlotControl.RefreshLimit(DateTime.Now);
-                            LineSeries.DataSeries = SelectedSensor.SensorData.PressureLine;
-                        }
+                        Name = "Undefind" + dataPackage.SensorID.ToString(),
+                        SensorID = dataPackage.SensorID,
+                        SensorType = (SensorInfo.Types)(dataPackage.SensorTYpe - 1),
+                        NetWorkID = dataPackage.NetworkID,
+                    };
+                    SensorInfos.Add(info);
+                    Application.Current.Dispatcher.Invoke(() => //Use invoke to refresh UI elements
+                    {
+                        NodeList.Items.Refresh();
+                    });
+                    sensorInfo = info;
+                    //Set as Anemometer if it is setted found before.
+                    if (WindSensor == null && info.SensorType == SensorInfo.Types.Anemometer)
+                    {
+                        WindSensor = info;
                     }
-                    if (sensorInfo == WindSensor)
+                }
+                //Add data to sensor data class and plot
+                sensorInfo.SensorData.GetSensorData(dataPackage);
+                if (sensorInfo == SelectedSensor)
+                {
+                    using (sciChartSurface.SuspendUpdates())
                     {
-                        using (sciChartSurface.SuspendUpdates())
-                        {
-                            WindSeries.DataSeries = WindSensor.SensorData.WindPlot;
-                        }
+                        SelectedSensor.SensorData.PlotControl.RefreshLimit(DateTime.Now);
+                        LineSeries.DataSeries = SelectedSensor.SensorData.PressureLine;
+                    }
+                }
+                if (sensorInfo == WindSensor)
+                {
+                    using (sciChartSurface.SuspendUpdates())
+                    {
+                        WindSeries.DataSeries = WindSensor.SensorData.WindPlot;
                     }
                 }
             }

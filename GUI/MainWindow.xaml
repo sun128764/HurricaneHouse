@@ -16,11 +16,11 @@
                 <ColumnDefinition Width="634*"/>
             </Grid.ColumnDefinitions>
             <GroupBox Header="Network Status" HorizontalAlignment="Left" Margin="10,50,0,190.5" VerticalAlignment="Stretch" Width="144">
-                <TreeView Name="NodeList" ItemsSource="{Binding SensorInfos}" HorizontalAlignment="Stretch" Height="auto" VerticalAlignment="Stretch" Width="126" Margin="0,5,0,5" Background="#FFF8F9E4">
+                <TreeView Name="NodeList" ItemsSource="{Binding SensorInfos}" HorizontalAlignment="Stretch" Height="auto" VerticalAlignment="Stretch" Width="130" Margin="0,5,0,5" Background="#FFF8F9E4">
                     <TreeView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="-15,0,0,0">
-                                <CheckBox VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                <!--<CheckBox VerticalAlignment="Center" HorizontalAlignment="Left"/>-->
                                 <Image x:Name="Icon" Width="13" VerticalAlignment="Center" />
                                 <Label Content="{Binding Name}" Height="auto" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" MouseLeftButtonUp="Label_MouseDoubleClick" MouseDoubleClick="Label_MouseDoubleClick"/>
                             </StackPanel>
