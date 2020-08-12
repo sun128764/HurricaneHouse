@@ -1,7 +1,7 @@
 // parameters
 const unsigned int NetworkID = 5001; //
-const unsigned int BoardID = 101; //
-const unsigned int BoardType = 2; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
+const unsigned int BoardID = 4; //
+const unsigned int BoardType = 4; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
 
 const unsigned int Fs = 50; // sample reading per second (per sensor)
 const unsigned int nSensors = 5;
@@ -53,10 +53,8 @@ const unsigned int PMask = 255;
 byte SerBuf[31];
 
 void ForwardData() {
-  if (Serial2.available()) {
-    while (Serial2.available()) {
-      Serial.write( Serial2.read());
-    }
+  while (Serial2.available()) {
+    Serial.write( Serial2.read());
   }
 }
 
@@ -85,7 +83,6 @@ void SendSample() {
   Serial2.write(255);
   Serial2.write(SerBuf, 31);
   analogReadResolution(16);
-  Serial.println(SerBuf[3]);
 }
 
 void setup() {
@@ -127,11 +124,11 @@ void setup() {
   delay(100);
   Serial2.print("ATNW 1\r" ); // Set NW to 1 (1 minutes) to trigger a rejoin if the network is lost
   delay(100);
-  Serial2.print("ATJV 1\r" ); // Set JV to 1 so that if you switch coordinators, your routers will search for the new one on startup. 
+  Serial2.print("ATJV 1\r" ); // Set JV to 1 so that if you switch coordinators, your routers will search for the new one on startup.
   delay(100);
   Serial2.print("ATNP\r" ); // read the max payload of a packet. (determined from encryption and type of coommunication)
   delay(100);
-  Serial2.print("ATWR\r" ); // Send a WR (Write) command to save the changes. 
+  Serial2.print("ATWR\r" ); // Send a WR (Write) command to save the changes.
   delay(100);
   Serial2.print("ATCN\r" ); //Exit command mode.
   while (Serial2.available()) {
@@ -140,7 +137,6 @@ void setup() {
   number = 0;
   LastMillis = millis();
   lock = true;
-
 }
 
 void loop() { // while true
@@ -161,7 +157,7 @@ void loop() { // while true
     reading = 0;
     lock = false;
     number = 0;
-    LastMillis = (CurrentMillis/100)*100; //Round
+    LastMillis = (CurrentMillis / 100) * 100; //Round
   }
 
   if (PressureIndex > 9) {
