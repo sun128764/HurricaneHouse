@@ -22,7 +22,8 @@ namespace GUI
             {
                 //var res = HttpGet("http://api.ipstack.com/check?access_key=c4358b1d5570b8a0fdc733e18c1045c6");
                 //Format.IpStackApi location = JsonConvert.DeserializeObject<Format.IpStackApi>(res);
-                var res = HttpGet("https://api.ipgeolocation.io/ipgeo?apiKey=01d110a5e710445b91306d8d3345657e");
+                var res = WebAPIUtil.HttpGet("https://api.ipgeolocation.io/ipgeo?apiKey=01d110a5e710445b91306d8d3345657e");
+                if (res == null) return; //Stop if GET method catched an excption
                 Format.IpgeoLocationApi location = JsonConvert.DeserializeObject<Format.IpgeoLocationApi>(res);
                 Application.Current.Dispatcher.Invoke(() => //Use invoke to refresh UI elements
                 {
@@ -76,52 +77,6 @@ namespace GUI
             LocationStr.Text = "";
             Close();
         }
-        public static string HttpGet(string url)
-        {
-            try
-            {
-                //ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(CheckValidationResult);
-                //Encoding encoding = Encoding.UTF8;
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "GET";
-                request.Accept = "text/html, application/xhtml+xml, */*";
-                request.ContentType = "application/json";
-
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-        public static string HttpPost(string url, string body)
-        {
-            try
-            {
-                //ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(CheckValidationResult);
-                Encoding encoding = Encoding.UTF8;
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                request.Accept = "text/html, application/xhtml+xml, */*";
-                request.ContentType = "application/json";
-
-                byte[] buffer = encoding.GetBytes(body);
-                request.ContentLength = buffer.Length;
-                request.GetRequestStream().Write(buffer, 0, buffer.Length);
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
+        
     }
 }

@@ -115,6 +115,7 @@
     <Compile Include="URLReader.xaml.cs">
       <DependentUpon>URLReader.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WebAPIUtil.cs" />
     <Compile Include="WebMap.xaml.cs">
       <DependentUpon>WebMap.xaml</DependentUpon>
     </Compile>

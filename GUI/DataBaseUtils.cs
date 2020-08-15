@@ -12,7 +12,7 @@ namespace GUI
         public void PostData(Format.DataPackage dataPackage)
         {
             string url = DataBaseAddress + "/write?db=WSN";
-            WebMap.HttpPost(url, InfluxDBStringBuilder(dataPackage));
+            WebAPIUtil.HttpPost(url, InfluxDBStringBuilder(dataPackage));
         }
         private string InfluxDBStringBuilder(Format.DataPackage dataPackage)
         {
