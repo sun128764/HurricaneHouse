@@ -72,9 +72,11 @@ void SendSample() {
   SerBuf[9] = (StartTime >> 8) & LMask;
   SerBuf[10] = (StartTime) & LMask;
   int i = 11;
+  int totalP = 0;
   for (int j = 0; j < 10; j++) {
     SerBuf[i++] = (Pressure[j] >> 8) & PMask;
     SerBuf[i++] = (Pressure[j]) & PMask;
+    totalP += Pressure[j];
   }
   analogReadResolution(12);
   int windSpeed = analogRead(A3);//Extention A3
@@ -83,6 +85,9 @@ void SendSample() {
   Serial2.write(255);
   Serial2.write(SerBuf, 31);
   analogReadResolution(16);
+  Serial.print("SensorID:%d",&BoardID);
+  Serial.print("Pressure 16bits Reading:");
+  Serial.println(totalP / 10);
 }
 
 void setup() {
