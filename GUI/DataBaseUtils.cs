@@ -28,6 +28,7 @@ namespace GUI
             result += "Temperature,";
             result += "SensorID=" + dataPackage.SensorID + " ";
             result += "Value=" + (((dataPackage.Temperature / 65536d * 3.3 - 0.05) / 0.01 * 1.8) + 32).ToString("F3") + " ";
+            result += (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() * 1000).ToString(); //Nano second UTCs
             return result;
         }
     }
