@@ -1,7 +1,7 @@
 // parameters
 const unsigned int NetworkID = 5001; //
-const unsigned int BoardID = 4; //
-const unsigned int BoardType = 4; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
+const unsigned int BoardID = 101; //
+const unsigned int BoardType = 2; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
 
 const unsigned int Fs = 50; // sample reading per second (per sensor)
 const unsigned int nSensors = 5;
@@ -42,7 +42,10 @@ void led(unsigned int color, unsigned int n) {
 
 unsigned int Pressure[10];
 int PressureIndex = 0;
-int reading;
+int reading1;
+int reading2;
+int WindSpeed;
+int WindDir;
 int number;
 bool lock;
 unsigned long LastMillis;
@@ -50,7 +53,7 @@ unsigned long StartTime;
 unsigned long CurrentMillis;
 const unsigned long LMask = 255;
 const unsigned int PMask = 255;
-byte SerBuf[31];
+byte SerBuf[32];
 
 void ForwardData() {
   while (Serial2.available()) {
@@ -65,29 +68,35 @@ void SendSample() {
   SerBuf[2] = analogRead(A0);//Temperature
   SerBuf[3] = analogRead(A1);//Battery
   //SerBuf[4] = analogRead(A3);//Extention A3
-  SerBuf[6] = analogRead(A4);// Expansion A4
+  SerBuf[4] = WindSpeed >> 8 & LMask;
+  SerBuf[5] = WindSpeed & LMask;
+  SerBuf[6] = WindDir>> 8 & LMask;
+  SerBuf[7] = WindDir & LMask;
   //Mills() to Byte[]
-  SerBuf[7] = (StartTime >> 24) & LMask;
-  SerBuf[8] = (StartTime >> 16) & LMask;
-  SerBuf[9] = (StartTime >> 8) & LMask;
-  SerBuf[10] = (StartTime) & LMask;
-  int i = 11;
+  SerBuf[8] = (StartTime >> 24) & LMask;
+  SerBuf[9] = (StartTime >> 16) & LMask;
+  SerBuf[10] = (StartTime >> 8) & LMask;
+  SerBuf[11] = (StartTime) & LMask;
+  int i = 12;
   int totalP = 0;
   for (int j = 0; j < 10; j++) {
     SerBuf[i++] = (Pressure[j] >> 8) & PMask;
     SerBuf[i++] = (Pressure[j]) & PMask;
     totalP += Pressure[j];
   }
-  analogReadResolution(12);
-  int windSpeed = analogRead(A3);//Extention A3
-  SerBuf[4] = windSpeed >> 8 & LMask;
-  SerBuf[5] = windSpeed & LMask;
   Serial2.write(255);
-  Serial2.write(SerBuf, 31);
+  Serial2.write(SerBuf, 32);
   analogReadResolution(16);
-  Serial.print("SensorID:%d",&BoardID);
-  Serial.print("Pressure 16bits Reading:");
-  Serial.println(totalP / 10);
+  Serial.printf("SensorID: %d  ", BoardID);
+  if (BoardType == 4) {
+    Serial.printf("Pressure 16bits Reading: ");
+    Serial.println(totalP / 10);
+  }
+  else {
+    Serial.printf("WindSpeed 16bits Reading: %d ", WindSpeed);
+    Serial.print("WindDirection 16bits Reading: ");
+    Serial.println(WindDir);
+  }
 }
 
 void setup() {
@@ -145,29 +154,50 @@ void setup() {
 }
 
 void loop() { // while true
-  if (BoardType == 1) {
-    ForwardData();
-  }
   CurrentMillis = millis();
   if ((CurrentMillis - LastMillis) >= 100 && !lock) {
     lock = true;
     StartTime = CurrentMillis;
   }
-  if (number < 4096 && lock) {
-    reading += analogRead(A5);
-    number++;
-  }
-  if (number >= 4096 && lock) {
-    Pressure[PressureIndex++] = reading >> 12;
-    reading = 0;
-    lock = false;
-    number = 0;
-    LastMillis = (CurrentMillis / 100) * 100; //Round
+  switch (BoardType) {
+    case 1:
+      ForwardData();
+      break;
+    case 2:
+      if ((CurrentMillis - LastMillis) >= 1000) return;
+      while (number < 16384) {
+        reading1 += analogRead(A4);
+        reading2 += analogRead(A3);
+        number++;
+      }
+      WindSpeed = reading1 >> 14;
+      WindDir = reading2 >> 14;
+      reading1 = 0;
+      reading2 = 0;
+      lock = false;
+      number = 0;
+      LastMillis = (CurrentMillis / 100) * 100; //Round
+      SendSample();
+      break;
+    case 4:
+      if (number < 4096 && lock) {
+        reading1 += analogRead(A5);
+        number++;
+      }
+      if (number >= 4096 && lock) {
+        Pressure[PressureIndex++] = reading1 >> 12;
+        reading1 = 0;
+        lock = false;
+        number = 0;
+        LastMillis = (CurrentMillis / 100) * 100; //Round
+      }
+      if (PressureIndex > 9) {
+        PressureIndex = 0;
+        SendSample();
+      }
+    default:
+      break;
   }
 
-  if (PressureIndex > 9) {
-    PressureIndex = 0;
-    SendSample();
-  }
   // XCTU https://www.digi.com/products/embedded-systems/digi-xbee/digi-xbee-tools/xctu#productsupport-utilities
 }

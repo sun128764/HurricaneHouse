@@ -398,14 +398,22 @@ namespace GUI
             WindSpeed = package.WindSpeed;
             WindDirection = package.WindDirection;
             Huminity = package.Huminity;
+            NotifyPropertyChanged("BatteryString");
+            Status = StatusValue.Ok;
+            lastUpdate = DateTime.Now;
+            if (this.SensorType == SensorInfo.Types.Anemometer)
+            {
+                WindPlot.Clear();
+                WindPlot.Append(ConvertToDouble(WindDirection, Type.WindDirection), ConvertToDouble(WindSpeed, Type.WindSpeed));
+                return;
+            }
+
             double[] pressureL = new double[10];
             for (int i = 0; i < 10; i++)
             {
                 pressureL[i] = ConvertToDouble(package.PressureList[i], Type.Pressure);
             }
-
             PressureLine.Append(package.TimeSeries, pressureL);
-
             AddData(ref Pressure3s, package.TimeSeries, package.PressureList, -3);
             NotifyPropertyChanged("PressureAvg3s");
             NotifyPropertyChanged("PressureMax3s");
@@ -414,14 +422,6 @@ namespace GUI
             NotifyPropertyChanged("PressureAvg5m");
             NotifyPropertyChanged("PressureMax5m");
             NotifyPropertyChanged("PressureMin5m");
-            NotifyPropertyChanged("BatteryString");
-            Status = StatusValue.Ok;
-            lastUpdate = DateTime.Now;
-            if (this.SensorType == SensorInfo.Types.Anemometer)
-            {
-                WindPlot.Clear();
-                WindPlot.Append(ConvertToDouble(WindDirection, Type.WindDirection), ConvertToDouble(WindSpeed, Type.WindSpeed));
-            }
         }
         /// <summary>
         /// Add data point to list and remove old values.

@@ -139,11 +139,14 @@ namespace Format
             dataPackage.SensorTYpe = data[1];
             dataPackage.Temperature = data[2] << 8;
             dataPackage.Battery = data[3] << 8;
-            dataPackage.WindDirection = ((data[4] << 8) + data[5]) << 4;
-            if (dataPackage.SensorTYpe == 2) dataPackage.WindSpeed = data[6] << 8;
-            else dataPackage.Huminity = data[6] << 8;
-            dataPackage.BoardTime = (data[7] << 24) + (data[8] << 16) + (data[9] << 8) + data[10];
-            dataPackage.Pressure = ((data[11] << 8) + data[12]);
+            if (dataPackage.SensorTYpe == 2)
+            {
+                dataPackage.WindSpeed = ((data[4] << 8) + data[5]);
+                dataPackage.WindDirection = ((data[6] << 8) + data[7]);
+            }
+            else dataPackage.Huminity = 0;
+            dataPackage.BoardTime = (data[8] << 24) + (data[9] << 16) + (data[10] << 8) + data[11];
+            dataPackage.Pressure = ((data[12] << 8) + data[13]);
             dataPackage.Time = DateTime.Now;
 
             dataPackage.DataString += DateTime.Now.ToString("o");
@@ -156,9 +159,10 @@ namespace Format
             dataPackage.DataString += "," + dataPackage.WindSpeed.ToString();
             dataPackage.DataString += "," + dataPackage.WindDirection.ToString();
             dataPackage.DataString += "," + dataPackage.Huminity.ToString();
+            if (dataPackage.SensorTYpe == 2) return dataPackage;
 
             dataPackage.PressureList = new int[10];
-            int i = 11;
+            int i = 12;
             for (int j = 0; j < 10; j++)
             {
                 dataPackage.PressureList[j] = ((data[i] << 8) + data[i + 1]);

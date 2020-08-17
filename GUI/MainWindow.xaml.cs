@@ -103,9 +103,9 @@ namespace GUI
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             while (serialPort.ReadByte() != 255) ;
-            while (serialPort.BytesToRead < 31) ;
-            byte[] data = new byte[31];
-            serialPort.Read(data, 0, 31);
+            while (serialPort.BytesToRead < 32) ;
+            byte[] data = new byte[32];
+            serialPort.Read(data, 0, 32);
             Format.DataPackage dataPackage = Format.DataPackage.Decode(data);
             DataBaseUtils.PostData(dataPackage);
             if (dataPackage != null)
@@ -128,7 +128,7 @@ namespace GUI
                         NodeList.Items.Refresh();
                     });
                     sensorInfo = info;
-                    //Set as Anemometer if it is setted found before.
+                    //Set as Anemometer if it is not found before.
                     if (WindSensor == null && info.SensorType == SensorInfo.Types.Anemometer)
                     {
                         WindSensor = info;
