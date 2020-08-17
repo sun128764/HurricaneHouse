@@ -33,7 +33,7 @@ namespace GUI
             DataContext = this;
             sensorWatcher = new SensorWatcher();
             DataBaseUtils = new DataBaseUtils() { DataBaseAddress = "http://localhost:8086" };
-            }
+        }
         public void InitRecording(Format.ProgramSetting setting)
         {
             Mouse.OverrideCursor = Cursors.Wait;
@@ -107,49 +107,47 @@ namespace GUI
             byte[] data = new byte[32];
             serialPort.Read(data, 0, 32);
             Format.DataPackage dataPackage = Format.DataPackage.Decode(data);
+            if (dataPackage == null || dataPackage.SensorTYpe > 4 || dataPackage.SensorTYpe < 1) return;
             DataBaseUtils.PostData(dataPackage);
-            if (dataPackage != null)
+            dataLogger.AddData(dataPackage.DataString);
+            SensorInfo sensorInfo = SensorInfos.Find(x => x.SensorID == dataPackage.SensorID);
+            if (sensorInfo == null)
             {
-                dataLogger.AddData(dataPackage.DataString);
-                SensorInfo sensorInfo = SensorInfos.Find(x => x.SensorID == dataPackage.SensorID);
-                if (sensorInfo == null)
+                //Add undefined sensor to list.
+                SensorInfo info = new SensorInfo()
                 {
-                    //Add undefined sensor to list.
-                    SensorInfo info = new SensorInfo()
-                    {
-                        Name = "Undefind" + dataPackage.SensorID.ToString(),
-                        SensorID = dataPackage.SensorID,
-                        SensorType = (SensorInfo.Types)(dataPackage.SensorTYpe - 1),
-                        NetWorkID = dataPackage.NetworkID,
-                    };
-                    SensorInfos.Add(info);
-                    Application.Current.Dispatcher.Invoke(() => //Use invoke to refresh UI elements
-                    {
-                        NodeList.Items.Refresh();
-                    });
-                    sensorInfo = info;
-                    //Set as Anemometer if it is not found before.
-                    if (WindSensor == null && info.SensorType == SensorInfo.Types.Anemometer)
-                    {
-                        WindSensor = info;
-                    }
+                    Name = "Undefind" + dataPackage.SensorID.ToString(),
+                    SensorID = dataPackage.SensorID,
+                    SensorType = (SensorInfo.Types)(dataPackage.SensorTYpe - 1),
+                    NetWorkID = dataPackage.NetworkID,
+                };
+                SensorInfos.Add(info);
+                Application.Current.Dispatcher.Invoke(() => //Use invoke to refresh UI elements
+                {
+                    NodeList.Items.Refresh();
+                });
+                sensorInfo = info;
+                //Set as Anemometer if it is not found before.
+                if (WindSensor == null && info.SensorType == SensorInfo.Types.Anemometer)
+                {
+                    WindSensor = info;
                 }
-                //Add data to sensor data class and plot
-                sensorInfo.SensorData.GetSensorData(dataPackage);
-                if (sensorInfo == SelectedSensor)
+            }
+            //Add data to sensor data class and plot
+            sensorInfo.SensorData.GetSensorData(dataPackage);
+            if (sensorInfo == SelectedSensor)
+            {
+                using (sciChartSurface.SuspendUpdates())
                 {
-                    using (sciChartSurface.SuspendUpdates())
-                    {
-                        SelectedSensor.SensorData.PlotControl.RefreshLimit(DateTime.Now);
-                        LineSeries.DataSeries = SelectedSensor.SensorData.PressureLine;
-                    }
+                    SelectedSensor.SensorData.PlotControl.RefreshLimit(DateTime.Now);
+                    LineSeries.DataSeries = SelectedSensor.SensorData.PressureLine;
                 }
-                if (sensorInfo == WindSensor)
+            }
+            if (sensorInfo == WindSensor)
+            {
+                using (sciChartSurface.SuspendUpdates())
                 {
-                    using (sciChartSurface.SuspendUpdates())
-                    {
-                        WindSeries.DataSeries = WindSensor.SensorData.WindPlot;
-                    }
+                    WindSeries.DataSeries = WindSensor.SensorData.WindPlot;
                 }
             }
         }
