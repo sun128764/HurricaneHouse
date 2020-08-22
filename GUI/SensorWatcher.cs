@@ -11,7 +11,7 @@ namespace GUI
         private static Timer aTimer;
         public void SetTimer(List<SensorInfo> sensors)
         {
-            // Create a timer with a two second interval.
+            // Create a timer with a 10 second interval.
             aTimer = new Timer(10000);
             // Hook up the Elapsed event for the timer. 
             aTimer.Elapsed += CheckSensorStatus;

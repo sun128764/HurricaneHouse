@@ -52,8 +52,9 @@ namespace GUI
                     return reader.ReadToEnd();
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                var a = e;
                 return null;
             }
         }

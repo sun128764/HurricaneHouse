@@ -24,7 +24,8 @@ namespace GUI
         private DataLoger dataLogger;
         private SensorWatcher sensorWatcher;
         public IRange FixRange => new DoubleRange(0, 360);
-        private DataBaseUtils DataBaseUtils;
+        private DataBaseUtils LocalDataBaseUtils;
+        private DataBaseUtils RemoteDataBaseUtils;
         public MainWindow()
         {
             InitializeComponent();
@@ -32,7 +33,8 @@ namespace GUI
             SensorInfos = new List<SensorInfo>();
             DataContext = this;
             sensorWatcher = new SensorWatcher();
-            DataBaseUtils = new DataBaseUtils() { DataBaseAddress = "http://localhost:8086" };
+            LocalDataBaseUtils = new DataBaseUtils("http://localhost:8086");
+            RemoteDataBaseUtils = new DataBaseUtils("https://db.yae-sakura.moe", true, "sun128764", "tTNf1ofAAdEUNYJoKgDB");
         }
         public void InitRecording(Format.ProgramSetting setting)
         {
@@ -108,7 +110,10 @@ namespace GUI
             serialPort.Read(data, 0, 32);
             Format.DataPackage dataPackage = Format.DataPackage.Decode(data);
             if (dataPackage == null || dataPackage.SensorTYpe > 4 || dataPackage.SensorTYpe < 1) return;
-            DataBaseUtils.PostData(dataPackage);
+            LocalDataBaseUtils.PostData(dataPackage);
+            RemoteDataBaseUtils.PostData(dataPackage);
+            //LocalDataBaseUtils.Upload.BeginInvoke(dataPackage, null, null);
+            //RemoteDataBaseUtils.Upload.BeginInvoke(dataPackage, null, null);
             dataLogger.AddData(dataPackage.DataString);
             SensorInfo sensorInfo = SensorInfos.Find(x => x.SensorID == dataPackage.SensorID);
             if (sensorInfo == null)
