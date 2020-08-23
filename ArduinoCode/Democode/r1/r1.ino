@@ -164,7 +164,7 @@ void loop() { // while true
       ForwardData();
       break;
     case 2:
-      if ((CurrentMillis - LastMillis) >= 1000) return;
+      if ((CurrentMillis - LastMillis) <= 1000) return;
       while (number < 16384) {
         reading1 += analogRead(A4);
         reading2 += analogRead(A3);
