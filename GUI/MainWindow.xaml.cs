@@ -26,6 +26,7 @@ namespace GUI
         public IRange FixRange => new DoubleRange(0, 360);
         private DataBaseUtils LocalDataBaseUtils;
         private DataBaseUtils RemoteDataBaseUtils;
+        private SerialCOM SerialCOM;
         public MainWindow()
         {
             InitializeComponent();
@@ -33,6 +34,7 @@ namespace GUI
             SensorInfos = new List<SensorInfo>();
             DataContext = this;
             sensorWatcher = new SensorWatcher();
+            SerialCOM = new SerialCOM();
             LocalDataBaseUtils = new DataBaseUtils("http://localhost:8086");
             RemoteDataBaseUtils = new DataBaseUtils("https://db.yae-sakura.moe", true, "sun128764", "tTNf1ofAAdEUNYJoKgDB");
         }
@@ -66,11 +68,11 @@ namespace GUI
                     MessageBox.Show("Unable to refresh Tapis token.Please creat token manually.");
                     return;
                 }
-                if (serialPort != null && serialPort.IsOpen)
+                if (SerialCOM.IsOpen)
                 {
-                    serialPort.Close();
+                    SerialCOM.Close();
                 }
-                InitCOM(setting.PortName);
+                SerialCOM.InitCOM(setting.PortName, new SerialDataReceivedEventHandler(SerialPort_DataReceived));
                 sensorWatcher.SetTimer(SensorInfos);
                 Application.Current.Dispatcher.Invoke(() => //Use invoke to refresh UI elements
                 {
@@ -86,17 +88,6 @@ namespace GUI
             }, null);
         }
 
-        public SerialPort serialPort;//Serial object
-
-        public bool InitCOM(string PortName)
-        {
-            serialPort = new SerialPort(PortName, 9600, Parity.None, 8, StopBits.One);
-            serialPort.DataReceived += new SerialDataReceivedEventHandler(SerialPort_DataReceived);//DataReceived event delegate
-            serialPort.ReceivedBytesThreshold = 31;
-            serialPort.RtsEnable = true;
-            return OpenPort();
-        }
-
         /// <summary>
         /// Data received event.
         /// </summary>
@@ -104,10 +95,10 @@ namespace GUI
         /// <param name="e"></param>
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            while (serialPort.ReadByte() != 255) ;
-            while (serialPort.BytesToRead < 32) ;
+            while (SerialCOM.serialPort.ReadByte() != 255) ;
+            while (SerialCOM.serialPort.BytesToRead < 32) ;
             byte[] data = new byte[32];
-            serialPort.Read(data, 0, 32);
+            SerialCOM.serialPort.Read(data, 0, 32);
             Format.DataPackage dataPackage = Format.DataPackage.Decode(data);
             if (dataPackage == null || dataPackage.SensorTYpe > 4 || dataPackage.SensorTYpe < 1) return;
             LocalDataBaseUtils.PostData(dataPackage);
@@ -156,37 +147,6 @@ namespace GUI
                 }
             }
         }
-        /// <summary>
-        /// Open serial port
-        /// </summary>
-        /// <returns>If port open success.</returns>
-        public bool OpenPort()
-        {
-            try//Avoid program crash when port open failed.
-            {
-                serialPort.Open();
-            }
-            catch { }
-            if (serialPort.IsOpen)
-            {
-                return true;
-            }
-            else
-            {
-                MessageBox.Show("Fial to open serial port!");
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Send command via serial port
-        /// </summary>
-        /// <param name="CommandString">Command string</param>
-        public void SendCommand(string CommandString)
-        {
-            byte[] WriteBuffer = Encoding.ASCII.GetBytes(CommandString);
-            serialPort.Write(WriteBuffer, 0, WriteBuffer.Length);
-        }
 
         private void Label_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
@@ -214,7 +174,7 @@ namespace GUI
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (serialPort != null && serialPort.IsOpen)
+            if (SerialCOM.IsOpen)
             {
                 MessageBoxResult result = MessageBox.Show("Data recording. Do you want to exit?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
