@@ -1,6 +1,6 @@
 // parameters
 const unsigned int NetworkID = 5001; //
-const unsigned int BoardID = 46; //
+const unsigned int BoardID = 11; //
 const unsigned int BoardType = 4; // 1.Coordinatorn (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
 
 const unsigned int Fs = 50; // sample reading per second (per sensor)
@@ -38,6 +38,21 @@ void led(unsigned int color, unsigned int n) {
     digitalWrite(color, LOW);
     delay(1);
     digitalWrite(color, HIGH);
+  }
+}
+
+void TrySleep(int mil) {
+  //Go sleep if Sleep command is found.
+  if (!Serial2.available()) return;
+  if (Serial2.find("Sleep")) {
+    digitalWrite(7, HIGH); //Sleep Xbee.
+    LowPower.deepSleep(mil); //Sleeo MCU.
+    //Flush serial buffer.
+    while (Serial2.available()) {
+      Serial2.read();
+    }
+    digitalWrite(7, LOW); //Weakup Xbee
+    delay(10000); //Wait 10s to recover Xbee network and read command.
   }
 }
 
@@ -111,8 +126,8 @@ void setup() {
   pinMode(A5, INPUT);
   pinMode(green, OUTPUT);
   pinMode(blue, OUTPUT);
-  pinMode(7,OUTPUT);
-  digitalWrite(7,LOW);
+  pinMode(7, OUTPUT); //Xbee sleep control. Set to HIGH to enter sleep mode.
+  digitalWrite(7, LOW);
   // Default ADC's resolution of the Atmel's ATSAM21 is 10bit (reading range from 0 to 1023).
   analogReadResolution(16);
   Serial2.begin(9600);
@@ -159,6 +174,7 @@ void setup() {
 }
 
 void loop() { // while true
+  TrySleep(90000);//Sleep 15min if sleep command is received.
   CurrentMillis = millis();
   if ((CurrentMillis - LastMillis) >= 100 && !lock) {
     lock = true;
@@ -202,11 +218,6 @@ void loop() { // while true
       }
     default:
       break;
-  }
-  ForwardData();
-  if (millis() > 10000){
-    digitalWrite(7,HIGH);
-    LowPower.deepSleep(10000);
   }
   // XCTU https://www.digi.com/products/embedded-systems/digi-xbee/digi-xbee-tools/xctu#productsupport-utilities
 }
