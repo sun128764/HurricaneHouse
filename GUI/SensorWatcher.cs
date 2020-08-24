@@ -5,15 +5,16 @@ using System.Windows;
 
 namespace GUI
 {
-    class SensorWatcher
+    internal class SensorWatcher
     {
         private List<SensorInfo> sensorInfos;
         private static Timer aTimer;
+
         public void SetTimer(List<SensorInfo> sensors)
         {
             // Create a timer with a 10 second interval.
             aTimer = new Timer(10000);
-            // Hook up the Elapsed event for the timer. 
+            // Hook up the Elapsed event for the timer.
             aTimer.Elapsed += CheckSensorStatus;
             aTimer.AutoReset = true;
             aTimer.Enabled = true;

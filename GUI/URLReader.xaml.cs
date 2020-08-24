@@ -17,6 +17,7 @@ namespace GUI
         //Example Cloud path
         //project-6284144844314644966-242ac11c-0001-012/GUI_Test/
         private Regex Regex = new Regex(@"^(https://)?www.designsafe-ci.org/data/browser/(projects.*?)\?query_string=\s?$");
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         // This method is called by the Set accessor of each property.
@@ -29,6 +30,7 @@ namespace GUI
 
         private string _uRL;
         private string _cloudPath;
+
         public string URL
         {
             set
@@ -44,6 +46,7 @@ namespace GUI
                 return _uRL;
             }
         }
+
         public string CloudPath
         {
             set
@@ -59,7 +62,9 @@ namespace GUI
                 return _cloudPath;
             }
         }
+
         private bool isFinish;
+
         public URLReader()
         {
             InitializeComponent();
@@ -77,16 +82,19 @@ namespace GUI
                 CloudPath = Regex.Match(textBox.Text).Groups[2].Value.Replace("projects/", "projects-").Replace("//", "/") + "/";
             }
         }
+
         private void Finish_Click(object sender, RoutedEventArgs e)
         {
             isFinish = true;
             Close();
         }
+
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             isFinish = true;
             Close();
         }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (!isFinish)

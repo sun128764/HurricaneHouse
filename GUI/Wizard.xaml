@@ -10,10 +10,10 @@
         ">
     <Window.Resources>
         <Style TargetType="TextBox">
-            <Setter Property="Margin" Value="3"/>
+            <Setter Property="Margin" Value="3" />
         </Style>
         <Style TargetType="ComboBox">
-            <Setter Property="Margin" Value="3"/>
+            <Setter Property="Margin" Value="3" />
         </Style>
     </Window.Resources>
     <Grid>
@@ -21,7 +21,7 @@
             <xctk:WizardPage x:Name="IntroPage"
                              NextPage="{Binding ElementName=SelectSettingFile}"
                              Title="Welcome to program setting Wizerd"
-                             Description="This Wizard will walk you though how to set up this program."/>
+                             Description="This Wizard will walk you though how to set up this program." />
             <xctk:WizardPage x:Name="SelectSettingFile"
                              CanSelectNextPage="False"
                              NextPage="{Binding ElementName=CloudSetting}"
@@ -29,13 +29,13 @@
                              Description="Plase select the exsit setting file or create a new setting file.">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
-                    <Button Grid.Row="0" Content="Read" Click="Read_Click"/>
-                    <Button Grid.Row="1" Content="Create" Click="Create_Click"/>
-                    <Button Grid.Row="2" Content="Sensor List Tool" Click="Tool_Click"/>
+                    <Button Grid.Row="0" Content="Read" Click="Read_Click" />
+                    <Button Grid.Row="1" Content="Create" Click="Create_Click" />
+                    <Button Grid.Row="2" Content="Sensor List Tool" Click="Tool_Click" />
                 </Grid>
             </xctk:WizardPage>
             <xctk:WizardPage x:Name="CloudSetting"
@@ -45,36 +45,36 @@
                              Description="Setting up cloud upload parameters.">
                 <Grid Margin="5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="200"/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="25" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="25" />
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" Grid.Column="0">Project name:</Label>
-                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ProjectName}"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ProjectName}" />
                     <Label Grid.Row="1" Grid.Column="0">Cloud data folder path:</Label>
-                    <TextBox x:Name="pathBox" Grid.Row="1" Grid.Column="1" Text="{Binding CloudPath}"/>
+                    <TextBox x:Name="pathBox" Grid.Row="1" Grid.Column="1" Text="{Binding CloudPath}" />
                     <Button x:Name="BrowseCloudPath" Grid.Row="1" Grid.Column="2" Margin="3" Click="BrowseCloudPath_Click">...</Button>
                     <Label Grid.Row="2" Grid.Column="0">Local data folder path:</Label>
-                    <TextBox x:Name="LocalPath" Grid.Row="2" Grid.Column="1" Text="{Binding LocalPath}"/>
+                    <TextBox x:Name="LocalPath" Grid.Row="2" Grid.Column="1" Text="{Binding LocalPath}" />
                     <Button Grid.Row="2" Grid.Column="2" Margin="3" Click="BrowseLocalPath_Click">...</Button>
                     <Label Grid.Row="3" Grid.Column="0">Data upload interval(minutes):</Label>
-                    <TextBox Grid.Row="3" Grid.Column="1" Width="50" HorizontalAlignment="Left" Text="{Binding UploadSpan}" PreviewTextInput="NumberValidationTextBox"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" Width="50" HorizontalAlignment="Left" Text="{Binding UploadSpan}" PreviewTextInput="NumberValidationTextBox" />
                     <Label Grid.Row="4" Grid.Column="0">Token refresh interval(minutes):</Label>
-                    <TextBox Grid.Row="4" Grid.Column="1" Width="50" HorizontalAlignment="Left" Text="{Binding TokenRefreshSpan}" PreviewTextInput="NumberValidationTextBox"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" Width="50" HorizontalAlignment="Left" Text="{Binding TokenRefreshSpan}" PreviewTextInput="NumberValidationTextBox" />
                     <Label Grid.Row="5" Grid.Column="0">Sensors setting file path:</Label>
-                    <TextBox x:Name="ConfPath" Grid.Row="5" Grid.Column="1" Text="{Binding SensorConfPath}"/>
+                    <TextBox x:Name="ConfPath" Grid.Row="5" Grid.Column="1" Text="{Binding SensorConfPath}" />
                     <Button Grid.Row="5" Grid.Column="2" Margin="3" Click="SensorSettingBrowse_Click">...</Button>
                     <Label Grid.Row="6" Grid.Column="0">Location:</Label>
-                    <TextBox x:Name="Location" Grid.Row="6" Grid.Column="1" Text="{Binding ProjectLocation}"/>
+                    <TextBox x:Name="Location" Grid.Row="6" Grid.Column="1" Text="{Binding ProjectLocation}" />
                     <Button Grid.Row="6" Grid.Column="2" Margin="3" Click="Location_Click">...</Button>
                 </Grid>
             </xctk:WizardPage>
@@ -84,28 +84,28 @@
                              Description="Setting up serial communication parameters.">
                 <Grid Margin="5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="80"/>
-                        <ColumnDefinition Width="80"/>
-                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="25" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="25" />
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" Grid.Column="0">Serial port:</Label>
-                    <ComboBox Name="PortListBox" Grid.Row="0" Grid.Column="1" SelectedValue="{Binding PortName}"/>
+                    <ComboBox Name="PortListBox" Grid.Row="0" Grid.Column="1" SelectedValue="{Binding PortName}" />
                     <Button x:Name="RefreshCOM" Grid.Row="0" Grid.Column="2" Margin="3" Click="RefreshPort_Click">↻</Button>
                     <Label Grid.Row="1" Grid.Column="0">Baud rate:</Label>
-                    <ComboBox x:Name="BaudRateBox" Grid.Row="1" Grid.Column="1" IsEditable="True" SelectedIndex="0"/>
+                    <ComboBox x:Name="BaudRateBox" Grid.Row="1" Grid.Column="1" IsEditable="True" SelectedIndex="0" />
                     <Label Grid.Row="2" Grid.Column="0">Data bits:</Label>
-                    <ComboBox x:Name="DataBitsBox" Grid.Row="2" Grid.Column="1" SelectedIndex="1"/>
+                    <ComboBox x:Name="DataBitsBox" Grid.Row="2" Grid.Column="1" SelectedIndex="1" />
                     <Label Grid.Row="3" Grid.Column="0">Parity:</Label>
-                    <ComboBox x:Name="ParityBox" Grid.Row="3" Grid.Column="1" SelectedIndex="0"/>
+                    <ComboBox x:Name="ParityBox" Grid.Row="3" Grid.Column="1" SelectedIndex="0" />
                     <Label Grid.Row="4" Grid.Column="0">Stop bits:</Label>
-                    <ComboBox x:Name="StopBitsBox" Grid.Row="4" Grid.Column="1" SelectedIndex="0"/>
+                    <ComboBox x:Name="StopBitsBox" Grid.Row="4" Grid.Column="1" SelectedIndex="0" />
                 </Grid>
             </xctk:WizardPage>
             <xctk:WizardPage x:Name="Validation"
@@ -114,15 +114,15 @@
                              Description="Please go through all steps to validate input parameters.">
                 <Grid Margin="5">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="25" />
                     </Grid.RowDefinitions>
-                    <Button x:Name="CheckBtn" Grid.Row="0" Content="Srart validation" Click="CheckTapis"/>
-                    <TextBox Grid.Row="1" Height="200" Text="{Binding OutputString}" IsReadOnly="True"/>
-                    <ProgressBar Grid.Row="2" Value="{Binding PBar}"/>
-                    <CheckBox x:Name="SkipChk" Grid.Row="3" Content="Skip validation"/>
+                    <Button x:Name="CheckBtn" Grid.Row="0" Content="Srart validation" Click="CheckTapis" />
+                    <TextBox Grid.Row="1" Height="200" Text="{Binding OutputString}" IsReadOnly="True" />
+                    <ProgressBar Grid.Row="2" Value="{Binding PBar}" />
+                    <CheckBox x:Name="SkipChk" Grid.Row="3" Content="Skip validation" />
                 </Grid>
             </xctk:WizardPage>
         </xctk:Wizard>

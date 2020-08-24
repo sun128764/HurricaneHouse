@@ -107,6 +107,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ChangeModeWindow.xaml.cs">
+      <DependentUpon>ChangeModeWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DataBaseUtils.cs" />
     <Compile Include="DataLoger.cs" />
     <Compile Include="SensorInfo.cs" />
@@ -115,6 +118,7 @@
     <Compile Include="SettingMaker.xaml.cs">
       <DependentUpon>SettingMaker.xaml</DependentUpon>
     </Compile>
+    <Compile Include="StateManager.cs" />
     <Compile Include="URLReader.xaml.cs">
       <DependentUpon>URLReader.xaml</DependentUpon>
     </Compile>
@@ -125,6 +129,10 @@
     <Compile Include="Wizard.xaml.cs">
       <DependentUpon>Wizard.xaml</DependentUpon>
     </Compile>
+    <Page Include="ChangeModeWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

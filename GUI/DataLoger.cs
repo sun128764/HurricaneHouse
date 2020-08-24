@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace GUI
 {
-    class DataLoger : INotifyPropertyChanged
+    internal class DataLoger : INotifyPropertyChanged
     {
         private readonly Process p;
         private DateTime lastTime;
@@ -18,8 +18,11 @@ namespace GUI
         private TimeSpan uploadSpan;
         private string projectName;
         private int fileCount;
+        public bool enableUpload;
         public bool isPass;
+
         private delegate void uploadDelegate(string cloudPath);
+
         private readonly uploadDelegate upload;
         private string CloudPath;
         private string LocalPath;
@@ -28,9 +31,11 @@ namespace GUI
         private readonly Regex listFolderRegex = new Regex(@"\|\s*(\S*)\s*\|.*");
         public string LastFileName { set; get; }
         public string LastFileTime { set; get; }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private string _outputString;
+
         public string OutputString
         {
             set
@@ -46,7 +51,9 @@ namespace GUI
                 return _outputString;
             }
         }
+
         private int _pBar;
+
         public int PBar
         {
             set
@@ -62,10 +69,12 @@ namespace GUI
                 return _pBar;
             }
         }
+
         protected void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
         public DataLoger()
         {
             p = new Process();
@@ -88,6 +97,7 @@ namespace GUI
             OutputString = "";
             isPass = true;
         }
+
         public string Init(Format.ProgramSetting setting)
         {
             OutputString += "Start initialing upload module...";
@@ -116,6 +126,7 @@ namespace GUI
             }
             return output;
         }
+
         /// <summary>
         /// Try to create a .temp file in Local path and upload it to Cloud Path.
         /// If file is upload successfully, it will clean up the .temp file.
@@ -155,12 +166,12 @@ namespace GUI
                 PBar = 90;
                 DeleteFile(CloudPath + "/" + testFile);
                 File.Delete(LocalPath + "\\" + testFile);
-
             }
             OutputString += "Validation finished." + Environment.NewLine;
             PBar = 100;
             return "Pass";
         }
+
         public bool CheckEnv()
         {
             string output = RunTapis("--help");
@@ -173,6 +184,7 @@ namespace GUI
                 return false;
             }
         }
+
         /// <summary>
         /// Upload local to DesignSafe-CI by tapis files upload comand
         /// </summary>
@@ -228,22 +240,21 @@ namespace GUI
                 }
             }
         }
+
         /// <summary>
         /// Add data to data buffer. Auto upload to DesignSafe. Use Null input to enforce upload.
         /// </summary>
         /// <param name="data">Sensor data. Use Null to enforce upload</param>
         public void AddData(string data)
         {
+            if (!enableUpload) return;
             this.dataString.Add(data);
             if ((((DateTime.Now - lastTime) > uploadSpan) || (data == null)) && dataString.Count > 0)
             {
-                //Upload("project-6284144844314644966-242ac11c-0001-012/GUI_Test/");
                 upload.BeginInvoke(CloudPath, null, null);
-                //upload.BeginInvoke("project-6284144844314644966-242ac11c-0001-012/GUI_Test/", null, null);
-                //upload(Environment.CurrentDirectory + "\\" + filename, "project-6284144844314644966-242ac11c-0001-012/GUI_Test/");
-                //Upload(Environment.CurrentDirectory + "\\" + filename, "project-6284144844314644966-242ac11c-0001-012/GUI_Test/");
             }
         }
+
         private string RefreshToken()
         {
             string output = RunTapis("auth tokens refresh");
@@ -253,6 +264,12 @@ namespace GUI
             }
             return output;
         }
+
+        public void ClearData()
+        {
+            dataString.Clear();
+        }
+
         /// <summary>
         /// Call Tapis.
         /// </summary>
@@ -278,6 +295,7 @@ namespace GUI
                 return "Error";
             }
         }
+
         public List<string> ListFolder(string path)
         {
             List<string> fileList = new List<string>();
@@ -297,11 +315,13 @@ namespace GUI
             }
             return fileList;
         }
+
         public bool DeleteFile(string path)
         {
             string output = RunTapis("files list agave://" + path);
             return uploadRegex.IsMatch(output);
         }
+
         /// <summary>
         /// Find the maximum suffix in given folder.
         /// </summary>

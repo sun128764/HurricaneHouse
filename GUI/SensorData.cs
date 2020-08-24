@@ -4,16 +4,20 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+
 namespace GUI
 {
     public class SensorData : INotifyPropertyChanged
     {
         private enum Type { Temprature, Battery, Pressure, WindSpeed, WindDirection, Huminity };
+
         public enum StatusValue { Ok, Lost, Error, Wait };
 
         private readonly string[] windName = new string[16] { "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW" };
+
         // These fields hold the values for the public properties.
         private int _temperature;
+
         private int _batteryLevel;
         private int _pressure;
         private int _windSpeed;
@@ -52,7 +56,9 @@ namespace GUI
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
         #region Data String
+
         public string TemperautreString
         {
             get
@@ -60,6 +66,7 @@ namespace GUI
                 return ConvertToString(this._temperature, Type.Temprature);
             }
         }
+
         public string BatteryLevelString
         {
             get
@@ -67,6 +74,7 @@ namespace GUI
                 return ConvertToString(this._batteryLevel, Type.Battery);
             }
         }
+
         public string PressureString
         {
             get
@@ -74,6 +82,7 @@ namespace GUI
                 return ConvertToString(this._pressure, Type.Pressure);
             }
         }
+
         public string WindSpeedString
         {
             get
@@ -81,6 +90,7 @@ namespace GUI
                 return ConvertToString(this._windSpeed, Type.WindSpeed);
             }
         }
+
         public double WindScale
         {
             get
@@ -88,6 +98,7 @@ namespace GUI
                 return 1;
             }
         }
+
         public string WindDirectionString
         {
             get
@@ -95,6 +106,7 @@ namespace GUI
                 return ConvertToString(this._windDirection, Type.WindDirection);
             }
         }
+
         public double WindAngle
         {
             get
@@ -105,6 +117,7 @@ namespace GUI
                 else return direction;
             }
         }
+
         public string HuminityString
         {
             get
@@ -112,7 +125,9 @@ namespace GUI
                 return ConvertToString(this._huminity, Type.Huminity);
             }
         }
-        #endregion
+
+        #endregion Data String
+
         #region Real Time Data
 
         public int Temperature
@@ -137,6 +152,7 @@ namespace GUI
                 }
             }
         }
+
         /// <summary>
         /// The battery voltage. Needs to be calibrated. R1 and R3.
         /// </summary>
@@ -156,6 +172,7 @@ namespace GUI
                 }
             }
         }
+
         public string BatteryString
         {
             get
@@ -165,6 +182,7 @@ namespace GUI
                 else return voltage.ToString("F0") + "%";
             }
         }
+
         public int Pressure
         {
             get
@@ -181,6 +199,7 @@ namespace GUI
                 }
             }
         }
+
         public int WindSpeed
         {
             get
@@ -197,6 +216,7 @@ namespace GUI
                 }
             }
         }
+
         public int WindDirection
         {
             get
@@ -214,6 +234,7 @@ namespace GUI
                 }
             }
         }
+
         public int Huminity
         {
             get
@@ -230,6 +251,7 @@ namespace GUI
                 }
             }
         }
+
         public StatusValue Status
         {
             get
@@ -245,8 +267,11 @@ namespace GUI
                 }
             }
         }
-        #endregion
+
+        #endregion Real Time Data
+
         #region Average Data
+
         public string PressureAvg3s
         {
             get
@@ -258,6 +283,7 @@ namespace GUI
                 }
             }
         }
+
         public string PressureMin3s
         {
             get
@@ -269,6 +295,7 @@ namespace GUI
                 }
             }
         }
+
         public string PressureMax3s
         {
             get
@@ -280,6 +307,7 @@ namespace GUI
                 }
             }
         }
+
         public string PressureAvg5m
         {
             get
@@ -291,6 +319,7 @@ namespace GUI
                 }
             }
         }
+
         public string PressureMin5m
         {
             get
@@ -302,6 +331,7 @@ namespace GUI
                 }
             }
         }
+
         public string PressureMax5m
         {
             get
@@ -313,7 +343,9 @@ namespace GUI
                 }
             }
         }
-        #endregion
+
+        #endregion Average Data
+
         /// <summary>
         /// Convert ADC reading to actual value; SI or Eng unit is determined by SensorData.isSI;
         /// </summary>
@@ -332,9 +364,11 @@ namespace GUI
                     //if (isSI) return res.ToString("F1") + "ºC";
                     //else return (res * 1.8 + 32).ToString("F1") + "ºF";
                     return (res * 1.8 + 32).ToString("F2") + "ºF";
+
                 case Type.Battery:
                     if (voltage < 0.2) return "0V";
                     return (voltage * 2).ToString("F2") + "V";
+
                 case Type.Pressure:
                     res = (voltage / RefVol + 0.095) / 0.009 * 10;
                     if (isSI) return res.ToString("F2"); //+ "mBar";
@@ -357,6 +391,7 @@ namespace GUI
                     return "error";
             }
         }
+
         private double ConvertToDouble(int value, Type type)
         {
             double voltage = (double)value / (2 << (BitDepth - 1)) * RefVol;
@@ -369,6 +404,7 @@ namespace GUI
                     else return (res * 1.8 + 32);
                 case Type.Battery:
                     return (voltage * 2);
+
                 case Type.Pressure:
                     res = (voltage / RefVol + 0.095) / 0.009 * 10;
                     if (isSI) return res; //+ "mBar";
@@ -390,6 +426,7 @@ namespace GUI
                     return 0;
             }
         }
+
         public void GetSensorData(Format.DataPackage package)
         {
             Temperature = package.Temperature;
@@ -423,6 +460,7 @@ namespace GUI
             NotifyPropertyChanged("PressureMax5m");
             NotifyPropertyChanged("PressureMin5m");
         }
+
         /// <summary>
         /// Add data point to list and remove old values.
         /// </summary>
@@ -441,6 +479,7 @@ namespace GUI
             }
             series.RemoveAll(t => t.DateTime < time[time.Length - 1].AddSeconds(interval));
         }
+
         public void CheckStatus()
         {
             if (DateTime.Now - lastUpdate > WaitTime)

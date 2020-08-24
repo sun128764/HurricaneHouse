@@ -17,12 +17,12 @@ namespace GUI
     /// </summary>
     public partial class Wizard : Window
     {
-
         public Format.ProgramSetting ProgramSetting { set; get; }
         private string oldProgramSettingString;
         public string[] PortList { set; get; }
         private bool isCreate;
         public bool isFinished;
+
         public Wizard()
         {
             InitializeComponent();
@@ -48,11 +48,14 @@ namespace GUI
                     case MessageBoxResult.Yes:
                         isCreate = true;
                         break;
+
                     case MessageBoxResult.No:
                         isCreate = false;
                         break;
+
                     case MessageBoxResult.Cancel:
                         return;
+
                     default:
                         return;
                 }
@@ -96,6 +99,7 @@ namespace GUI
                 WizardWindow.CurrentPage = CloudSetting;
             }
         }
+
         private void Create_Click(object sender, RoutedEventArgs e)
         {
             ProgramSetting = new Format.ProgramSetting();
@@ -103,12 +107,14 @@ namespace GUI
             isCreate = true;
             WizardWindow.CurrentPage = CloudSetting;
         }
+
         private void RefreshPort_Click(object sender, RoutedEventArgs e)
         {
             PortList = SerialPort.GetPortNames();
             PortListBox.ItemsSource = PortList;
             PortListBox.SelectedIndex = 0;
         }
+
         private void BrowseLocalPath_Click(object sender, RoutedEventArgs e)
         {
             FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog
@@ -121,6 +127,7 @@ namespace GUI
                 LocalPath.GetBindingExpression(System.Windows.Controls.TextBox.TextProperty).UpdateTarget();
             }
         }
+
         private void BrowseCloudPath_Click(object sender, RoutedEventArgs e)
         {
             var uRLReader = new URLReader();
@@ -130,11 +137,13 @@ namespace GUI
                 pathBox.Text = uRLReader.CloudPath;
             }
         }
+
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
+
         private void CheckTapis(object sender, RoutedEventArgs e)
         {
             CheckBtn.IsEnabled = false;
@@ -156,6 +165,7 @@ namespace GUI
                 });
             }, null);
         }
+
         private void SensorSettingBrowse_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -178,6 +188,7 @@ namespace GUI
                 ConfPath.GetBindingExpression(System.Windows.Controls.TextBox.TextProperty).UpdateTarget();
             }
         }
+
         private void Tool_Click(object sender, RoutedEventArgs e)
         {
             var settingWindow = new SettingMaker();
@@ -188,6 +199,7 @@ namespace GUI
                 ConfPath.GetBindingExpression(System.Windows.Controls.TextBox.TextProperty).UpdateTarget();
             }
         }
+
         private void Location_Click(object sender, RoutedEventArgs e)
         {
             var webMap = new WebMap();
@@ -198,10 +210,10 @@ namespace GUI
                 Location.GetBindingExpression(System.Windows.Controls.TextBox.TextProperty).UpdateTarget();
             }
         }
+
         private void WizardWindow_PageChanged(object sender, RoutedEventArgs e)
         {
             Mouse.OverrideCursor = null;
         }
-
     }
 }

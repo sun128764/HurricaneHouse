@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
-using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
@@ -27,6 +26,9 @@ namespace GUI
         private DataBaseUtils LocalDataBaseUtils;
         private DataBaseUtils RemoteDataBaseUtils;
         private SerialCOM SerialCOM;
+        public bool isCollecting;
+        private StateManager StateManager;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -37,7 +39,9 @@ namespace GUI
             SerialCOM = new SerialCOM();
             LocalDataBaseUtils = new DataBaseUtils("http://localhost:8086");
             RemoteDataBaseUtils = new DataBaseUtils("https://db.yae-sakura.moe", true, "sun128764", "tTNf1ofAAdEUNYJoKgDB");
+            isCollecting = true;
         }
+
         public void InitRecording(Format.ProgramSetting setting)
         {
             Mouse.OverrideCursor = Cursors.Wait;
@@ -82,6 +86,8 @@ namespace GUI
                     lll.DataContext = SelectedSensor.SensorData.PlotControl;
                     Status.DataContext = SelectedSensor.SensorData;
                     CloudStatus.DataContext = dataLogger;
+                    StateManager = new StateManager(dataLogger, SerialCOM, new List<DataBaseUtils>() { LocalDataBaseUtils, RemoteDataBaseUtils }, this, StateManager.State.Recording);
+                    ModeStatus.DataContext = StateManager;
                     Mouse.OverrideCursor = null;
                     Busy.IsBusy = false; //Disable busy indicator.
                 });
@@ -95,6 +101,7 @@ namespace GUI
         /// <param name="e"></param>
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
+            if (!isCollecting) return;
             while (SerialCOM.serialPort.ReadByte() != 255) ;
             while (SerialCOM.serialPort.BytesToRead < 32) ;
             byte[] data = new byte[32];
@@ -103,8 +110,6 @@ namespace GUI
             if (dataPackage == null || dataPackage.SensorTYpe > 4 || dataPackage.SensorTYpe < 1) return;
             LocalDataBaseUtils.PostData(dataPackage);
             RemoteDataBaseUtils.PostData(dataPackage);
-            //LocalDataBaseUtils.Upload.BeginInvoke(dataPackage, null, null);
-            //RemoteDataBaseUtils.Upload.BeginInvoke(dataPackage, null, null);
             dataLogger.AddData(dataPackage.DataString);
             SensorInfo sensorInfo = SensorInfos.Find(x => x.SensorID == dataPackage.SensorID);
             if (sensorInfo == null)
@@ -161,6 +166,7 @@ namespace GUI
                 lll.DataContext = SelectedSensor.SensorData.PlotControl;
             }
         }
+
         private void SettingBtn_Click(object sender, RoutedEventArgs e)
         {
             var wizard = new Wizard();
@@ -170,6 +176,14 @@ namespace GUI
             {
                 InitRecording(wizard.ProgramSetting);
             }
+        }
+
+        private void ModeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (StateManager == null) return;
+            var ChangeModeWindow = new ChangeModeWindow();
+            ChangeModeWindow.ShowDialog();
+            StateManager.SetState(ChangeModeWindow.ModeName.Text);
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

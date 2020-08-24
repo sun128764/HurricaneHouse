@@ -8,72 +8,72 @@
         Title="SettingMaker" Height="400" Width="430" ResizeMode="NoResize">
     <Window.Resources>
         <Style TargetType="Button">
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="Height" Value="auto"/>
-            <Setter Property="Width" Value="40"/>
-            <Setter Property="Margin" Value="3"/>
+            <Setter Property="Background" Value="White" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Height" Value="auto" />
+            <Setter Property="Width" Value="40" />
+            <Setter Property="Margin" Value="3" />
         </Style>
         <Style TargetType="TextBox">
-            <Setter Property="Margin" Value="3"/>
-            <Setter Property="Width" Value="100"/>
+            <Setter Property="Margin" Value="3" />
+            <Setter Property="Width" Value="100" />
         </Style>
         <Style TargetType="ComboBox">
-            <Setter Property="Margin" Value="3"/>
-            <Setter Property="Width" Value="100"/>
+            <Setter Property="Margin" Value="3" />
+            <Setter Property="Width" Value="100" />
         </Style>
     </Window.Resources>
     <Grid Background="LightGray">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
         <GroupBox Header="Sensor List" Grid.Column="0" Grid.Row="0" Width="200" Height="auto" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Stretch">
             <StackPanel Orientation="Vertical">
                 <ListView x:Name="SensorList"  Height="300" ItemsSource="{Binding SensorInfos}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Name}"/>
+                            <TextBlock Text="{Binding Name}" />
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
                 <StackPanel Orientation="Horizontal">
-                    <Button Name="OpenBtn" Content="Open" ToolTip="Open setting file." Click="OpenBtn_Click"/>
-                    <Button Name="SaveBtn" Content="Save" ToolTip="Save this list to file." Click="SaveBtn_Click"/>
-                    <Button Name="AddBtn" Content="+" ToolTip="Creat new sensor to list." Click="AddBtn_Click"/>
-                    <Button Name="DelBtn" Content="-" ToolTip="Delete selected sensor from list" Click="DelBtn_Click"/>
+                    <Button Name="OpenBtn" Content="Open" ToolTip="Open setting file." Click="OpenBtn_Click" />
+                    <Button Name="SaveBtn" Content="Save" ToolTip="Save this list to file." Click="SaveBtn_Click" />
+                    <Button Name="AddBtn" Content="+" ToolTip="Creat new sensor to list." Click="AddBtn_Click" />
+                    <Button Name="DelBtn" Content="-" ToolTip="Delete selected sensor from list" Click="DelBtn_Click" />
                 </StackPanel>
             </StackPanel>
         </GroupBox>
         <Grid Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" DataContext="{Binding ElementName=SensorList,Path=SelectedItem}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="100"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="100" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Label Content="Name:" Grid.Row="0" Grid.Column="0"/>
-            <TextBox Name="SensorName" Grid.Row="0" Grid.Column="1" Text="{Binding Name}"/>
-            <Label Content="Network ID:" Grid.Row="1" Grid.Column="0"/>
-            <TextBox Name="NetID" Grid.Row="1" Grid.Column="1" Text="{Binding NetWorkID}"/>
-            <Label Content="Sensor ID:" Grid.Row="2" Grid.Column="0"/>
-            <TextBox Name="SensorID" Grid.Row="2" Grid.Column="1" Text="{Binding SensorID }"/>
-            <Label Content="Sensor Type" Grid.Row="3" Grid.Column="0"/>
+            <Label Content="Name:" Grid.Row="0" Grid.Column="0" />
+            <TextBox Name="SensorName" Grid.Row="0" Grid.Column="1" Text="{Binding Name}" />
+            <Label Content="Network ID:" Grid.Row="1" Grid.Column="0" />
+            <TextBox Name="NetID" Grid.Row="1" Grid.Column="1" Text="{Binding NetWorkID}" />
+            <Label Content="Sensor ID:" Grid.Row="2" Grid.Column="0" />
+            <TextBox Name="SensorID" Grid.Row="2" Grid.Column="1" Text="{Binding SensorID }" />
+            <Label Content="Sensor Type" Grid.Row="3" Grid.Column="0" />
             <ComboBox Name="SensorType" Grid.Row="3" Grid.Column="1" Margin="3" SelectedIndex="{Binding TypeIndex}">
-                <ComboBoxItem Content="Router"/>
-                <ComboBoxItem Content="Anemometer"/>
-                <ComboBoxItem Content="Humidity"/>
-                <ComboBoxItem Content="Reguler"/>
+                <ComboBoxItem Content="Router" />
+                <ComboBoxItem Content="Anemometer" />
+                <ComboBoxItem Content="Humidity" />
+                <ComboBoxItem Content="Reguler" />
             </ComboBox>
-            <Label Content="Note:" Grid.Row="4" Grid.Column="0"/>
-            <TextBox Name="Metadata" Grid.Row="4" Grid.Column="1" Background="White" Margin="3" TextWrapping="Wrap" AcceptsReturn="True" SpellCheck.IsEnabled="True" Language="en-US" Text="{Binding MetaData}"/>
+            <Label Content="Note:" Grid.Row="4" Grid.Column="0" />
+            <TextBox Name="Metadata" Grid.Row="4" Grid.Column="1" Background="White" Margin="3" TextWrapping="Wrap" AcceptsReturn="True" SpellCheck.IsEnabled="True" Language="en-US" Text="{Binding MetaData}" />
         </Grid>
-        <Button Grid.Column="1" Name="ExitBtn" Content="Exit" Width="100" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Bottom" Click="ExitBtn_Click" ToolTip="Exit"/>
+        <Button Grid.Column="1" Name="ExitBtn" Content="Exit" Width="100" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Bottom" Click="ExitBtn_Click" ToolTip="Exit" />
     </Grid>
 </Window>

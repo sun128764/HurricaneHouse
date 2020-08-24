@@ -10,15 +10,15 @@
         Title="WebMap" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="24"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="24" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Row="0">
             <TextBlock Margin="3">Please double click to set a pin. Pin location:</TextBlock>
-            <TextBox Margin="3" x:Name="LocationStr" IsReadOnly="True" Width="300"/>
-            <Button Content="Finish" Margin="3" Click="Finish_Click"/>
-            <Button Content="Cancle" Margin="3" Click="Cancle_Click"/>
-            <Button Content="Change Mode" Margin="3" Click="Toggle_Map"/>
+            <TextBox Margin="3" x:Name="LocationStr" IsReadOnly="True" Width="300" />
+            <Button Content="Finish" Margin="3" Click="Finish_Click" />
+            <Button Content="Cancle" Margin="3" Click="Cancle_Click" />
+            <Button Content="Change Mode" Margin="3" Click="Toggle_Map" />
         </StackPanel>
         <m:Map Grid.Row="1" x:Name="myMap" Mode="Road" ZoomLevel="6" Center="28.0684937,-80.5911816" MouseDoubleClick="myMap_MouseDoubleClick"
                CredentialsProvider="RPmmSyTNWppZKhTZj2T4~gK6qzY4Sz1HwQqHdg-L7GA~Aj3TmeMMDFnzME1fY3FNIj8f7WBsDnD4k_WexG9b8JrqCTCmmP5PCGV-u6MXgltl" />

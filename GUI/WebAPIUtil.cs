@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace GUI
 {
-    class WebAPIUtil
+    internal class WebAPIUtil
     {
         public static string HttpGet(string url)
         {
@@ -32,6 +29,7 @@ namespace GUI
                 return null;
             }
         }
+
         public static string HttpPost(string url, string body)
         {
             try

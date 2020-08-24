@@ -15,6 +15,7 @@ namespace GUI
 
         public List<SensorInfo> SensorInfos { set; get; }
         public string FilePath;
+
         public SettingMaker()
         {
             InitializeComponent();

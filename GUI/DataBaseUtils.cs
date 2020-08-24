@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 
 namespace GUI
 {
-    class DataBaseUtils
+    internal class DataBaseUtils
     {
         private string DataBaseAddress;
         private string userName;
         private string passWord;
         private bool needAuth;
         private string dataString;
-        private readonly object o;
         private static Timer aTimer;
+        private bool isEnable;
 
         public DataBaseUtils(string Address, bool NeedPassword = false, string User = "", string PassWord = "")
         {
@@ -24,18 +20,33 @@ namespace GUI
             userName = User;
             passWord = PassWord;
             dataString = "";
-            o = new object();
             // Create a timer with a 1 second interval.
             aTimer = new Timer(1000);
-            // Hook up the Elapsed event for the timer. 
+            // Hook up the Elapsed event for the timer.
             aTimer.Elapsed += Upload;
             aTimer.AutoReset = true;
             aTimer.Enabled = true;
+            isEnable = true;
         }
+
         public void PostData(Format.DataPackage dataPackage)
         {
+            if (!isEnable) return;
             dataString += InfluxDBStringBuilder(dataPackage) + "\n";
         }
+
+        public void EnableUpload()
+        {
+            if (aTimer == null) return;
+            isEnable = true;
+        }
+
+        public void DisableUpload()
+        {
+            if (aTimer == null) return;
+            isEnable = false;
+        }
+
         private void Upload(Object source, ElapsedEventArgs e)
         {
             int length = dataString.Length;
@@ -49,6 +60,7 @@ namespace GUI
                 dataString.Remove(0, length);
             }
         }
+
         private string InfluxDBStringBuilder(Format.DataPackage dataPackage)
         {
             string timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();//Unix UTC time for InfluxDB
@@ -60,10 +72,12 @@ namespace GUI
                     result += "WindSpeed=" + (dataPackage.WindSpeed / 65536d * 3.3 * (57.6 + 150) / 57.6 * 20).ToString("F3") + ",";
                     result += "WindDirection=" + (dataPackage.WindDirection / 65536d * 3.3 * (57.6 + 150) / 57.6 * 72).ToString("F2") + ",";
                     break;
+
                 case 4:
                     result += "Pressure=" + ((dataPackage.Pressure / 65536d + 0.095) / 0.009 * 10).ToString("F3") + ",";
                     result += "Battery=" + (dataPackage.Battery / 65536d * 3.3 * 2).ToString("F3") + ",";
                     break;
+
                 default:
                     break;
             }

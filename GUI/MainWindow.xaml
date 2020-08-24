@@ -9,33 +9,33 @@
         mc:Ignorable="d"
         Title="FIT Hurricane House Monitor" Height="600" Width="800" MinHeight="600" MinWidth="800"
         Closing="Window_Closing">
-    <xctk:BusyIndicator x:Name="Busy" IsBusy="False" >
+    <xctk:BusyIndicator x:Name="Busy" IsBusy="False">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="161*"/>
-                <ColumnDefinition Width="634*"/>
+                <ColumnDefinition Width="161*" />
+                <ColumnDefinition Width="634*" />
             </Grid.ColumnDefinitions>
             <GroupBox Header="Network Status" HorizontalAlignment="Left" Margin="10,50,0,190.5" VerticalAlignment="Stretch" Width="144">
                 <TreeView Name="NodeList" ItemsSource="{Binding SensorInfos}" HorizontalAlignment="Stretch" Height="auto" VerticalAlignment="Stretch" Width="130" Margin="0,5,0,5" Background="#FFF8F9E4">
                     <TreeView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="-15,0,0,0">
-                                <!--<CheckBox VerticalAlignment="Center" HorizontalAlignment="Left"/>-->
+                                <!--<CheckBox VerticalAlignment="Center" HorizontalAlignment="Left" />-->
                                 <Image x:Name="Icon" Width="13" VerticalAlignment="Center" />
-                                <Label Content="{Binding Name}" Height="auto" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" MouseLeftButtonUp="Label_MouseDoubleClick" MouseDoubleClick="Label_MouseDoubleClick"/>
+                                <Label Content="{Binding Name}" Height="auto" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" MouseLeftButtonUp="Label_MouseDoubleClick" MouseDoubleClick="Label_MouseDoubleClick" />
                             </StackPanel>
                             <DataTemplate.Triggers>
                                 <DataTrigger Binding="{Binding SensorData.Status}" Value="Ok">
-                                    <Setter TargetName="Icon" Property="Source" Value="icons/ok.png"/>
+                                    <Setter TargetName="Icon" Property="Source" Value="icons/ok.png" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding SensorData.Status}" Value="Lost">
-                                    <Setter TargetName="Icon" Property="Source" Value="icons/lost.png"/>
+                                    <Setter TargetName="Icon" Property="Source" Value="icons/lost.png" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding SensorData.Status}" Value="Error">
-                                    <Setter TargetName="Icon" Property="Source" Value="icons/error.png"/>
+                                    <Setter TargetName="Icon" Property="Source" Value="icons/error.png" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding SensorData.Status}" Value="Wait">
-                                    <Setter TargetName="Icon" Property="Source" Value="icons/wait.png"/>
+                                    <Setter TargetName="Icon" Property="Source" Value="icons/wait.png" />
                                 </DataTrigger>
                             </DataTemplate.Triggers>
                         </DataTemplate>
@@ -57,60 +57,58 @@
                     <GroupBox Header="Battery" Grid.Row="0" Grid.Column="0" Margin="3" Height="auto">
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="Voltage:"/>
-                                <Label Content="{Binding BatteryLevelString}" Margin="0,0,0,0" Width="auto"/>
+                                <Label Content="Voltage:" />
+                                <Label Content="{Binding BatteryLevelString}" Margin="0,0,0,0" Width="auto" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="Percentage:"/>
-                                <Label Content="{Binding BatteryString}" Margin="0,0,0,0" Width="auto"/>
+                                <Label Content="Percentage:" />
+                                <Label Content="{Binding BatteryString}" Margin="0,0,0,0" Width="auto" />
                             </StackPanel>
                         </StackPanel>
-
                     </GroupBox>
                     <GroupBox Header="Pressure" Margin="3" Grid.Row="0" Grid.Column="1">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="0.8*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="0.8*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.ColumnSpan="3">
-                                <Label Content="Real-time:"/>
-                                <Label Content="{Binding PressureString}" Margin="0,0,0,0" Width="auto"/>
-                                <Label Content="mBar"/>
+                                <Label Content="Real-time:" />
+                                <Label Content="{Binding PressureString}" Margin="0,0,0,0" Width="auto" />
+                                <Label Content="mBar" />
                             </StackPanel>
-                            <Label Content="Min" Grid.Row="1" Grid.Column="1"/>
-                            <Label Content="Ave" Grid.Row="1" Grid.Column="2"/>
-                            <Label Content="Max" Grid.Row="1" Grid.Column="3"/>
-                            <Label Content="{Binding PressureMin3s}" Grid.Row="2" Grid.Column="1"/>
-                            <Label Content="{Binding PressureAvg3s}" Grid.Row="2" Grid.Column="2"/>
-                            <Label Content="{Binding PressureMax3s}" Grid.Row="2" Grid.Column="3"/>
-                            <Label Content="{Binding PressureMin5m}" Grid.Row="3" Grid.Column="1"/>
-                            <Label Content="{Binding PressureAvg5m}" Grid.Row="3" Grid.Column="2"/>
-                            <Label Content="{Binding PressureMax5m}" Grid.Row="3" Grid.Column="3"/>
-                            <Label Content="3 sec:" Grid.Row="2" Grid.Column="0"/>
-                            <Label Content="5 min:" Grid.Row="3" Grid.Column="0"/>
+                            <Label Content="Min" Grid.Row="1" Grid.Column="1" />
+                            <Label Content="Ave" Grid.Row="1" Grid.Column="2" />
+                            <Label Content="Max" Grid.Row="1" Grid.Column="3" />
+                            <Label Content="{Binding PressureMin3s}" Grid.Row="2" Grid.Column="1" />
+                            <Label Content="{Binding PressureAvg3s}" Grid.Row="2" Grid.Column="2" />
+                            <Label Content="{Binding PressureMax3s}" Grid.Row="2" Grid.Column="3" />
+                            <Label Content="{Binding PressureMin5m}" Grid.Row="3" Grid.Column="1" />
+                            <Label Content="{Binding PressureAvg5m}" Grid.Row="3" Grid.Column="2" />
+                            <Label Content="{Binding PressureMax5m}" Grid.Row="3" Grid.Column="3" />
+                            <Label Content="3 sec:" Grid.Row="2" Grid.Column="0" />
+                            <Label Content="5 min:" Grid.Row="3" Grid.Column="0" />
                         </Grid>
-
                     </GroupBox>
                     <GroupBox Header="Wind" Grid.Row="0" Grid.Column="2" Margin="3" Height="auto">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
+                                <RowDefinition />
+                                <RowDefinition />
                             </Grid.RowDefinitions>
                             <s:SciChartSurface Grid.Row="0" s:ThemeManager.Theme="BrightSpark" Height="105">
                                 <s:SciChartSurface.RenderableSeries>
                                     <s:XyScatterRenderableSeries x:Name="WindSeries">
                                         <s:XyScatterRenderableSeries.PointMarker>
-                                            <s:EllipsePointMarker Width="9" Height="9" Fill="SteelBlue" Stroke="LightSteelBlue" StrokeThickness="2"/>
+                                            <s:EllipsePointMarker Width="9" Height="9" Fill="SteelBlue" Stroke="LightSteelBlue" StrokeThickness="2" />
                                         </s:XyScatterRenderableSeries.PointMarker>
                                     </s:XyScatterRenderableSeries>
                                 </s:SciChartSurface.RenderableSeries>
@@ -123,7 +121,7 @@
                                               RotationAngle="90"
                                               AutoTicks="False"
                                               MajorDelta="45"
-                                              MinorDelta="45"/>
+                                              MinorDelta="45" />
                                 </s:SciChartSurface.XAxis>
                                 <s:SciChartSurface.YAxis>
                                     <s:PolarYAxis AutoRange="Never"
@@ -131,12 +129,12 @@
                                               VisibleRange="0,50"
                                               DrawMajorTicks="False"
                                               DrawMinorTicks="False"
-                                              GrowBy="0,0.2"/>
+                                              GrowBy="0,0.2" />
                                 </s:SciChartSurface.YAxis>
                             </s:SciChartSurface>
                             <StackPanel Orientation="Horizontal" Grid.Row="1" x:Name="WindInfo">
-                                <Label Content="{Binding WindDirectionString}"/>
-                                <Label Content="{Binding WindSpeedString}"/>
+                                <Label Content="{Binding WindDirectionString}" />
+                                <Label Content="{Binding WindSpeedString}" />
                             </StackPanel>
                         </Grid>
                     </GroupBox>
@@ -144,8 +142,8 @@
                     <GroupBox Header="Humidity" Margin="3" Grid.Row="0" Grid.Column="3">
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="Relevant:"/>
-                                <Label Content="{Binding HuminityString}" Margin="0,0,0,-0.5" Width="auto"/>
+                                <Label Content="Relevant:" />
+                                <Label Content="{Binding HuminityString}" Margin="0,0,0,-0.5" Width="auto" />
                             </StackPanel>
                         </StackPanel>
                     </GroupBox>
@@ -153,15 +151,15 @@
                     <GroupBox Header="Temperature" Margin="3" Grid.Row="0" Grid.Column="4">
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="Temp:"/>
-                                <Label Content="{Binding TemperautreString}" Margin="0,0,0,0" Width="auto"/>
+                                <Label Content="Temp:" />
+                                <Label Content="{Binding TemperautreString}" Margin="0,0,0,0" Width="auto" />
                             </StackPanel>
                         </StackPanel>
                     </GroupBox>
                 </Grid>
             </GroupBox>
 
-            <GroupBox Name="Monitor" Header="Real-time Monitor" HorizontalAlignment="Stretch" Margin="159,50,10,190.5" VerticalAlignment="Stretch" Background="#FFF8F9E4" Grid.ColumnSpan="2" >
+            <GroupBox Name="Monitor" Header="Real-time Monitor" HorizontalAlignment="Stretch" Margin="159,50,10,190.5" VerticalAlignment="Stretch" Background="#FFF8F9E4" Grid.ColumnSpan="2">
                 <Grid>
                     <!--  Create the chart surface  -->
                     <!-- where xmlns:s="http://schemas.abtsoftware.co.uk/scichart" -->
@@ -169,68 +167,85 @@
                         <!--  Define RenderableSeries  -->
                         <!-- where xmlns:s="http://schemas.abtsoftware.co.uk/scichart" -->
                         <s:SciChartSurface.RenderableSeries>
-                            <s:FastLineRenderableSeries x:Name="LineSeries" Stroke="#FF4083B7"/>
+                            <s:FastLineRenderableSeries x:Name="LineSeries" Stroke="#FF4083B7" />
                         </s:SciChartSurface.RenderableSeries>
                         <!--  Create an X Axis  -->
                         <s:SciChartSurface.XAxis>
                             <s:DateTimeAxis AxisTitle="Time" VisibleRange="{Binding XVisibleRange, Mode=TwoWay}"
                                         TextFormatting="MMM/dd/yyyy"
-                                        SubDayTextFormatting="HH:mm"/>
+                                        SubDayTextFormatting="HH:mm" />
                         </s:SciChartSurface.XAxis>
                         <!--  Create a Y Axis  -->
                         <s:SciChartSurface.YAxis>
-                            <s:NumericAxis AxisTitle="Pressure (mBar)" AutoRange="{Binding AutoRange}"/>
+                            <s:NumericAxis AxisTitle="Pressure (mBar)" AutoRange="{Binding AutoRange}" />
                         </s:SciChartSurface.YAxis>
                         <!--  Specify interactivity modifiers  -->
                         <s:SciChartSurface.ChartModifier>
                             <s:ModifierGroup>
                                 <s:RubberBandXyZoomModifier ExecuteOn="MouseLeftButton"
                                                  RubberBandFill="#33FFFFFF" RubberBandStroke="#AAFFFFFF"
-                                                 RubberBandStrokeDashArray="2 2"/>
+                                                 RubberBandStrokeDashArray="2 2" />
                                 <!-- Allow pan on Right mouse drag -->
                                 <s:ZoomPanModifier ExecuteOn="MouseRightButton" ClipModeX="None" />
                                 <!-- Allow Dragging YAxis to Scale -->
-                                <s:YAxisDragModifier DragMode="Scale"/>
+                                <s:YAxisDragModifier DragMode="Scale" />
                                 <!-- Allow Dragging XAxis to Pan -->
-                                <s:XAxisDragModifier DragMode="Scale"/>
+                                <s:XAxisDragModifier DragMode="Scale" />
                                 <!-- Allow Mousewheel Zoom -->
-                                <s:MouseWheelZoomModifier/>
+                                <s:MouseWheelZoomModifier />
                                 <!-- Allow Zoom to Extents on double click -->
-                                <s:ZoomExtentsModifier ExecuteOn="MouseDoubleClick"/>
+                                <s:ZoomExtentsModifier ExecuteOn="MouseDoubleClick" />
                                 <s:LegendModifier ShowLegend="True" Orientation="Horizontal"
-                                       VerticalAlignment="Bottom"                                     
+                                       VerticalAlignment="Bottom"
                                        HorizontalAlignment="Left"
                                        LegendPlacement="Inside" />
                                 <!-- Add a RolloverModifier to the chart (shows vertical line tooltips -->
-                                <s:RolloverModifier ExecuteOn="MouseMove" ShowTooltipOn="MouseHover"/>
+                                <s:RolloverModifier ExecuteOn="MouseMove" ShowTooltipOn="MouseHover" />
                             </s:ModifierGroup>
                         </s:SciChartSurface.ChartModifier>
                     </s:SciChartSurface>
                 </Grid>
             </GroupBox>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Height="30" Margin="29,15,191,0" Grid.Column="1" >
-                <Label Content="Time Period:"/>
-                <Label Name ="lll" Content="{Binding Scale}" Width="35" Margin="-5,0,0,0"/>
-                <Label Content="min" Width="auto" Margin="-10,0,0,0"/>
-                <Slider Name="sll" Minimum="5" Maximum="30" Value="{Binding Scale, Mode=TwoWay}" VerticalAlignment="Center" Height="23" Width="280"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Height="30" Margin="29,15,191,0" Grid.Column="1">
+                <Label Content="Time Period:" />
+                <Label Name ="lll" Content="{Binding Scale}" Width="35" Margin="-5,0,0,0" />
+                <Label Content="min" Width="auto" Margin="-10,0,0,0" />
+                <Slider Name="sll" Minimum="5" Maximum="30" Value="{Binding Scale, Mode=TwoWay}" VerticalAlignment="Center" Height="23" Width="280" />
             </StackPanel>
-            <Button Name="SettingBtn" Content="Setting" HorizontalAlignment="Left" Margin="40,15,0,0" VerticalAlignment="Top" Width="76" Click="SettingBtn_Click"/>
+            <Button Name="SettingBtn" Content="Setting" HorizontalAlignment="Left" Margin="40,5,0,0" VerticalAlignment="Top" Width="76" Click="SettingBtn_Click" />
+            <Button Content="ChangeMode" HorizontalAlignment="Left" Margin="40,30,0,0" VerticalAlignment="Top" Width="90" Click="ModeBtn_Click" />
             <Grid x:Name="CloudStatus" Grid.Column="1" HorizontalAlignment="Right" Height="40" Margin="0,5,10,0" VerticalAlignment="Top" Width="176">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Last File:"/>
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Last Time:"/>
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="Status:"/>
-                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding LastFileName}"/>
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding LastFileTime}"/>
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Status}"/>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Last File:" />
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Last Time:" />
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Status:" />
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding LastFileName}" />
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding LastFileTime}" />
+                <TextBlock x:Name="ModeStatus" Grid.Row="2" Grid.Column="1" Text="{Binding SensorState}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SensorState}" Value="Record">
+                                    <Setter Property="Foreground" Value="Green" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SensorState}" Value="NoUpload">
+                                    <Setter Property="Foreground" Value="Orange" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SensorState}" Value="Sleep">
+                                    <Setter Property="Foreground" Value="Red" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </Grid>
         </Grid>
     </xctk:BusyIndicator>

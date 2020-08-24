@@ -1,9 +1,5 @@
 ﻿using Microsoft.Maps.MapControl.WPF;
 using Newtonsoft.Json;
-using System;
-using System.IO;
-using System.Net;
-using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
@@ -56,6 +52,7 @@ namespace GUI
             myMap.Children.Clear();
             myMap.Children.Add(pin);
         }
+
         private void Toggle_Map(object sender, RoutedEventArgs e)
         {
             if (myMap.Mode.ToString() == "Microsoft.Maps.MapControl.WPF.AerialMode")
@@ -68,15 +65,16 @@ namespace GUI
                 myMap.Mode = new AerialMode(true);
             }
         }
+
         private void Finish_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }
+
         private void Cancle_Click(object sender, RoutedEventArgs e)
         {
             LocationStr.Text = "";
             Close();
         }
-        
     }
 }

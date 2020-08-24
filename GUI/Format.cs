@@ -11,6 +11,7 @@ namespace Format
     {
         public DateTime DateTime;
         public double Value;
+
         public TimeSeries(DateTime time, double value)
         {
             DateTime = time;
@@ -23,13 +24,17 @@ namespace Format
         public Func<double, string> DateTimeFormatter { get; set; }
         public double AxisStep { get; set; }
         public double AxisUnit { get; set; }
+
         //public int Scale { set; get; }
         // These fields hold the values for the public properties.
         private int _scale;
+
         public event PropertyChangedEventHandler PropertyChanged;
+
         private DateTime _max;
         private DateTime _min;
         private AutoRange _autoRange;
+
         public AutoRange AutoRange
         {
             set
@@ -45,7 +50,9 @@ namespace Format
                 return _autoRange;
             }
         }
+
         private IRange _xVisibleRange;
+
         public IRange XVisibleRange
         {
             get { return _xVisibleRange; }
@@ -58,7 +65,9 @@ namespace Format
                 }
             }
         }
+
         private ZoomStates _zoomeState;
+
         public ZoomStates ZoomState
         {
             get { return _zoomeState; }
@@ -71,6 +80,7 @@ namespace Format
                 }
             }
         }
+
         // This method is called by the Set accessor of each property.
         // The CallerMemberName attribute that is applied to the optional propertyName
         // parameter causes the property name of the caller to be substituted as an argument.
@@ -78,25 +88,30 @@ namespace Format
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
         public int Scale
         {
             get { return this._scale; }
             set { if (this._scale != value) { this._scale = value; this.Max = DateTime.Now; this.Min = DateTime.Now.AddMinutes(-value); NotifyPropertyChanged(); } }
         }
+
         public DateTime Max
         {
             get { return this._max; }
             set { DateTime dateTime = value; if (this._max != dateTime) { this._max = dateTime; NotifyPropertyChanged(); } }
         }
+
         public DateTime Min
         {
             get { return this._min; }
             set { DateTime dateTime = value; if (this._min != dateTime) { this._min = dateTime; NotifyPropertyChanged(); } }
         }
+
         public DateRange Limit
         {
             get { return new DateRange(Min, Max); }
         }
+
         public void RefreshLimit(DateTime dateTime)
         {
             this.Max = dateTime;
@@ -131,6 +146,7 @@ namespace Format
         public int[] PressureList;
         public DateTime[] TimeSeries;
         public string DataString;
+
         public static DataPackage Decode(byte[] data)
         {
             DataPackage dataPackage = new DataPackage();
@@ -173,6 +189,7 @@ namespace Format
             return dataPackage;
         }
     }
+
     public class ProgramSetting
     {
         public string ProjectName { set; get; }
@@ -181,6 +198,7 @@ namespace Format
         public string ProjectLocation { set; get; }
         public string SensorConfPath { set; get; }
         public TimeSpan _uploadSpan;
+
         public string UploadSpan
         {
             set
@@ -192,7 +210,9 @@ namespace Format
                 return _uploadSpan.TotalMinutes.ToString("F0");
             }
         }
+
         public TimeSpan _tokenRefreshSpan;
+
         public string TokenRefreshSpan
         {
             set
@@ -204,11 +224,13 @@ namespace Format
                 return _tokenRefreshSpan.TotalMinutes.ToString("F0");
             }
         }
+
         public string Username { set; get; }
         public string Password { set; get; }
         public string PortName { set; get; }
         public int BaudRate { set; get; }
     }
+
     public class IpStackApi
     {
         public string ip { get; set; }
@@ -244,6 +266,7 @@ namespace Format
             public string native { get; set; }
         }
     }
+
     public class IpgeoLocationApi
     {
         public string ip { get; set; }
@@ -287,6 +310,5 @@ namespace Format
             public bool is_dst { get; set; }
             public int dst_savings { get; set; }
         }
-
     }
 }
