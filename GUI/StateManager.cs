@@ -31,6 +31,7 @@ namespace GUI
             aTimer.AutoReset = true;
             aTimer.Enabled = false;
             _state = state;
+            SetRecord();
         }
 
         public enum State { Recording, Sleep, NoUpload }

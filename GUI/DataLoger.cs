@@ -96,6 +96,7 @@ namespace GUI
             failedFilePathList = new List<string>();
             OutputString = "";
             isPass = true;
+            enableUpload = true;
         }
 
         public string Init(Format.ProgramSetting setting)
