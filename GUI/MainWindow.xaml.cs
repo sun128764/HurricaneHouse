@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Format;
+using Newtonsoft.Json;
 using SciChart.Data.Model;
 using System;
 using System.Collections.Generic;
@@ -76,7 +77,7 @@ namespace GUI
                 {
                     SerialCOM.Close();
                 }
-                SerialCOM.InitCOM(setting.PortName, new SerialDataReceivedEventHandler(SerialPort_DataReceived));
+                SerialCOM.InitCOM(setting.PortName, setting.BaudRate, new SerialDataReceivedEventHandler(SerialPort_DataReceived));
                 sensorWatcher.SetTimer(SensorInfos);
                 Application.Current.Dispatcher.Invoke(() => //Use invoke to refresh UI elements
                 {

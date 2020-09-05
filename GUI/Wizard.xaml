@@ -99,7 +99,7 @@
                     <ComboBox Name="PortListBox" Grid.Row="0" Grid.Column="1" SelectedValue="{Binding PortName}" />
                     <Button x:Name="RefreshCOM" Grid.Row="0" Grid.Column="2" Margin="3" Click="RefreshPort_Click">↻</Button>
                     <Label Grid.Row="1" Grid.Column="0">Baud rate:</Label>
-                    <ComboBox x:Name="BaudRateBox" Grid.Row="1" Grid.Column="1" IsEditable="True" SelectedIndex="0" />
+                    <ComboBox x:Name="BaudRateBox" Grid.Row="1" Grid.Column="1" SelectedValue="{Binding BaudRate}" IsEditable="True" SelectedIndex="0" />
                     <Label Grid.Row="2" Grid.Column="0">Data bits:</Label>
                     <ComboBox x:Name="DataBitsBox" Grid.Row="2" Grid.Column="1" SelectedIndex="1" />
                     <Label Grid.Row="3" Grid.Column="0">Parity:</Label>

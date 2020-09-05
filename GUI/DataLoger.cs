@@ -211,7 +211,7 @@ namespace GUI
             }
             dataString.Clear();
             fileCount++;
-            lastTime = DateTime.Now;
+            //lastTime = DateTime.Now;
             string output = RunTapis("files upload agave://" + cloudPath + " " + filename);
             if (uploadRegex.IsMatch(output))
             {
@@ -249,9 +249,11 @@ namespace GUI
         public void AddData(string data)
         {
             if (!enableUpload) return;
+            if (data == null || data.Length < 10) return;
             this.dataString.Add(data);
             if ((((DateTime.Now - lastTime) > uploadSpan) || (data == null)) && dataString.Count > 0)
             {
+                lastTime = DateTime.Now;
                 upload.BeginInvoke(CloudPath, null, null);
             }
         }

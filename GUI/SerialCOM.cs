@@ -19,9 +19,9 @@ namespace GUI
             }
         }
 
-        public bool InitCOM(string PortName, SerialDataReceivedEventHandler SerialPort_DataReceived)
+        public bool InitCOM(string PortName,int BuadRate, SerialDataReceivedEventHandler SerialPort_DataReceived)
         {
-            serialPort = new SerialPort(PortName, 9600, Parity.None, 8, StopBits.One);
+            serialPort = new SerialPort(PortName, BuadRate, Parity.None, 8, StopBits.One);
             serialPort.DataReceived += SerialPort_DataReceived;//DataReceived event delegate
             serialPort.ReceivedBytesThreshold = 32;
             serialPort.RtsEnable = true;
