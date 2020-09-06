@@ -29,7 +29,7 @@ namespace GUI
             ProgramSetting = new Format.ProgramSetting() { UploadSpan = "5", TokenRefreshSpan = "1000" };
             DataContext = ProgramSetting;
             RefreshPort_Click(null, null);
-            BaudRateBox.ItemsSource = new string[] { "9600" };
+            BaudRateBox.ItemsSource = new string[] { "9600", "115200" };
             DataBitsBox.ItemsSource = new string[] { "7", "8" };
             ParityBox.ItemsSource = new string[] { "None", "Even", "Mark", "Odd", "Space" };
             StopBitsBox.ItemsSource = new string[] { "1", "2" };

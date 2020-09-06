@@ -29,6 +29,7 @@ namespace GUI
         private List<string> failedFilePathList;
         private readonly Regex uploadRegex = new Regex(@"\|\s*(uploaded|skipped)\s*\|\s*1\s*\|");
         private readonly Regex listFolderRegex = new Regex(@"\|\s*(\S*)\s*\|.*");
+        private readonly object o = new object();
         public string LastFileName { set; get; }
         public string LastFileTime { set; get; }
 
@@ -204,12 +205,17 @@ namespace GUI
                     " Sensor local time stamp, Temperature, Battery, Wind Speed, Wind Direction, " +
                     "Humidity, Pressure 1, Pressure 2, Pressure 3, Pressure 4, Pressure 5," +
                     " Pressure 6, Pressure 7, Pressure 8, Pressure 9, Pressure 10");
-                foreach (string t in dataString)
+                List<string> writeData = new List<string>();
+                lock (o)
+                {
+                    writeData.AddRange(dataString);
+                    dataString.Clear();
+                }
+                foreach (string t in writeData)
                 {
                     writer.WriteLine(t);
                 }
             }
-            dataString.Clear();
             fileCount++;
             //lastTime = DateTime.Now;
             string output = RunTapis("files upload agave://" + cloudPath + " " + filename);

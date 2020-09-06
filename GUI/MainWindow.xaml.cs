@@ -135,6 +135,7 @@ namespace GUI
                     WindSensor = info;
                 }
             }
+            if (sensorInfo.SensorType != (SensorInfo.Types)(dataPackage.SensorTYpe - 1)) return;
             //Add data to sensor data class and plot
             sensorInfo.SensorData.GetSensorData(dataPackage);
             if (sensorInfo == SelectedSensor)

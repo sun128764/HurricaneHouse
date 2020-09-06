@@ -12,6 +12,7 @@ namespace GUI
         private string dataString;
         private static Timer aTimer;
         private bool isEnable;
+        private readonly object o = new object();
 
         public DataBaseUtils(string Address, bool NeedPassword = false, string User = "", string PassWord = "")
         {
@@ -32,7 +33,10 @@ namespace GUI
         public void PostData(Format.DataPackage dataPackage)
         {
             if (!isEnable) return;
-            dataString += InfluxDBStringBuilder(dataPackage) + "\n";
+            lock (o)
+            {
+                dataString += InfluxDBStringBuilder(dataPackage) + "\n";
+            }
         }
 
         public void EnableUpload()
@@ -51,13 +55,18 @@ namespace GUI
         {
             int length = dataString.Length;
             if (length < 1) return;
-            var data = dataString;
+            string data;
+            lock (o)
+            {
+                data = dataString;
+                dataString = "";
+            }
             string auth = needAuth ? ("&u=" + userName + "&p=" + passWord) : "";
             string url = DataBaseAddress + "/write?db=WSN&precision=ms" + auth;//Dedabase name is WSN. Time precision is mill seconds.
             var res = WebAPIUtil.HttpPost(url, data);
-            if (res != null)
+            if (res == null)
             {
-                dataString.Remove(0, length);
+                dataString = data + dataString;
             }
         }
 

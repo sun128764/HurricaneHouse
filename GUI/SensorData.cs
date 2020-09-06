@@ -279,7 +279,7 @@ namespace GUI
                 lock (locker)
                 {
                     if (this.Pressure3s.Count < 1) return "0";
-                    else return ConvertToString((int)this.Pressure3s.Average(t => t.Value), Type.Pressure);
+                    else return ConvertToString((int)Pressure3s.Average(t => t.Value), Type.Pressure);
                 }
             }
         }
@@ -291,7 +291,7 @@ namespace GUI
                 lock (locker)
                 {
                     if (this.Pressure3s.Count < 1) return "0";
-                    else return ConvertToString((int)this.Pressure3s.Min(t => t.Value), Type.Pressure);
+                    else return ConvertToString((int)Pressure3s.Min(t => t.Value), Type.Pressure);
                 }
             }
         }
@@ -303,7 +303,7 @@ namespace GUI
                 lock (locker)
                 {
                     if (this.Pressure3s.Count < 1) return "0";
-                    else return ConvertToString((int)this.Pressure3s.Max(t => t.Value), Type.Pressure);
+                    else return ConvertToString((int)Pressure3s.Max(t => t.Value), Type.Pressure);
                 }
             }
         }
@@ -315,7 +315,7 @@ namespace GUI
                 lock (locker)
                 {
                     if (this.Pressure5m.Count < 1) return "0";
-                    else return ConvertToString((int)this.Pressure5m.Average(t => t.Value), Type.Pressure);
+                    else return ConvertToString((int)Pressure5m.Average(t => t.Value), Type.Pressure);
                 }
             }
         }
@@ -327,7 +327,7 @@ namespace GUI
                 lock (locker)
                 {
                     if (this.Pressure5m.Count < 1) return "0";
-                    else return ConvertToString((int)this.Pressure5m.Min(t => t.Value), Type.Pressure);
+                    else return ConvertToString((int)Pressure5m.Min(t => t.Value), Type.Pressure);
                 }
             }
         }
@@ -339,7 +339,7 @@ namespace GUI
                 lock (locker)
                 {
                     if (this.Pressure5m.Count < 1) return "0";
-                    else return ConvertToString((int)this.Pressure5m.Max(t => t.Value), Type.Pressure);
+                    else return ConvertToString((int)Pressure5m.Max(t => t.Value), Type.Pressure);
                 }
             }
         }
@@ -451,14 +451,17 @@ namespace GUI
                 pressureL[i] = ConvertToDouble(package.PressureList[i], Type.Pressure);
             }
             PressureLine.Append(package.TimeSeries, pressureL);
-            AddData(ref Pressure3s, package.TimeSeries, package.PressureList, -3);
-            NotifyPropertyChanged("PressureAvg3s");
-            NotifyPropertyChanged("PressureMax3s");
-            NotifyPropertyChanged("PressureMin3s");
-            AddData(ref Pressure5m, package.TimeSeries, package.PressureList, -300);
-            NotifyPropertyChanged("PressureAvg5m");
-            NotifyPropertyChanged("PressureMax5m");
-            NotifyPropertyChanged("PressureMin5m");
+            lock (locker)
+            {
+                AddData(ref Pressure3s, package.TimeSeries, package.PressureList, -3);
+                NotifyPropertyChanged("PressureAvg3s");
+                NotifyPropertyChanged("PressureMax3s");
+                NotifyPropertyChanged("PressureMin3s");
+                AddData(ref Pressure5m, package.TimeSeries, package.PressureList, -300);
+                NotifyPropertyChanged("PressureAvg5m");
+                NotifyPropertyChanged("PressureMax5m");
+                NotifyPropertyChanged("PressureMin5m");
+            }
         }
 
         /// <summary>
