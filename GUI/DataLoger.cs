@@ -256,7 +256,10 @@ namespace GUI
         {
             if (!enableUpload) return;
             if (data == null || data.Length < 10) return;
-            this.dataString.Add(data);
+            lock (o)
+            {
+                this.dataString.Add(data);
+            }
             if ((((DateTime.Now - lastTime) > uploadSpan) || (data == null)) && dataString.Count > 0)
             {
                 lastTime = DateTime.Now;
