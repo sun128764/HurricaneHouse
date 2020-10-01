@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Timers;
 
-namespace GUI
+namespace MainProgram
 {
     internal class DataBaseUtils
     {

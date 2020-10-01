@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Timers;
 using System.Windows;
 
-namespace GUI
+namespace MainProgram
 {
     internal class SensorWatcher
     {

@@ -10,7 +10,7 @@ using System.Windows.Input;
 using Application = System.Windows.Application;
 using Cursors = System.Windows.Input.Cursors;
 
-namespace GUI
+namespace MainProgram
 {
     /// <summary>
     /// Wizard.xaml 的交互逻辑

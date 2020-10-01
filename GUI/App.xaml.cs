@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Windows;
 
-namespace GUI
+namespace MainProgram
 {
     /// <summary>
     /// App.xaml 的交互逻辑

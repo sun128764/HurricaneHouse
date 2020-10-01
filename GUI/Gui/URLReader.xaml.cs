@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace GUI
+namespace MainProgram
 {
     /// <summary>
     /// URLReader.xaml 的交互逻辑

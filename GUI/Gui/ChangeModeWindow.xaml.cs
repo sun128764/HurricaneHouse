@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace GUI
+namespace MainProgram
 {
     /// <summary>
     /// ChangeModeWindow.xaml 的交互逻辑

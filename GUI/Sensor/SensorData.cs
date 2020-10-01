@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace GUI
+namespace MainProgram
 {
     public class SensorData : INotifyPropertyChanged
     {

@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Timers;
 
-namespace GUI
+namespace MainProgram
 {
     internal class StateManager : INotifyPropertyChanged
     {

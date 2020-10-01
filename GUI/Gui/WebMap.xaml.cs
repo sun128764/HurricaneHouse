@@ -4,7 +4,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 
-namespace GUI
+namespace MainProgram
 {
     /// <summary>
     /// WebMap.xaml 的交互逻辑

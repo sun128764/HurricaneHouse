@@ -2,7 +2,7 @@
 using System.Text;
 using System.Windows;
 
-namespace GUI
+namespace MainProgram
 {
     /// <summary>
     /// Serial communitcation warp.Data received event is attached when call InitCOM.

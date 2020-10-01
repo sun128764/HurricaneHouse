@@ -107,33 +107,33 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ChangeModeWindow.xaml.cs">
+    <Compile Include="Gui\ChangeModeWindow.xaml.cs">
       <DependentUpon>ChangeModeWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DataBaseUtils.cs" />
-    <Compile Include="DataLoger.cs" />
-    <Compile Include="SensorInfo.cs" />
-    <Compile Include="SensorWatcher.cs" />
-    <Compile Include="SerialCOM.cs" />
-    <Compile Include="SettingMaker.xaml.cs">
+    <Compile Include="Utils\DataBaseUtils.cs" />
+    <Compile Include="Utils\DataLoger.cs" />
+    <Compile Include="Sensor\SensorInfo.cs" />
+    <Compile Include="Utils\SensorWatcher.cs" />
+    <Compile Include="Utils\SerialCOM.cs" />
+    <Compile Include="Gui\SettingMaker.xaml.cs">
       <DependentUpon>SettingMaker.xaml</DependentUpon>
     </Compile>
-    <Compile Include="StateManager.cs" />
-    <Compile Include="URLReader.xaml.cs">
+    <Compile Include="Utils\StateManager.cs" />
+    <Compile Include="Gui\URLReader.xaml.cs">
       <DependentUpon>URLReader.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WebAPIUtil.cs" />
-    <Compile Include="WebMap.xaml.cs">
+    <Compile Include="Utils\WebAPIUtil.cs" />
+    <Compile Include="Gui\WebMap.xaml.cs">
       <DependentUpon>WebMap.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Wizard.xaml.cs">
+    <Compile Include="Gui\Wizard.xaml.cs">
       <DependentUpon>Wizard.xaml</DependentUpon>
     </Compile>
-    <Page Include="ChangeModeWindow.xaml">
+    <Page Include="Gui\ChangeModeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Gui\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -141,25 +141,25 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Format.cs" />
-    <Compile Include="SensorData.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Format\Format.cs" />
+    <Compile Include="Sensor\SensorData.cs" />
+    <Compile Include="Gui\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="SettingMaker.xaml">
+    <Page Include="Gui\SettingMaker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="URLReader.xaml">
+    <Page Include="Gui\URLReader.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WebMap.xaml">
+    <Page Include="Gui\WebMap.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Wizard.xaml">
+    <Page Include="Gui\Wizard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -225,5 +225,6 @@
       <Version>12.0.3</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

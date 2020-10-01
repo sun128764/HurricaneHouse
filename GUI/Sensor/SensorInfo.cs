@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace GUI
+namespace MainProgram
 {
     public class SensorInfo
     {

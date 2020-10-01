@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 
-namespace GUI
+namespace MainProgram
 {
     /// <summary>
     /// SettingMaker.xaml 的交互逻辑

@@ -8,8 +8,6 @@ This repository contains four folders.
 
 - Arduino Code – this folder contain all code for sensor board.
 - GUI – this folder contain all code and file for real time monitor running on Windows.
-- Hurricane House_Data Collect Daemon – this folder is not used for now. In future, the data collect daemon will be separated from Windows application to run it on Linux.
-- NUnitTestProject1 – A empty test project.
 
 ## Sensor board
 
@@ -53,10 +51,6 @@ Contain all data and information from sensors.
   - Get Sensor Data: Read input string from serial communication and add those data to it’s class members.
 - Private Methods:
   - Add Data: Add time series data point to List.
-
-## Nunit Test Project 1
-
-This is a empty test project which is design to verify the methods of the project.
 
 ## Known issue
 
