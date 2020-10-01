@@ -192,12 +192,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="icons\compass.jpg" />
-    <Resource Include="icons\cursor.png" />
-    <Resource Include="icons\error.png" />
-    <Resource Include="icons\lost.png" />
-    <Resource Include="icons\ok.png" />
-    <Resource Include="icons\wait.png" />
+    <Resource Include="Gui\icons\compass.jpg" />
+    <Resource Include="Gui\icons\cursor.png" />
+    <Resource Include="Gui\icons\error.png" />
+    <Resource Include="Gui\icons\lost.png" />
+    <Resource Include="Gui\icons\ok.png" />
+    <Resource Include="Gui\icons\wait.png" />
   </ItemGroup>
   <ItemGroup>
     <SplashScreen Include="Picture\Title.jpg" />
