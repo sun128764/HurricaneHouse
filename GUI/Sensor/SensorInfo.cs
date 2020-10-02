@@ -4,6 +4,9 @@ namespace MainProgram
 {
     public class SensorInfo
     {
+        /// <summary>
+        /// Sensor information class.Data is saved in Sensor Data class.
+        /// </summary>
         public enum Types { Router, Anemometer, Humidity, Regular }
 
         public string Name { set; get; }

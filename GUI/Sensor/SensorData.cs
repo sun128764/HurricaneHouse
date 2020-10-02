@@ -7,6 +7,9 @@ using System.Runtime.CompilerServices;
 
 namespace MainProgram
 {
+    /// <summary>
+    /// Contains all sensor data, plot series and data string.
+    /// </summary>
     public class SensorData : INotifyPropertyChanged
     {
         private enum Type { Temprature, Battery, Pressure, WindSpeed, WindDirection, Huminity };
@@ -27,6 +30,7 @@ namespace MainProgram
 
         public SensorInfo.Types SensorType { get; set; }
 
+        //Const values
         private const double RefVol = 3.3;
         private const int BitDepth = 16;
         private TimeSpan WaitTime = new TimeSpan(0, 0, 10);
@@ -37,15 +41,17 @@ namespace MainProgram
         public bool isSI = true;
         private DateTime lastUpdate;
 
+        // SciChart series and control
         public Format.PlotControl PlotControl = new Format.PlotControl() { Scale = 5 };
+        public XyDataSeries<DateTime, double> PressureLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure", AcceptsUnsortedData = true };
+        public XyDataSeries<double, double> WindPlot = new XyDataSeries<double, double>();
+
+        // List used to calculate avg, min and max values.
         public List<Format.TimeSeries> Pressure3s = new List<Format.TimeSeries>();
         public List<Format.TimeSeries> Pressure5m = new List<Format.TimeSeries>();
         public List<Format.TimeSeries> Pressure30m = new List<Format.TimeSeries>();
         public List<Format.TimeSeries> Huminity5m = new List<Format.TimeSeries>();
         public List<Format.TimeSeries> Temperature5m = new List<Format.TimeSeries>();
-
-        public XyDataSeries<DateTime, double> PressureLine = new XyDataSeries<DateTime, double>() { SeriesName = "Pressure", AcceptsUnsortedData = true };
-        public XyDataSeries<double, double> WindPlot = new XyDataSeries<double, double>();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -427,6 +433,10 @@ namespace MainProgram
             }
         }
 
+        /// <summary>
+        /// Add decoded data into this class.
+        /// </summary>
+        /// <param name="package">Decoded data package</param>
         public void GetSensorData(Format.DataPackage package)
         {
             Temperature = package.Temperature;
@@ -483,6 +493,9 @@ namespace MainProgram
             series.RemoveAll(t => t.DateTime < time[time.Length - 1].AddSeconds(interval));
         }
 
+        /// <summary>
+        /// Check the sensor status.
+        /// </summary>
         public void CheckStatus()
         {
             if (DateTime.Now - lastUpdate > WaitTime)

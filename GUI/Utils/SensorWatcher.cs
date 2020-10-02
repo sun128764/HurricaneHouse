@@ -5,6 +5,9 @@ using System.Windows;
 
 namespace MainProgram
 {
+    /// <summary>
+    /// Timer. Check sensor status every 10s.
+    /// </summary>
     internal class SensorWatcher
     {
         private List<SensorInfo> sensorInfos;

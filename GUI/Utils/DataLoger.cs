@@ -9,6 +9,9 @@ using System.Text.RegularExpressions;
 
 namespace MainProgram
 {
+    /// <summary>
+    /// Save data to local disk and upload to DesignSafe.
+    /// </summary>
     internal class DataLoger : INotifyPropertyChanged
     {
         private readonly Process p;
@@ -100,6 +103,11 @@ namespace MainProgram
             enableUpload = true;
         }
 
+        /// <summary>
+        /// Initialize the logger.User must set up Tapis and create token first.
+        /// </summary>
+        /// <param name="setting">Program setting</param>
+        /// <returns>Tapis output</returns>
         public string Init(Format.ProgramSetting setting)
         {
             OutputString += "Start initialing upload module...";
@@ -308,6 +316,11 @@ namespace MainProgram
             }
         }
 
+        /// <summary>
+        /// List all files in DesignSafe data saving path
+        /// </summary>
+        /// <param name="path">DesignSafe path</param>
+        /// <returns>File name list</returns>
         public List<string> ListFolder(string path)
         {
             List<string> fileList = new List<string>();
@@ -328,6 +341,11 @@ namespace MainProgram
             return fileList;
         }
 
+        /// <summary>
+        /// Delete file in DesignSafe
+        /// </summary>
+        /// <param name="path">File path</param>
+        /// <returns>Result</returns>
         public bool DeleteFile(string path)
         {
             string output = RunTapis("files list agave://" + path);

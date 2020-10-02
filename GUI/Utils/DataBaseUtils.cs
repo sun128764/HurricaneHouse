@@ -3,6 +3,9 @@ using System.Timers;
 
 namespace MainProgram
 {
+    /// <summary>
+    /// Functions used for database operation.This class will upload data every 1s.
+    /// </summary>
     internal class DataBaseUtils
     {
         private string DataBaseAddress;
@@ -29,7 +32,10 @@ namespace MainProgram
             aTimer.Enabled = true;
             isEnable = true;
         }
-
+        /// <summary>
+        /// Add data to data list.
+        /// </summary>
+        /// <param name="dataPackage">Decoded data package</param>
         public void PostData(Format.DataPackage dataPackage)
         {
             if (!isEnable) return;
@@ -51,6 +57,11 @@ namespace MainProgram
             isEnable = false;
         }
 
+        /// <summary>
+        /// Upload the data list to database and empty the data list if upload success.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
         private void Upload(Object source, ElapsedEventArgs e)
         {
             int length = dataString.Length;
@@ -70,6 +81,11 @@ namespace MainProgram
             }
         }
 
+        /// <summary>
+        /// Convert the decoded data package to InfluxDB Line protocol with time stamp.
+        /// </summary>
+        /// <param name="dataPackage">Decoded data package</param>
+        /// <returns>InfluxDB Line protocol string</returns>
         private string InfluxDBStringBuilder(Format.DataPackage dataPackage)
         {
             string timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();//Unix UTC time for InfluxDB

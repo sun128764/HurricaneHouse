@@ -6,6 +6,9 @@ using System.Timers;
 
 namespace MainProgram
 {
+    /// <summary>
+    /// Set the state of the sensor network.
+    /// </summary>
     internal class StateManager : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;

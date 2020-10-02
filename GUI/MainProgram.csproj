@@ -107,6 +107,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Format\DataPackage.cs" />
+    <Compile Include="Format\IpStackApi.cs" />
+    <Compile Include="Format\PlotControl.cs" />
+    <Compile Include="Format\ProgramSetting.cs" />
+    <Compile Include="Format\TimeSeries.cs" />
     <Compile Include="Gui\ChangeModeWindow.xaml.cs">
       <DependentUpon>ChangeModeWindow.xaml</DependentUpon>
     </Compile>
@@ -141,7 +146,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Format\Format.cs" />
+    <Compile Include="Format\IpgeoLocationApi.cs" />
     <Compile Include="Sensor\SensorData.cs" />
     <Compile Include="Gui\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

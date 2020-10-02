@@ -5,6 +5,9 @@ using System.Text;
 
 namespace MainProgram
 {
+    /// <summary>
+    /// WebApi utils. Get and Post method.
+    /// </summary>
     internal class WebAPIUtil
     {
         public static string HttpGet(string url)
