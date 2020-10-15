@@ -33,6 +33,7 @@ namespace MainProgram
         public MainWindow()
         {
             InitializeComponent();
+            System.Windows.Media.RenderOptions.ProcessRenderMode = System.Windows.Interop.RenderMode.SoftwareOnly;
             datastring = new List<string>();
             SensorInfos = new List<SensorInfo>();
             DataContext = this;
