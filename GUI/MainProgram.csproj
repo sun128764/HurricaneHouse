@@ -108,6 +108,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Format\DataPackage.cs" />
+    <Compile Include="Format\DbList.cs" />
     <Compile Include="Format\IpStackApi.cs" />
     <Compile Include="Format\PlotControl.cs" />
     <Compile Include="Format\ProgramSetting.cs" />
