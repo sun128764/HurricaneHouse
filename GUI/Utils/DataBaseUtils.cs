@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Format;
+using System;
 using System.Timers;
 
 namespace MainProgram
@@ -8,21 +9,15 @@ namespace MainProgram
     /// </summary>
     internal class DataBaseUtils
     {
-        private string DataBaseAddress;
-        private string userName;
-        private string passWord;
-        private bool needAuth;
+        private DbInfo Info;
         private string dataString;
         private static Timer aTimer;
         private bool isEnable;
         private readonly object o = new object();
 
-        public DataBaseUtils(string Address, bool NeedPassword = false, string User = "", string PassWord = "")
+        public DataBaseUtils(DbInfo dbInfo)
         {
-            DataBaseAddress = Address;
-            needAuth = NeedPassword;
-            userName = User;
-            passWord = PassWord;
+            Info = dbInfo;
             dataString = "";
             // Create a timer with a 1 second interval.
             aTimer = new Timer(1000);
@@ -36,7 +31,7 @@ namespace MainProgram
         /// Add data to data list.
         /// </summary>
         /// <param name="dataPackage">Decoded data package</param>
-        public void PostData(Format.DataPackage dataPackage)
+        public void PostData(DataPackage dataPackage)
         {
             if (!isEnable) return;
             lock (o)
@@ -72,10 +67,10 @@ namespace MainProgram
                 data = dataString;
                 dataString = "";
             }
-            string auth = needAuth ? ("&u=" + userName + "&p=" + passWord) : "";
-            string url = DataBaseAddress + "/write?db=WSN&precision=ms" + auth;//Dedabase name is WSN. Time precision is mill seconds.
+            string auth = Info.needAuth ? ("&u=" + Info.UserName + "&p=" + Info.PassWord) : "";
+            string url = Info.DataBaseAddress + "/write?db=" + Info.DataBaseName + "&precision=ms" + auth;//Dedabase name is WSN. Time precision is mill seconds.
             var res = WebAPIUtil.HttpPost(url, data);
-            if (res == null)
+            if (res == null && data.Length < 1000000)//limit maximum data length
             {
                 dataString = data + dataString;
             }
@@ -86,10 +81,10 @@ namespace MainProgram
         /// </summary>
         /// <param name="dataPackage">Decoded data package</param>
         /// <returns>InfluxDB Line protocol string</returns>
-        private string InfluxDBStringBuilder(Format.DataPackage dataPackage)
+        private string InfluxDBStringBuilder(DataPackage dataPackage)
         {
             string timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();//Unix UTC time for InfluxDB
-            string result = "WSN,";
+            string result = Info.MeasurementName + ",";
             result += "SensorID=" + dataPackage.SensorID + " ";
             switch (dataPackage.SensorTYpe)
             {
@@ -110,5 +105,6 @@ namespace MainProgram
             result += timestamp;
             return result;
         }
+
     }
 }

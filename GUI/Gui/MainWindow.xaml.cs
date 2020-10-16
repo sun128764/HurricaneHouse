@@ -11,9 +11,6 @@ using System.Windows.Input;
 
 namespace MainProgram
 {
-    /// <summary>
-    /// MainWindow.xaml 的交互逻辑
-    /// </summary>
     public partial class MainWindow : Window
     {
         public string SettingPath;
@@ -24,8 +21,7 @@ namespace MainProgram
         private DataLoger dataLogger;
         private SensorWatcher sensorWatcher;
         public IRange FixRange => new DoubleRange(0, 360);
-        private DataBaseUtils LocalDataBaseUtils;
-        private DataBaseUtils RemoteDataBaseUtils;
+        private DataBaseList dataBaseUtils;
         private SerialCOM SerialCOM;
         public bool isCollecting;
         private StateManager StateManager;
@@ -39,8 +35,8 @@ namespace MainProgram
             DataContext = this;
             sensorWatcher = new SensorWatcher();
             SerialCOM = new SerialCOM();
-            LocalDataBaseUtils = new DataBaseUtils("http://localhost:8086");
-            RemoteDataBaseUtils = new DataBaseUtils("https://db.yae-sakura.moe", true, "sun128764", "tTNf1ofAAdEUNYJoKgDB");
+            DbInfoList infoList = DbInfoList.ReadDbList(Environment.CurrentDirectory + "\\database.json");
+            dataBaseUtils = new DataBaseList(infoList);
             isCollecting = true;
         }
 
@@ -88,7 +84,7 @@ namespace MainProgram
                     lll.DataContext = SelectedSensor.SensorData.PlotControl;
                     Status.DataContext = SelectedSensor.SensorData;
                     CloudStatus.DataContext = dataLogger;
-                    StateManager = new StateManager(dataLogger, SerialCOM, new List<DataBaseUtils>() { LocalDataBaseUtils, RemoteDataBaseUtils }, this, StateManager.State.Recording);
+                    StateManager = new StateManager(dataLogger, SerialCOM, dataBaseUtils, this, StateManager.State.Recording);
                     ModeStatus.DataContext = StateManager;
                     Mouse.OverrideCursor = null;
                     Busy.IsBusy = false; //Disable busy indicator.
@@ -108,10 +104,9 @@ namespace MainProgram
             while (SerialCOM.serialPort.BytesToRead < 32) ;
             byte[] data = new byte[32];
             SerialCOM.serialPort.Read(data, 0, 32);
-            Format.DataPackage dataPackage = Format.DataPackage.Decode(data);
+            DataPackage dataPackage = DataPackage.Decode(data);
             if (dataPackage == null || dataPackage.SensorTYpe > 4 || dataPackage.SensorTYpe < 1) return;
-            LocalDataBaseUtils.PostData(dataPackage);
-            RemoteDataBaseUtils.PostData(dataPackage);
+            dataBaseUtils.PostData(dataPackage);
             dataLogger.AddData(dataPackage.DataString);
             SensorInfo sensorInfo = SensorInfos.Find(x => x.SensorID == dataPackage.SensorID);
             if (sensorInfo == null)

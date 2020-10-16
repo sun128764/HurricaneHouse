@@ -116,6 +116,7 @@
     <Compile Include="Gui\ChangeModeWindow.xaml.cs">
       <DependentUpon>ChangeModeWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils\DataBaseList.cs" />
     <Compile Include="Utils\DataBaseUtils.cs" />
     <Compile Include="Utils\DataLoger.cs" />
     <Compile Include="Sensor\SensorInfo.cs" />

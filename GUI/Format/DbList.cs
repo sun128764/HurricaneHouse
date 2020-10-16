@@ -1,29 +1,30 @@
-﻿
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
-namespace GUI.Format
+namespace Format
 {
     class DbInfo
     {
-        string Url;
-        bool NeedPassWord;
-        string User;
-        string PassWord;
+        public string DataBaseAddress { get; set; }
+        public string DataBaseName { get; set; }
+        public string MeasurementName { get; set; }
+        public bool needAuth { get; set; }
+        public string UserName { get; set; }
+        public string PassWord { get; set; }
     }
     /// <summary>
     /// Data base list with user name and password.
     /// </summary>
-    class DbList : List<DbInfo>
+    class DbInfoList : List<DbInfo>
     {
-        static public DbList ReadDbList(string path)
+        static public DbInfoList ReadDbList(string path)
         {
             string file = File.ReadAllText(path);
             try
             {
-                DbList list = JsonConvert.DeserializeObject<DbList>(file);
+                DbInfoList list = JsonConvert.DeserializeObject<DbInfoList>(file);
                 return list;
             }
             catch (JsonSerializationException)
@@ -33,7 +34,7 @@ namespace GUI.Format
             }
         }
 
-        static public void SaveDbList(DbList list)
+        static public void SaveDbList(DbInfoList list)
         {
             string setting = JsonConvert.SerializeObject(list, Formatting.Indented);
             SaveFileDialog saveFileDialog = new SaveFileDialog
@@ -48,6 +49,4 @@ namespace GUI.Format
             }
         }
     }
-
-    
 }
