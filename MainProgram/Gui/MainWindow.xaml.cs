@@ -100,10 +100,17 @@ namespace MainProgram
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             if (!isCollecting) return;
-            while (SerialCOM.serialPort.ReadByte() != 255) ;
-            while (SerialCOM.serialPort.BytesToRead < 36) ;
             byte[] data = new byte[36];
-            SerialCOM.serialPort.Read(data, 0, 36);
+            try
+            {
+                while (SerialCOM.serialPort.ReadByte() != 255) ;
+                while (SerialCOM.serialPort.BytesToRead < 36) ;
+                SerialCOM.serialPort.Read(data, 0, 36);
+            }
+            catch 
+            {
+                return;
+            }
             DataPackage dataPackage = DataPackage.Decode(data);
             if (dataPackage == null || !dataPackage.passCrc32) return;
             dataBaseUtils.PostData(dataPackage);
