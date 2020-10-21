@@ -32,7 +32,6 @@ XBee xbee = XBee();
 SAMD_CRC32 crc = SAMD_CRC32();
 uint32_t crc_result = 0;
 byte result[4];
-uint32_t 32Mask = 255;
 
 // define buffers
 #include <stdio.h>
@@ -111,9 +110,10 @@ void SendSample() {
   Serial2.write(SerBuf, 32);//Send data
   analogReadResolution(16);
   uint8_t status_code = crc.crc32(&SerBuf, sizeof(SerBuf), &crc_result); //Calculate CRC32
-  for (int j = 0; j < 4; j++) { //Form CRC32 byte array
-    result[j] = (crc_result >> j * 4) & 32Mask;
-  }
+  result[0] = (byte)crc_result;
+  result[1] = (byte)(crc_result >> 8);
+  result[2] = (byte)(crc_result >> 16);
+  result[3] = (byte)(crc_result >> 24);
   Serial2.write(result, 4); //Send CRC32
   Serial.printf("%d", (byte)crc_result);
   Serial.printf("SensorID: %d  ", BoardID);
