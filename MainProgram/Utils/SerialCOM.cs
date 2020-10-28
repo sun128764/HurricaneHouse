@@ -1,6 +1,8 @@
 ﻿using System.IO.Ports;
 using System.Text;
 using System.Windows;
+using System.Timers;
+using System;
 
 namespace MainProgram
 {
@@ -10,6 +12,28 @@ namespace MainProgram
     internal class SerialCOM
     {
         public SerialPort serialPort;//Serial object
+        private static Timer aTimer;
+
+        private void SetTimer()
+        {
+            // Create a timer with a 1 second interval.
+            aTimer = new Timer(1000);
+            // Hook up the Elapsed event for the timer.
+            aTimer.Elapsed += CheckPort;
+            aTimer.AutoReset = true;
+            aTimer.Enabled = true;
+        }
+        private void CheckPort(Object source, ElapsedEventArgs e)
+        {
+            if (!IsOpen)
+            {
+                try
+                {
+                    serialPort.Open();
+                }
+                catch { }
+            }
+        }
 
         public bool IsOpen
         {
@@ -41,6 +65,7 @@ namespace MainProgram
             catch { }
             if (serialPort.IsOpen)
             {
+                SetTimer();
                 return true;
             }
             else

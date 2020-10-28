@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Force.Crc32;
+using System;
 
 namespace Format
 {
@@ -21,6 +22,7 @@ namespace Format
         public int[] PressureList;
         public DateTime[] TimeSeries;
         public string DataString;
+        public bool passCrc32;
         /// <summary>
         /// Decode the data array from serial port and convert to Data Package.
         /// </summary>
@@ -65,6 +67,10 @@ namespace Format
                 dataPackage.DataString += "," + dataPackage.PressureList[j].ToString();
                 i += 2;
             }
+            //byte[] input = new byte[36];
+            //data.CopyTo(input, 0);
+            //Crc32Algorithm.ComputeAndWriteToEnd(input); // CRC32 local test
+            dataPackage.passCrc32 = Crc32Algorithm.IsValidWithCrcAtEnd(data);
             return dataPackage;
         }
     }

@@ -55,3 +55,7 @@ Contain all data and information from sensors.
 ## Known issue
 
 * pip install tapis-cli -> non-Unicode application, enable UTF-8
+
+## Sponsor
+
+SciChart : https://www.scichart.com/
