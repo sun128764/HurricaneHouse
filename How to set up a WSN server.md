@@ -19,8 +19,8 @@ IP : ipv4 or ipv6(optional)
 ## Update system software
 
 ```shell
-sudo apt update
-sudo apt upgrade
+sudo yum update
+sudo yum upgrade
 ```
 
 ## Install Software
@@ -28,22 +28,39 @@ sudo apt upgrade
 Install Nginx first.
 
 ```shell
-sudo apt-get install nginx 
+sudo yum install nginx 
 ```
 
 Install Influx DB and Grafana.
 
 ```shell
-sudo apt-get update && sudo apt-get install influxdb
+cat <<EOF | sudo tee /etc/yum.repos.d/influxdb.repo
+[influxdb]
+name=InfluxDB Repository - RHEL \$releasever
+baseurl=https://repos.influxdata.com/rhel/\$releasever/\$basearch/stable
+enabled=1
+gpgcheck=1
+gpgkey=https://repos.influxdata.com/influxdb.key
+EOF
+
+sudo yum install -y influxdb
+
 sudo systemctl unmask influxdb.service
 sudo systemctl start influxdb
 
-sudo apt-get install -y apt-transport-https
-sudo apt-get install -y software-properties-common wget
-wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -
-echo "deb https://packages.grafana.com/oss/deb stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list 
-sudo apt-get update
-sudo apt-get install grafana
+sudo nano /etc/yum.repos.d/grafana.repo
+[grafana]
+name=grafana
+baseurl=https://packages.grafana.com/oss/rpm
+repo_gpgcheck=1
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.grafana.com/gpg.key
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+
+sudo yum install grafana
+sudo service grafana-server start
 ```
 
 For other operation systems, please check their office site for installation description.
@@ -128,7 +145,7 @@ The Grafana dashboard will use 3000 port to provide Web UI service. To avoid por
 
 Upload a .conf file with the content as follow to /etc/nginx/conf.d
 
-```
+```nginx
 server {  
     listen  80;
     server_name <Your domain here>;
