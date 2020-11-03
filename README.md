@@ -33,24 +33,42 @@ IDE : Visual Studio 2019
 
 Depended libraries : .Net Core , WPF , SciChart
 
-### Class definition
+### Features
 
-#### Sensor data:
+- Read sensor data from serial port.
+- Read, save and create setting files.
+- Display real time sensor status and plot.
+- Save data to local .csv files.
+- Upload data files to Design Safe data depot automatically.
+- Upload data to local or remote Influx DB server.
+- Automatically add undefined sensor to sensor list.
+- CRC32 check for each data package.
+- Automatic serial port recover.
 
-Contain all data and information from sensors.
+### Data File
 
-- Private Variables: Starting by _ and lower case letter. Those variables is the original integer value of sensors measurement. The maximum value depends on the bit depth of the MCU ADC. Those variables can only be accessed by public get and set methods.
-- Public Variables: 
-  - Sensor info with set and get methods.
-  - List of measurement data in Time Series format.
-  - SciChart plot series
-  - Sensor data string with ``NotifyPropertyChanged()``.
-  - Set and get methods of sensor data.
-- Public Methods:
-  - Convert to String: Convert different integer data to string. The unit is determined by bool variable``isSI``.
-  - Get Sensor Data: Read input string from serial communication and add those data to it’s class members.
-- Private Methods:
-  - Add Data: Add time series data point to List.
+The local .csv files contains all data received form serial port. The saving interval is defined by user. Each file starting with a header row. The definition of each column is as follow.
+
+- Base computer time stamp(UTC): The time when the computer received this data package in ISO 8601 format.
+-  Network ID: The network ID of the Xbee network. Also known as Pan ID in Xbee module.
+-  Board ID: The board ID of the sensor board. Also known as Node ID in Xbee module.
+-  Sensor local time stamp: The time span form the board started in mill second. This value is given by Mills() function and determined when the sensor board start collect the Pressure 1.
+-  Temperature: 16-bit temperature reading. The original resolution is 8-bit.
+-  Battery: 16-bit battery level reading. The original resolution is 8-bit.
+-  Wind Speed: 16-bit wind speed reading. The original resolution is 16-bit.
+-  Wind Direction:  16-bit wind direction reading. The original resolution is 16-bit.
+-  Humidity: 16-bit humidity reading. The original resolution is 16-bit.
+- Pressure 1-10: 16-bit pressure reading. The original resolution is 16-bit. All pressure reading are sampled at even interval(0.1s). The pressure 1 sampling start at the time of sensor local time stamp. For example, if the local time stamp is 6100, the pressure 1 sampling started at 6100, the pressure 2 sampling sampling started at 6200 and so on. Each pressure reading is a average of 4096 points of 12->16 oversampling ADC output.
+
+### Setting Files
+
+#### Program Setting
+
+Program setting file contains project information, sensor list, local and remote data file path and serial port settings. This setting file is read or created by setting up Wizard.
+
+#### Sensor List
+
+Sensor list file contains sensor information such as sensor name, network ID, sensor type and meta data. 
 
 ## Known issue
 
