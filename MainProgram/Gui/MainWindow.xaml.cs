@@ -42,6 +42,7 @@ namespace MainProgram
             }
             catch (Exception)
             {
+                //First message box will be closed automatically since a "Enter" is in the Keyboard stream for some reason.
                 MessageBox.Show("Can not read setting file. Please choose correct file.");
                 MessageBox.Show("Can not read setting file. Please choose correct file.");
             }
