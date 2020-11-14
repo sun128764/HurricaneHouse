@@ -67,7 +67,7 @@ namespace MainProgram
                 data = dataString;
                 dataString = "";
             }
-            string auth = Info.needAuth ? ("&u=" + Info.UserName + "&p=" + Info.PassWord) : "";
+            string auth = Info.NeedAuth ? ("&u=" + Info.UserName + "&p=" + Info.PassWord) : "";
             string url = Info.DataBaseAddress + "/write?db=" + Info.DataBaseName + "&precision=ms" + auth;//Dedabase name is WSN. Time precision is mill seconds.
             var res = WebAPIUtil.HttpPost(url, data);
             if (res == null && data.Length < 1000000)//limit maximum data length

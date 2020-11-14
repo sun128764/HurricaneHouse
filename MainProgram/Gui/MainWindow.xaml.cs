@@ -35,8 +35,16 @@ namespace MainProgram
             DataContext = this;
             sensorWatcher = new SensorWatcher();
             SerialCOM = new SerialCOM();
-            DbInfoList infoList = DbInfoList.ReadDbList(Environment.CurrentDirectory + "\\database.json");
-            dataBaseUtils = new DataBaseList(infoList);
+            try
+            {
+                DbInfoList infoList = DbInfoList.ReadDbList(Environment.CurrentDirectory + "\\database.json");
+                dataBaseUtils = new DataBaseList(infoList);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Can not read setting file. Please choose correct file.");
+                MessageBox.Show("Can not read setting file. Please choose correct file.");
+            }
             isCollecting = true;
         }
 
@@ -107,13 +115,13 @@ namespace MainProgram
                 while (SerialCOM.serialPort.BytesToRead < 36) ;
                 SerialCOM.serialPort.Read(data, 0, 36);
             }
-            catch 
+            catch
             {
                 return;
             }
             DataPackage dataPackage = DataPackage.Decode(data);
             if (dataPackage == null || !dataPackage.passCrc32) return;
-            dataBaseUtils.PostData(dataPackage);
+            dataBaseUtils?.PostData(dataPackage);
             dataLogger.AddData(dataPackage.DataString);
             SensorInfo sensorInfo = SensorInfos.Find(x => x.SensorID == dataPackage.SensorID);
             if (sensorInfo == null)
