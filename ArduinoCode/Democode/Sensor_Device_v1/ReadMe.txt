@@ -18,16 +18,16 @@ NetworkID = 5001 // must be the same for all connected boards in a network.
 BoardID = 1 // counter to identify the boards
 BoardType = 1.Coordinator (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. regular
 
-
 5. While a Coordinator is connected to the usb, open a terminal window, browse to the current directory, and enter:
 python3 Record.py /dev/cu.usbmodem14401
 
 Where /dev/cu.usbmodem14401 is from the Port tab.
+Each line is a sensor, and each three digit is a reading. The line is prefixed with the recording date/time of the lines' last samples. Click <Control + C> to safely exit the python's loop.
 
-
+6. to build a new corrdinator. Incert New dongles on USB then open xctu and turn the dongle on. In. ino file find the "encryption key" in the code at lin 168 looks like "Serial2.print("ATKY AAAAABBBBBCCCCCDDDDDEEEEEFFFFF12\r" );" Copy "AAA........FF12" to KYT parameter.
 The sensor source data would be exported to a file called "data.txt" in the same directory.
 
-Each line is a sensor, and each three digit is a reading. The line is prefixed with the recording date/time of the lines' last samples. Click <Control + C> to safely exit the python's loop.
+
 
 
 
