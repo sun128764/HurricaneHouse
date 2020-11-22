@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.IO;
 
 namespace Format
 {
@@ -44,5 +46,15 @@ namespace Format
         public string Password { set; get; }
         public string PortName { set; get; }
         public int BaudRate { set; get; }
+
+        public void Save()
+        {
+            try
+            {
+                string setting = JsonConvert.SerializeObject(this, Formatting.Indented);
+                File.WriteAllText(ConstValues.BakFilePath, setting);
+            }
+            catch { }
+        }
     }
 }

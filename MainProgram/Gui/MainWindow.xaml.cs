@@ -208,6 +208,11 @@ namespace MainProgram
                 if (result == MessageBoxResult.Yes)
                 {
                     dataLogger?.AddData(null);
+                    try
+                    {
+                        File.Delete(ConstValues.BakFilePath);
+                    }
+                    catch { }
                     e.Cancel = false;
                 }
                 else

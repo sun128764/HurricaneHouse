@@ -99,6 +99,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Format\ConstValues.cs" />
     <Compile Include="Format\DataPackage.cs" />
     <Compile Include="Format\DbList.cs" />
     <Compile Include="Format\IpStackApi.cs" />
