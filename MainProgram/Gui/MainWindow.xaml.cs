@@ -13,6 +13,8 @@ namespace MainProgram
 {
     public partial class MainWindow : Window
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         public string SettingPath;
         public List<SensorInfo> SensorInfos { set; get; }
         public SensorInfo SelectedSensor { set; get; }
@@ -116,8 +118,9 @@ namespace MainProgram
                 while (SerialCOM.serialPort.BytesToRead < 36) ;
                 SerialCOM.serialPort.Read(data, 0, 36);
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.Debug(ex, "Cannot read data from serial port.");
                 return;
             }
             DataPackage dataPackage = DataPackage.Decode(data);
@@ -183,13 +186,22 @@ namespace MainProgram
 
         private void SettingBtn_Click(object sender, RoutedEventArgs e)
         {
-            var wizard = new Wizard();
-            wizard.ShowDialog();
-            Mouse.OverrideCursor = null;
-            if (wizard.isFinished)
+            try
             {
-                InitRecording(wizard.ProgramSetting);
+                var wizard = new Wizard();
+                wizard.ShowDialog();
+                Mouse.OverrideCursor = null;
+                if (wizard.isFinished)
+                {
+                    InitRecording(wizard.ProgramSetting);
+                }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error." + ex.StackTrace, "Error");
+                Logger.Error(ex, "Setting wizard error." + ex.StackTrace);
+            }
+
         }
 
         private void ModeBtn_Click(object sender, RoutedEventArgs e)

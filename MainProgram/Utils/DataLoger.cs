@@ -14,6 +14,8 @@ namespace MainProgram
     /// </summary>
     internal class DataLoger : INotifyPropertyChanged
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly Process p;
         private DateTime lastTime;
         private TimeSpan tokenRefreshSpan;
@@ -310,8 +312,9 @@ namespace MainProgram
                 p.Close();
                 return output;
             }
-            catch (SystemException)
+            catch (SystemException ex)
             {
+                Logger.Error(ex,"Cannot run tapis");
                 return "Error";
             }
         }

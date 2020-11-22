@@ -11,6 +11,8 @@ namespace MainProgram
     /// </summary>
     internal class SerialCOM
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         public SerialPort serialPort;//Serial object
         private static Timer aTimer;
 
@@ -31,7 +33,10 @@ namespace MainProgram
                 {
                     serialPort.Open();
                 }
-                catch { }
+                catch(Exception ex)
+                {
+                    Logger.Error(ex, "Cannot open serial port.");
+                }
             }
         }
 
@@ -62,7 +67,10 @@ namespace MainProgram
             {
                 serialPort.Open();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Cannot open serial port.");
+            }
             if (serialPort.IsOpen)
             {
                 SetTimer();

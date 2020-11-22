@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace MainProgram
 {
@@ -11,8 +12,11 @@ namespace MainProgram
     /// </summary>
     public partial class App : Application
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         public App()
         {
+            Current.DispatcherUnhandledException += App_DispatcherUnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             ThreadPool.QueueUserWorkItem((object state) =>
             {
                 //WebMap.HttpGet("http://api.ipstack.com/check?access_key=c4358b1d5570b8a0fdc733e18c1045c6");
@@ -23,9 +27,10 @@ namespace MainProgram
         }
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            Logger.Info("Program start at" + DateTime.Now.ToLongDateString());
             var mainwindow = new MainWindow();
             mainwindow.Show();
-            if (e.Args.Length == 1 || e.Args[0] == "-recover")
+            if (e.Args.Length == 1 && e.Args[0] == "-recover")
             {
                 try
                 {
@@ -33,8 +38,26 @@ namespace MainProgram
                     Format.ProgramSetting setting = JsonConvert.DeserializeObject<Format.ProgramSetting>(file);
                     mainwindow.InitRecording(setting);
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex, "Can not recover the program." + ex.StackTrace);
+                }
             }
+        }
+        //Catch unhandled exception of UI process
+        private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            Exception ex = e.Exception;
+            Logger.Error(ex, "Unhandled exception of UI process." + ex.StackTrace);
+            e.Handled = true;//Keep program running.
+        }
+
+        //Catch unhandled exception of UI process (such as Tapis)
+        //When this method is called, the process will be stopped.
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Exception ex = e.ExceptionObject as Exception;
+            Logger.Error(ex, "Unhandled exception of UI process" + ex.StackTrace);
         }
     }
 }
