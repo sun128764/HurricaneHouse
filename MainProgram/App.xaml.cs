@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows;
@@ -58,6 +59,7 @@ namespace MainProgram
         {
             Exception ex = e.ExceptionObject as Exception;
             Logger.Error(ex, "Unhandled exception of UI process" + ex.StackTrace);
+            Process.Start(Path.Combine(Environment.CurrentDirectory, "FIT Hurricane House Monitor.exe"), "-recover");
         }
     }
 }

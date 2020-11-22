@@ -42,11 +42,9 @@ namespace MainProgram
                 DbInfoList infoList = DbInfoList.ReadDbList(Environment.CurrentDirectory + "\\database.json");
                 dataBaseUtils = new DataBaseList(infoList);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //First message box will be closed automatically since a "Enter" is in the Keyboard stream for some reason.
-                MessageBox.Show("Can not read database setting file. All data will not upload to database.");
-                MessageBox.Show("Can not read database setting file. All data will not upload to database.");
+                Logger.Error(ex, "Can not read database setting." + ex.StackTrace);
             }
             isCollecting = true;
         }
