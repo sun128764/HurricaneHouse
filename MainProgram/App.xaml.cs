@@ -58,7 +58,8 @@ namespace MainProgram
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             Exception ex = e.ExceptionObject as Exception;
-            Logger.Error(ex, "Unhandled exception of UI process" + ex.StackTrace);
+            Logger.Error(ex, "Unhandled exception of UI process" + ex.StackTrace); 
+            Thread.Sleep(10000);
             Process.Start(Path.Combine(Environment.CurrentDirectory, "FIT Hurricane House Monitor.exe"), "-recover");
         }
     }
