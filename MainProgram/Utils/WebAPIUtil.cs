@@ -10,6 +10,8 @@ namespace MainProgram
     /// </summary>
     internal class WebAPIUtil
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         public static string HttpGet(string url)
         {
             try
@@ -27,8 +29,9 @@ namespace MainProgram
                     return reader.ReadToEnd();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Logger.Debug(ex, "Cannot use http get method.");
                 return null;
             }
         }
@@ -53,9 +56,9 @@ namespace MainProgram
                     return reader.ReadToEnd();
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                var a = e;
+                Logger.Debug(ex, "Cannot use http post method.");
                 return null;
             }
         }

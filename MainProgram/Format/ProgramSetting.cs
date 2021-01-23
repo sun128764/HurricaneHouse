@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.IO;
 
 namespace Format
 {
@@ -7,6 +9,8 @@ namespace Format
     /// </summary>
     public class ProgramSetting
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         public string ProjectName { set; get; }
         public string CloudPath { set; get; }
         public string LocalPath { set; get; }
@@ -44,5 +48,18 @@ namespace Format
         public string Password { set; get; }
         public string PortName { set; get; }
         public int BaudRate { set; get; }
+
+        public void Save()
+        {
+            try
+            {
+                string setting = JsonConvert.SerializeObject(this, Formatting.Indented);
+                File.WriteAllText(ConstValues.BakFilePath, setting);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Can not save the program setting backup file.");
+            }
+        }
     }
 }

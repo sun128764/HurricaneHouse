@@ -107,7 +107,7 @@ namespace MainProgram
             aTimer.Stop();
             MainWindow.isCollecting = true;
             DataLoger.enableUpload = true;
-            DataBaseUtilsList.ForEach(p => p.EnableUpload());
+            DataBaseUtilsList?.ForEach(p => p.EnableUpload());
         }
 
         private void SetNoUpload()
@@ -116,7 +116,7 @@ namespace MainProgram
             MainWindow.isCollecting = true;
             DataLoger.enableUpload = false;
             DataLoger.ClearData();
-            DataBaseUtilsList.ForEach(p => p.DisableUpload());
+            DataBaseUtilsList?.ForEach(p => p.DisableUpload());
         }
 
         private void SetSleep()

@@ -13,6 +13,8 @@ namespace MainProgram
 {
     public partial class MainWindow : Window
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         public string SettingPath;
         public List<SensorInfo> SensorInfos { set; get; }
         public SensorInfo SelectedSensor { set; get; }
@@ -35,8 +37,15 @@ namespace MainProgram
             DataContext = this;
             sensorWatcher = new SensorWatcher();
             SerialCOM = new SerialCOM();
-            DbInfoList infoList = DbInfoList.ReadDbList(Environment.CurrentDirectory + "\\database.json");
-            dataBaseUtils = new DataBaseList(infoList);
+            try
+            {
+                DbInfoList infoList = DbInfoList.ReadDbList(Environment.CurrentDirectory + "\\database.json");
+                dataBaseUtils = new DataBaseList(infoList);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Can not read database setting." + ex.StackTrace);
+            }
             isCollecting = true;
         }
 
@@ -107,13 +116,14 @@ namespace MainProgram
                 while (SerialCOM.serialPort.BytesToRead < 36) ;
                 SerialCOM.serialPort.Read(data, 0, 36);
             }
-            catch 
+            catch (Exception ex)
             {
+                Logger.Debug(ex, "Cannot read data from serial port.");
                 return;
             }
             DataPackage dataPackage = DataPackage.Decode(data);
             if (dataPackage == null || !dataPackage.passCrc32) return;
-            dataBaseUtils.PostData(dataPackage);
+            dataBaseUtils?.PostData(dataPackage);
             dataLogger.AddData(dataPackage.DataString);
             SensorInfo sensorInfo = SensorInfos.Find(x => x.SensorID == dataPackage.SensorID);
             if (sensorInfo == null)
@@ -174,13 +184,22 @@ namespace MainProgram
 
         private void SettingBtn_Click(object sender, RoutedEventArgs e)
         {
-            var wizard = new Wizard();
-            wizard.ShowDialog();
-            Mouse.OverrideCursor = null;
-            if (wizard.isFinished)
+            try
             {
-                InitRecording(wizard.ProgramSetting);
+                var wizard = new Wizard();
+                wizard.ShowDialog();
+                Mouse.OverrideCursor = null;
+                if (wizard.isFinished)
+                {
+                    InitRecording(wizard.ProgramSetting);
+                }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error." + ex.StackTrace, "Error");
+                Logger.Error(ex, "Setting wizard error." + ex.StackTrace);
+            }
+
         }
 
         private void ModeBtn_Click(object sender, RoutedEventArgs e)
@@ -199,6 +218,11 @@ namespace MainProgram
                 if (result == MessageBoxResult.Yes)
                 {
                     dataLogger?.AddData(null);
+                    try
+                    {
+                        File.Delete(ConstValues.BakFilePath);
+                    }
+                    catch { }
                     e.Cancel = false;
                 }
                 else

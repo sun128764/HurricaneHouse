@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
@@ -10,7 +11,7 @@ namespace Format
         public string DataBaseAddress { get; set; }
         public string DataBaseName { get; set; }
         public string MeasurementName { get; set; }
-        public bool needAuth { get; set; }
+        public bool NeedAuth { get; set; }
         public string UserName { get; set; }
         public string PassWord { get; set; }
     }
@@ -22,16 +23,8 @@ namespace Format
         static public DbInfoList ReadDbList(string path)
         {
             string file = File.ReadAllText(path);
-            try
-            {
-                DbInfoList list = JsonConvert.DeserializeObject<DbInfoList>(file);
-                return list;
-            }
-            catch (JsonSerializationException)
-            {
-                System.Windows.MessageBox.Show("Can not read setting file. Please choose correct file.");
-                return null;
-            }
+            DbInfoList list = JsonConvert.DeserializeObject<DbInfoList>(file);
+            return list;
         }
 
         static public void SaveDbList(DbInfoList list)
