@@ -454,6 +454,10 @@ namespace MainProgram
                 WindPlot.Append(ConvertToDouble(WindDirection, Type.WindDirection), ConvertToDouble(WindSpeed, Type.WindSpeed));
                 return;
             }
+            if (this.SensorType == SensorInfo.Types.Humidity)
+            {
+                return;
+            }
 
             double[] pressureL = new double[10];
             for (int i = 0; i < 10; i++)

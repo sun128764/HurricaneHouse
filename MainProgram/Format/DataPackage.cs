@@ -51,7 +51,7 @@ namespace Format
             dataPackage.Time = DateTime.Now;
 
             dataPackage.DataString += DateTime.Now.ToString("o");
-            //dataPackage.DataString += "," + "5001";
+            dataPackage.DataString += "," + "5001";
             dataPackage.DataString += "," + dataPackage.SensorID.ToString();
             dataPackage.DataString += "," + dataPackage.SensorTYpe.ToString();
             dataPackage.DataString += "," + dataPackage.BoardTime.ToString();
@@ -76,6 +76,9 @@ namespace Format
                 dataPackage.DataString += "," + dataPackage.PressureList[j].ToString();
                 i += 2;
             }
+            //byte[] input = new byte[36];
+            //data.CopyTo(input, 0);
+            //Crc32Algorithm.ComputeAndWriteToEnd(input); // CRC32 local test
             return dataPackage;
         }
     }
