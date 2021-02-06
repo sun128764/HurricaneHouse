@@ -11,6 +11,7 @@ a. Tab Arduino > Preferences... > Additional Board Manager URLs, and add https:/
 b. Tab Tools > Board > Boards Manager, and install: "Ardunio SAMD Boards" and "Adafruit SAMD Boards," then tab Tools > Boards > Adafruit feather M0.
 c. Tab Sketch > Include Library > Mange Libraries, and install "XBee-Arduniio library", "XBee Serial Array", "Arduino Low Power" and 'ArduinoThread"
 d. Intal zipfile from https://github.com/knicholson32/SAMD_CRC32. Click "Code" then "Download Zip" on github page. Then on Arduino Sketch > Include Library > Add Zip Library > select the zip file you just install.
+
 3. Connect the board to a usb, and tab Tools > Port > [Your_USB_Here]
 
 4. In the ino file, edit these parameters, then click upload.
