@@ -29,7 +29,7 @@ Known issue: If you are using **Non-English operation system**, tapis may not in
 Then set up the Tapis by your Design Safe account.
 
 ```
-tapis auth init
+tapis auth init --interactive
 Configure Tapis API access:
 ===========================
 +---------------+--------------------------------------+----------------------------------------+
