@@ -21,7 +21,7 @@ BoardType = 1.Coordinator (cellular/gps/main), 2. Anemometer, 3. Humidity., 4. r
 
 5. Connect the usb dongle. 
 
-6. to build a new corrdinator. Incert New dongles on USB then open xctu and turn the dongle on. In. ino file find the "encryption key"-KY in the code at lin 168 looks like "Serial2.print("ATKY AAAAABBBBBCCCCCDDDDDEEEEEFFFFF12\r" );" Copy "AAA........FF12" to KYT parameter.
+6. to build a new corrdinator. Incert New dongles on USB then open xctu and turn the dongle on. In. ino file find the "encryption key"-KY in the code at lin 168 looks like "Serial2.print("ATKY AAAAABBBBBCCCCCDDDDDEEEEEFFFFF12\r" );" Copy "AAA........FF12" to KYT parameter. Set up the CE to 1 (Form Network) and ID to network ID.
 The sensor source data would be exported to a file called "data.txt" in the same directory.
 
 
