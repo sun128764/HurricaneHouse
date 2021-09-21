@@ -14,9 +14,10 @@ namespace MainProgram
     {
         //Example URL
         //https://www.designsafe-ci.org/data/browser/projects/2213334571396698601-242ac11a-0001-012//GUI_Test?query_string=
+        //New URL Example https://www.designsafe-ci.org/data/browser/projects/2495676092987862550-242ac116-0001-012/CB_WSNS_WOW_6-22-21
         //Example Cloud path
         //project-6284144844314644966-242ac11c-0001-012/GUI_Test/
-        private Regex Regex = new Regex(@"^(https://)?www.designsafe-ci.org/data/browser/(projects.*?)\?query_string=\s?$");
+        private Regex Regex = new Regex(@"^(https://)?www.designsafe-ci.org(.*?)(?<CloudPth>projects.*?)$\s?");
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -79,7 +80,7 @@ namespace MainProgram
             TextBox textBox = sender as TextBox;
             if (Regex.IsMatch(textBox.Text))
             {
-                CloudPath = Regex.Match(textBox.Text).Groups[2].Value.Replace("projects/", "projects-").Replace("//", "/") + "/";
+                CloudPath = Regex.Match(textBox.Text).Groups[3].Value.Replace("projects/", "projects-").Replace("//", "/") + "/";
             }
         }
 
