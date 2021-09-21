@@ -80,7 +80,7 @@ namespace MainProgram
             TextBox textBox = sender as TextBox;
             if (Regex.IsMatch(textBox.Text))
             {
-                CloudPath = Regex.Match(textBox.Text).Groups[3].Value.Replace("projects/", "projects-").Replace("//", "/") + "/";
+                CloudPath = Regex.Match(textBox.Text).Groups[3].Value.Replace("projects/", "project-").Replace("//", "/") + "/";
             }
         }
 

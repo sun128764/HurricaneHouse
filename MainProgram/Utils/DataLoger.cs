@@ -162,7 +162,9 @@ namespace MainProgram
             }
             OutputString += "Uploading to:" + "agave://" + CloudPath + Environment.NewLine;
             PBar = 55;
-            string output = RunTapis("files upload agave://" + CloudPath + " " + LocalPath + "\\" + testFile);
+            string output = RunTapis("files upload agave://" + CloudPath + " " + " \"" + LocalPath + "\\" + testFile + "\"");
+            OutputString += "tapis files upload agave://" + CloudPath + " " + " \"" + LocalPath + "\\" + testFile + "\"" + Environment.NewLine;
+            OutputString += output + Environment.NewLine;
             if (!uploadRegex.IsMatch(output))
             {
                 OutputString += "Unable to upload";
