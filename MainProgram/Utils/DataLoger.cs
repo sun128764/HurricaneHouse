@@ -162,8 +162,8 @@ namespace MainProgram
             }
             OutputString += "Uploading to:" + "agave://" + CloudPath + Environment.NewLine;
             PBar = 55;
-            string output = RunTapis("files upload agave://" + CloudPath + " " + " \"" + LocalPath + "\\" + testFile + "\"");
-            OutputString += "tapis files upload agave://" + CloudPath + " " + " \"" + LocalPath + "\\" + testFile + "\"" + Environment.NewLine;
+            string output = RunTapis("files upload agave://" + CloudPath + " " + "\"" + LocalPath + "\\" + testFile + "\"");
+            OutputString += "tapis files upload agave://" + CloudPath + " " + "\"" + LocalPath + "\\" + testFile + "\"" + Environment.NewLine;
             OutputString += output + Environment.NewLine;
             if (!uploadRegex.IsMatch(output))
             {
@@ -230,7 +230,7 @@ namespace MainProgram
             }
             fileCount++;
             //lastTime = DateTime.Now;
-            string output = RunTapis("files upload agave://" + cloudPath + " " + filename);
+            string output = RunTapis("files upload agave://" + cloudPath + " " + "\"" + filename + "\"");
             if (uploadRegex.IsMatch(output))
             {
                 LastFileName = Path.GetFileName(filename);
@@ -247,7 +247,7 @@ namespace MainProgram
                 List<string> successFiles = new List<string>();
                 foreach (string file in failedFilePathList)
                 {
-                    string outputt = RunTapis("files upload agave://" + cloudPath + " " + file);
+                    string outputt = RunTapis("files upload agave://" + cloudPath + " " + "\"" + file + "\"");
                     if (uploadRegex.IsMatch(outputt))
                     {
                         successFiles.Add(file);
